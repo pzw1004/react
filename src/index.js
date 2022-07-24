@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import './assets/css/index.css';
+import App from './components/common/App';
 import * as serviceWorker from './serviceWorker';
+import MRoute from './routes/index'
+import  "babel-polyfill";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<MRoute />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
