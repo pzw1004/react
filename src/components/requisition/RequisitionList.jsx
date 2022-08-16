@@ -43,12 +43,25 @@ class RequisitionList extends Component{
             searchText: '',
             requisitionList: [],
             requisition: {
+                requisition_military_inspection_id: '',
+                requisition_sensitization_method: '',
+                requisition_film_processing_method: '',
+                requisition_focus_size: '',
+                requisition_material: '',
+                requisition_souce_age: '',
+                requisition_source_strength: '',
+                requisition_testing_instrument: '',
+                requisition_testing_date: '',
+                requisition_transillumination: '',
+                requisition_bevel_form: '',
                 requisition_id: '',
                 requisition_number: '',
                 requisition_name: '',
                 requisition_structurename: '',
                 requisition_constructunit: '',
                 requisition_weldingmethod: '',
+                requisition_testing_rate:'',
+                requisition_complete_date:'',
                 requisition_saveplace: '',
                 requisition_samplenumber: '',
                 requisition_density: '',
@@ -188,7 +201,7 @@ class RequisitionList extends Component{
                 let temp_state;
 
                 if(JSON.parse(sessionStorage.getItem("temp_user")).member_role === response.data.requisition_state)
-                   {temp_state=false;}else {
+                {temp_state=false;}else {
                     temp_state=true;
                 }
                 this.threeRoleManage(JSON.parse(sessionStorage.getItem("temp_user")));
@@ -361,15 +374,15 @@ class RequisitionList extends Component{
                 dataIndex: 'delete',
                 key: 'delete',
                 render: (text,record) => (
-                        <Popconfirm
-                            title="确定要删除该影像图吗？"
-                            icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-                            onConfirm={()=>this.deletePicture(record.picture_id,record.picture_number)}
-                            okText="确定删除"
-                            cancelText="取消"
-                        >
-                            <a href="#">删除影像图</a>
-                        </Popconfirm>
+                    <Popconfirm
+                        title="确定要删除该影像图吗？"
+                        icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+                        onConfirm={()=>this.deletePicture(record.picture_id,record.picture_number)}
+                        okText="确定删除"
+                        cancelText="取消"
+                    >
+                        <a href="#">删除影像图</a>
+                    </Popconfirm>
                 ),
             }
 
@@ -398,21 +411,21 @@ class RequisitionList extends Component{
         //console.log(data);
         return (
             <div>
-                    <div style={{ marginBottom: 16 }}>
-                        <Button type="danger"  onClick={this.deleteMany} disabled={!hasSelected} loading={loading}>
-                            批量删除
-                        </Button>
-                        <span style={{ marginLeft: 8 }}>
+                <div style={{ marginBottom: 16 }}>
+                    <Button type="danger"  onClick={this.deleteMany} disabled={!hasSelected} loading={loading}>
+                        批量删除
+                    </Button>
+                    <span style={{ marginLeft: 8 }}>
                         {hasSelected ? `选择了 ${selectedRowKeys.length} 张` : ''}
                       </span>
-                    </div>
-                    <Table 
-                        rowSelection={rowSelection}
-                        columns={columns}
-                        dataSource={data}
-                        pagination={true}
-                        rowKey="picture_id"
-                    />
+                </div>
+                <Table
+                    rowSelection={rowSelection}
+                    columns={columns}
+                    dataSource={data}
+                    pagination={true}
+                    rowKey="picture_id"
+                />
             </div>
         );
     };
@@ -468,8 +481,8 @@ class RequisitionList extends Component{
 
         // eslint-disable-next-line array-callback-return
         requisitionList.map((item)=>{
-             if(item.requisition_firstexam==='未审批')
-                 item["firstStatus"] = "warning";
+            if(item.requisition_firstexam==='未审批')
+                item["firstStatus"] = "warning";
 
             if(item.requisition_firstexam==='审批完成')
                 item["firstStatus"] = "success";
@@ -498,12 +511,12 @@ class RequisitionList extends Component{
 
         });
 
-         this.setState({
-             requisitionList: requisitionList,
-         })
+        this.setState({
+            requisitionList: requisitionList,
+        })
 
 
-     };
+    };
 
     getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -581,15 +594,15 @@ class RequisitionList extends Component{
         { title: '三级状态', key: 'state3', render: (record) => <span><Badge status={record.thirdStatus} />{record.requisition_thirdexam}</span> },
         { title: '操作', key: 'operation', render: (record) => <a onClick={()=>this.showDrawer(record.requisition_id)}>审核申请单</a> },
         { title: '删除', key: 'delete', render: (record) =>
-            <Popconfirm
-                title="确定要删除该申请单吗？"
-                icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-                onConfirm={()=>this.deleteRequisition(record.requisition_id,record.requisition_number)}
-                okText="确定删除"
-                cancelText="取消"
-            >
-                <a href="#">删除申请单</a>
-            </Popconfirm>},
+                <Popconfirm
+                    title="确定要删除该申请单吗？"
+                    icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+                    onConfirm={()=>this.deleteRequisition(record.requisition_id,record.requisition_number)}
+                    okText="确定删除"
+                    cancelText="取消"
+                >
+                    <a href="#">删除申请单</a>
+                </Popconfirm>},
     ];
 
 
@@ -602,14 +615,14 @@ class RequisitionList extends Component{
                 {/*<PictureManage tiaozhuan={this.tiaozhuan}/>*/}
                 <br/><br/>
                 <Table
-                className="components-table-demo-nested"
-                columns={this.columns}
-                expandedRowRender={this.expandedRowRender}
-                dataSource={this.state.requisitionList}
-                rowKey="requisition_id"
+                    className="components-table-demo-nested"
+                    columns={this.columns}
+                    expandedRowRender={this.expandedRowRender}
+                    dataSource={this.state.requisitionList}
+                    rowKey="requisition_id"
                 />
             </div>
-    );
+        );
 
     }
 }

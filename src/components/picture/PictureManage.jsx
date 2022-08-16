@@ -11,6 +11,7 @@ import RectangleManage from './rectangle/rectangleManage'
 import saveLoginInfo from '../../utils/saveLogInfo'
 import history from '../common/history'
 import {Link } from "react-router-dom";
+import {render} from "react-dom";
 
 
 const { Option } = Select;
@@ -43,12 +44,12 @@ let globalRectY;
 let globalJudgeRectX;
 let globalJudgeRectY;
 let globalFlag;
-
+let newCircle;
 //用来画多边形
 let polygonFlag = false;
 let polygonPointsNum = 0;
-let polygonPointArrayX = new Array(8);
-let polygonPointArrayY = new Array(8);
+let polygonPointArrayX = new Array(20);
+let polygonPointArrayY = new Array(20);
 let polygonPointsString = "";//保存多边形当前的点
 let polygonBeginTag = "";
 let globalPolygon;//globalPolygon指向每次创建后多边形，操控多边形属性
@@ -140,6 +141,7 @@ class PictureManage extends Component{
     }
 
     rePolygon=()=>{//重画多边形
+        this.deleteAllCircle();
         if(polygonFlag==true)
         {
             polygonTopy = 350;
@@ -159,6 +161,7 @@ class PictureManage extends Component{
     }
 
     savetmpPolygon=()=>{//在前端保存多边形到<polygon/>标签
+        this.deleteAllCircle()
         if(polygonPointsString!=""&&polygonPointsString.length>14)
         {
             globalPolygon = globalSVG.append("polygon")
@@ -222,7 +225,7 @@ class PictureManage extends Component{
         axios.post(api)
             .then((response)=> {
                 //console.log(response);
-                 console.log('getPictureRect:'+JSON.stringify(response.data));
+                console.log('getPictureRect:'+JSON.stringify(response.data));
                 //this.removeAllChild();
                 this.setState({
                     rectangleList: response.data,
@@ -299,7 +302,7 @@ class PictureManage extends Component{
                 // message.success("改变state状态后"+this.state.updateRectClor);
 
             }else
-                {
+            {
                 let ele = document.getElementById(clickRectClor);
                 if(ele!=null) {
                     ele.setAttribute("stroke", "yellow");
@@ -309,16 +312,43 @@ class PictureManage extends Component{
             }
         }
     };
+    //删除所有顶点
+    deleteAllCircle = ()=> {
+        while(document.getElementById("newc")){
+            document.getElementById("newc").remove();
+        }
+    }
+
+    //创建顶点
+    createCircle=(x, y)=> {
+        console.log("!!!!!!!!!!!!!!!!!!!!!!")
+        var svg = document.getElementById('svgG');
+        var newcircle = document.createElementNS('http://www.w3.org/2000/svg',"circle");
+        console.log(x)
+        console.log(y)
+        newcircle.setAttribute("id","newc");
+        newcircle.setAttribute("cx",x);
+        newcircle.setAttribute("cy",y);
+        newcircle.setAttribute("r","1");
+        newcircle.setAttribute("stroke","black");
+        newcircle.setAttribute("stroke-width","2");
+        newcircle.setAttribute("fill","black");
+        svg.appendChild(newcircle);
+
+    }
+
 
     mousedown=(e)=> {
 
         if (polygonFlag) //如果是正在画多边形
         {
-            if(polygonPointsNum < 8)
+            if(polygonPointsNum < 21)
             {
+
                 console.log(polygonFlag);
                 globalRectX = e.pageX - document.getElementById('svgG').getBoundingClientRect().left;
                 globalRectY = e.pageY - document.getElementById('svgG').getBoundingClientRect().top;
+                this.createCircle(globalRectX,globalRectY)
                 console.log(globalRectX+'这是鼠标位置x');
                 console.log(globalRectY+'这是鼠标位置y');
 
@@ -348,6 +378,7 @@ class PictureManage extends Component{
         }
         else
         {
+            this.deleteAllCircle();
             // this.judegeColor();
             console.log("点击了svg");
             //message.success(this.state.updateRectClor);
@@ -356,7 +387,7 @@ class PictureManage extends Component{
             globalRectX = e.pageX - document.getElementById('svgG').getBoundingClientRect().left;
             globalRectY = e.pageY - document.getElementById('svgG').getBoundingClientRect().top;
             //console.log(document.getElementById('svgG').getBoundingClientRect());
-             console.log(globalRectX+'这是鼠标位置x');
+            console.log(globalRectX+'这是鼠标位置x');
             console.log(globalRectY+'这是鼠标位置y');
 
             let tempRect = globalSVG.append("rect")  //向globalSVG里面新加了一个rect,tempRect拿到引用
@@ -391,7 +422,9 @@ class PictureManage extends Component{
         }
     };
 
+
     deletePolygon=()=>{
+        this.deleteAllCircle();
         if(polygonFlag==false)
         {
             if(polygonId!="")
@@ -505,16 +538,16 @@ class PictureManage extends Component{
 
     mousemove=(e)=> {
 
-       // if(globalFlag){
-       //  let tempX = e.pageX - document.getElementById('svgG').getBoundingClientRect().left +1;
-       //  let tempY = e.pageY - document.getElementById('svgG').getBoundingClientRect().top  +1;
-       //  globalRect.attr("width", Math.max(0, tempX - +globalRectX))
-       //            .attr("height", Math.max(0, tempY - +globalRectY))
-       //            .attr("id", 'tempId');
-       //
-       //  globalJudgeRectX = Math.max(0, tempX - +globalRectX);//绘制矩形的长
-       //  globalJudgeRectY = Math.max(0, tempY - +globalRectY);//绘制矩形的宽
-       // }
+        // if(globalFlag){
+        //  let tempX = e.pageX - document.getElementById('svgG').getBoundingClientRect().left +1;
+        //  let tempY = e.pageY - document.getElementById('svgG').getBoundingClientRect().top  +1;
+        //  globalRect.attr("width", Math.max(0, tempX - +globalRectX))
+        //            .attr("height", Math.max(0, tempY - +globalRectY))
+        //            .attr("id", 'tempId');
+        //
+        //  globalJudgeRectX = Math.max(0, tempX - +globalRectX);//绘制矩形的长
+        //  globalJudgeRectY = Math.max(0, tempY - +globalRectY);//绘制矩形的宽
+        // }
 
     };
 
@@ -538,7 +571,7 @@ class PictureManage extends Component{
         //message.success("捕捉到滚轮")
         let tempTime = this.state.wheelTimes;
         this.setState({
-           // wheelTimes: tempTime + 0.1,
+            // wheelTimes: tempTime + 0.1,
         });
         //this.fangDa();
     };
@@ -583,9 +616,9 @@ class PictureManage extends Component{
         //....转换格式发送给后端
         for(let j = 0; j < polygons.length; j++)
         {
-          //  if(polygons[j].getAttribute("damage") !== 1)//临时多边形不添加
+            //  if(polygons[j].getAttribute("damage") !== 1)//临时多边形不添加
 
-         
+
 
             {
                 let obj ={
@@ -619,8 +652,8 @@ class PictureManage extends Component{
                 });
 
                 this.setState({
-                        polygonPoints:"",
-                    });//把临时框清空
+                    polygonPoints:"",
+                });//把临时框清空
             })
             .catch( (error)=> {
                 console.log(error);
@@ -679,13 +712,13 @@ class PictureManage extends Component{
                     let ele = document.getElementById(clickRectClor);
                     if(ele!=null)
                     {
-                    ele.setAttribute("stroke","red");
+                        ele.setAttribute("stroke","red");
                     }
                     updateRectClor = '';
                     clickRectClor = '';
                 }
                 else
-                    {
+                {
                     temp[4] = 'yellow';
                     let ele = document.getElementById(clickRectClor);
                     if(ele!=null) {
@@ -736,23 +769,23 @@ class PictureManage extends Component{
     };
 
     saveRectList=(rectangleArray,picture_id)=>{
-         let api = global.AppConfig.serverIP + '/getRectangleArray?picture_id='+ picture_id;
-         console.log('rectangleArray:'+rectangleArray);
-         axios.post(api,rectangleArray)
-                          .then((response)=> {
-                 // console.log(JSON.stringify(response.data));
-                 message.success('保存成功');
-                 let ele = document.getElementById("tempId");
-                 if(ele!=null){
-                     ele.parentNode.removeChild(ele);
-                 }
-                 this.setState({
-                     rectangleList: response.data,
-                 });
-             })
-             .catch( (error)=> {
-                 console.log(error);
-             });
+        let api = global.AppConfig.serverIP + '/getRectangleArray?picture_id='+ picture_id;
+        console.log('rectangleArray:'+rectangleArray);
+        axios.post(api,rectangleArray)
+            .then((response)=> {
+                // console.log(JSON.stringify(response.data));
+                message.success('保存成功');
+                let ele = document.getElementById("tempId");
+                if(ele!=null){
+                    ele.parentNode.removeChild(ele);
+                }
+                this.setState({
+                    rectangleList: response.data,
+                });
+            })
+            .catch( (error)=> {
+                console.log(error);
+            });
     };
 
     selectPolygon=(polygon_id)=>{
@@ -782,7 +815,7 @@ class PictureManage extends Component{
             console.log("updateDamageType之后:"+"updateRectClor="+updateRectClor+" clickRectClor="+clickRectClor)
         }
         else//不是第一次
-            {
+        {
             if(updateRectClor=='red'){
                 let ele = document.getElementById(clickRectClor);
                 if(ele!=null){
@@ -806,13 +839,13 @@ class PictureManage extends Component{
         // }
         // //执行延时
         // clickTimeId = setTimeout(()=> {
-            //此处为单击事件要执行的代码
-            this.getRectangleInfo(retangle_id);
-            this.setState({
-                visible: true,
-                onClickRectId:retangle_id,
-            });
-            console.log("鼠标单击");
+        //此处为单击事件要执行的代码
+        this.getRectangleInfo(retangle_id);
+        this.setState({
+            visible: true,
+            onClickRectId:retangle_id,
+        });
+        console.log("鼠标单击");
         // }, 200);
 
     };
@@ -888,7 +921,7 @@ class PictureManage extends Component{
         axios.post(api)
             .then((response)=> {
                 // console.log(JSON.stringify(response.data));
-                 // alert(JSON.stringify(response.data.retangle_damage_type));
+                // alert(JSON.stringify(response.data.retangle_damage_type));
                 this.getDamageType(JSON.stringify(response.data.retangle_damage_type));
                 this.setState({
                     rectangle: response.data,
@@ -973,59 +1006,59 @@ class PictureManage extends Component{
         this.getDamageTypeList();
 
         //判断是否更改厚度和检测标准
-            var obj_updatepicture = null;
-            var flag = true;
+        var obj_updatepicture = null;
+        var flag = true;
 
-            if(db_picture_teststandard==picture.picture_teststandard&&db_picture_thickness==picture.picture_thickness)//说明都没改
-            {
-                flag = false;
-            }
-            else
-            {
-                obj_updatepicture = Object.assign({}, this.state.requisition, { requisition_last_teststandard: picture.picture_teststandard,requisition_last_thickness: picture.picture_thickness });
-            }
-            if(flag == true)
-            {
-                console.log("图片更新后requisition是否改  id:"+obj_updatepicture.requisition_id+" last-test-standard:"+obj_updatepicture.requisition_last_teststandard)
-                this.setState({
-                    requisition: obj_updatepicture,
-                });
-                //更新requisition的last_thickness,即上一次处理的厚度
-                let api1 = global.AppConfig.serverIP + '/updateRequisition';
+        if(db_picture_teststandard==picture.picture_teststandard&&db_picture_thickness==picture.picture_thickness)//说明都没改
+        {
+            flag = false;
+        }
+        else
+        {
+            obj_updatepicture = Object.assign({}, this.state.requisition, { requisition_last_teststandard: picture.picture_teststandard,requisition_last_thickness: picture.picture_thickness });
+        }
+        if(flag == true)
+        {
+            console.log("图片更新后requisition是否改  id:"+obj_updatepicture.requisition_id+" last-test-standard:"+obj_updatepicture.requisition_last_teststandard)
+            this.setState({
+                requisition: obj_updatepicture,
+            });
+            //更新requisition的last_thickness,即上一次处理的厚度
+            let api1 = global.AppConfig.serverIP + '/updateRequisition';
 
-                axios.post(api1,obj_updatepicture)
-                    .then((response)=> {
-                        // console.log(response);
-                        // console.log(JSON.stringify(response.data));
-                        this.setState({
-                            requisition: response.data,
-                        });
-                    })
-                    .catch( (error)=> {
-                        console.log(error);
-                    });
-                console.log(db_picture_thickness,picture.picture_thickness,db_picture_thickness==picture.picture_thickness);
-            }
-
-
-            /**使用axios将value表单信息发送到后端
-             * */
-            //console.log(this.state.requisition);
-            saveLoginInfo('更新了影像图编号'+picture.picture_number+'的信息');
-            let api2 = global.AppConfig.serverIP + '/updatePicture';
-            axios.post(api2,picture)
+            axios.post(api1,obj_updatepicture)
                 .then((response)=> {
                     // console.log(response);
                     // console.log(JSON.stringify(response.data));
                     this.setState({
-                        picture: response.data,
+                        requisition: response.data,
                     });
-                    message.success("完成影像图信息更新！")
-
                 })
                 .catch( (error)=> {
                     console.log(error);
                 });
+            console.log(db_picture_thickness,picture.picture_thickness,db_picture_thickness==picture.picture_thickness);
+        }
+
+
+        /**使用axios将value表单信息发送到后端
+         * */
+        //console.log(this.state.requisition);
+        saveLoginInfo('更新了影像图编号'+picture.picture_number+'的信息');
+        let api2 = global.AppConfig.serverIP + '/updatePicture';
+        axios.post(api2,picture)
+            .then((response)=> {
+                // console.log(response);
+                // console.log(JSON.stringify(response.data));
+                this.setState({
+                    picture: response.data,
+                });
+                message.success("完成影像图信息更新！")
+
+            })
+            .catch( (error)=> {
+                console.log(error);
+            });
 
     };
 
@@ -1033,8 +1066,8 @@ class PictureManage extends Component{
         if(this.state.AIRectDisplay == "none"){
             this.setState({
                 AIRectDisplay: "",
-              //  AIDamageTypeDisplay:"",
-               // AIConfDisplay:""
+                //  AIDamageTypeDisplay:"",
+                // AIConfDisplay:""
             })
         }else{
             this.setState({
@@ -1063,13 +1096,13 @@ class PictureManage extends Component{
         if(this.state.rectDisplay == "none"){
             this.setState({
                 rectDisplay: "",
-              //  drawDamageTypeDisplay:"",
+                //  drawDamageTypeDisplay:"",
                 drawConfDisplay:""
             })
         }else{
             this.setState({
                 rectDisplay: "none",
-               // drawDamageTypeDisplay:"none",
+                // drawDamageTypeDisplay:"none",
                 drawConfDisplay:"none"
             })
         }
@@ -1078,7 +1111,7 @@ class PictureManage extends Component{
     clearSVG=()=>{
         var myNode = document.getElementById("svgG");
         myNode.innerHTML = '';
-       // alert(111)
+        // alert(111)
     };
 
     changeDamageTypeDisplay=()=>{
@@ -1145,10 +1178,10 @@ class PictureManage extends Component{
                 } else {
                     //window.location.href= "/app/pictureManage/"+response.data;
                     // this.props.tiaozhuan();
-                        const path = `/app`;
-                        history.push(path);
-                        const path2 = `/app/pictureManage/${response.data}`;
-                        history.push(path2)
+                    const path = `/app`;
+                    history.push(path);
+                    const path2 = `/app/pictureManage/${response.data}`;
+                    history.push(path2)
 
                 }
                 //message.success("完成影像图信息更新！")
@@ -1278,7 +1311,7 @@ class PictureManage extends Component{
             let polygon_id = polyg[i].polygon_id;
             let polygon_pt = polyg[i].polygon_pt;
             let polygon_belief = polyg[i].polygon_belief;
-          //  let polygon_picture_id = polyg[i].polygon_picture_id;
+            //  let polygon_picture_id = polyg[i].polygon_picture_id;
             let polygon_author = polyg[i].polygon_author;
             let polygon_damage_type = polyg[i].polygon_damage_type;
             console.log("id="+polygon_id+"  author="+polygon_author)
@@ -1301,117 +1334,117 @@ class PictureManage extends Component{
 
         return (
             <div >
-            <div className="picManage" >
-                {/*<RectangleManage PictureManage={this}/>
+                <div className="picManage" >
+                    {/*<RectangleManage PictureManage={this}/>
                const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;  */}
-                <div id="raw-view">
-                    <img className="tifImg" src={global.AppConfig.XrayDBIP+this.state.picture.picture_dir}  style={{width:1000,height:300}}  />
-                    <div id="multi-view" style={{
-                        width: "405px",
-                        height: "405px",
-                        borderRadius: "50%",
-                        boxShadow: "0 0 0 7px rgba(255, 255, 255, .8),0 0 7px 7px rgba(0, 0, 0, .2),inset 0 0 40px 2px rgba(0, 0, 0, 0.25)",
-                        backgroundImage: `url(`+global.AppConfig.XrayDBIP+this.state.picture.picture_dir+`)`,
-                        backgroundSize: `${this.state.wheelTimes*1000}px ${this.state.wheelTimes*300}px`,
-                        // backgroundPosition: "1000px 1000px",
-                        backgroundRepeat: "no-repeat",
-                        position: "absolute",
-                        zIndex: "3",
-                        display:this.state.fdDispaly
-                    }} onWheel={this.onWhellChange} onMouseDownCapture={this.changeFdDispaly}/>
-                </div>
-                <svg
-                    onMouseDown={this.mousedown}
-                    onMouseMove={this.mousemove}
-                    onMouseUp={this.mouseup}
-                    // onMouseOver={this.mouseover}
-                    className="svgG" id="svgG" version="1.1"  width="1000" height="300"  xmlns="http://www.w3.org/2000/svg"
-                >
-                    {/*/!*<rect  x={80} y={80} width={150} height={150} stroke="red" strokeWidth={2} onClick={()=>{alert(11111)}}/>*!/*/}
-                    {/*{rectList.map((item,index)=>{*/}
-                    {/*    if(item.author!=='member') {*/}
-                    {/*        return <rect style={{display:this.state.AIRectDisplay}}  onMouseDownCapture={()=>this.updateDamageType(item.id,item.author)}  key={index} id={item.id} damage={item.damage_type} rect_conf={item.conf} rect_cls_conf={item.cls_conf} x={item.x} y={item.y} width={item.width} height={item.height} fill="black"  fillOpacity={0} stroke={this.state.AIClor} strokeWidth={1}/>*/}
+                    <div id="raw-view">
+                        <img className="tifImg" src={global.AppConfig.XrayDBIP+this.state.picture.picture_dir}  style={{width:1000,height:300}}  />
+                        <div id="multi-view" style={{
+                            width: "405px",
+                            height: "405px",
+                            borderRadius: "50%",
+                            boxShadow: "0 0 0 7px rgba(255, 255, 255, .8),0 0 7px 7px rgba(0, 0, 0, .2),inset 0 0 40px 2px rgba(0, 0, 0, 0.25)",
+                            backgroundImage: `url(`+global.AppConfig.XrayDBIP+this.state.picture.picture_dir+`)`,
+                            backgroundSize: `${this.state.wheelTimes*1000}px ${this.state.wheelTimes*300}px`,
+                            // backgroundPosition: "1000px 1000px",
+                            backgroundRepeat: "no-repeat",
+                            position: "absolute",
+                            zIndex: "3",
+                            display:this.state.fdDispaly
+                        }} onWheel={this.onWhellChange} onMouseDownCapture={this.changeFdDispaly}/>
+                    </div>
+                    <svg
+                        onMouseDown={this.mousedown}
+                        onMouseMove={this.mousemove}
+                        onMouseUp={this.mouseup}
+                        // onMouseOver={this.mouseover}
+                        className="svgG" id="svgG" version="1.1"  width="1000" height="300"  xmlns="http://www.w3.org/2000/svg"
+                    >
+                        {/*/!*<rect  x={80} y={80} width={150} height={150} stroke="red" strokeWidth={2} onClick={()=>{alert(11111)}}/>*!/*/}
+                        {/*{rectList.map((item,index)=>{*/}
+                        {/*    if(item.author!=='member') {*/}
+                        {/*        return <rect style={{display:this.state.AIRectDisplay}}  onMouseDownCapture={()=>this.updateDamageType(item.id,item.author)}  key={index} id={item.id} damage={item.damage_type} rect_conf={item.conf} rect_cls_conf={item.cls_conf} x={item.x} y={item.y} width={item.width} height={item.height} fill="black"  fillOpacity={0} stroke={this.state.AIClor} strokeWidth={1}/>*/}
 
-                    {/*    }else{*/}
-                    {/*        return <rect style={{display:this.state.rectDisplay}}   onMouseDownCapture={()=>this.updateDamageType(item.id,item.author)}  key={index} id={item.id} damage={item.damage_type} rect_conf={item.conf} rect_cls_conf={item.cls_conf} x={item.x} y={item.y} width={item.width} height={item.height}  fill="black"  fillOpacity={0} stroke={this.state.memberClor} strokeWidth={1}/>*/}
-                    {/*        }*/}
-                    {/*    })*/}
-                    {/*}*/}
+                        {/*    }else{*/}
+                        {/*        return <rect style={{display:this.state.rectDisplay}}   onMouseDownCapture={()=>this.updateDamageType(item.id,item.author)}  key={index} id={item.id} damage={item.damage_type} rect_conf={item.conf} rect_cls_conf={item.cls_conf} x={item.x} y={item.y} width={item.width} height={item.height}  fill="black"  fillOpacity={0} stroke={this.state.memberClor} strokeWidth={1}/>*/}
+                        {/*        }*/}
+                        {/*    })*/}
+                        {/*}*/}
 
-                    {
-                        polygList.map((item,index)=>{
-                        // let color = this.getDamageTypeColor(item.damage_type);
-                        // console.log(color);
-                        if(item.author!=='member')
                         {
-                            return <polygon author={item.author} style={{display:this.state.AIRectDisplay}} key={index} id={item.id} onMouseDownCapture={()=>this.selectPolygon(item.id)} textx={item.textx} texty={item.texty} damage={item.damage_type} points={item.points}  fill={this.getDamageTypeColor(item.damage_type)} stroke="#0099CC"/>
-                        
+                            polygList.map((item,index)=>{
+                                // let color = this.getDamageTypeColor(item.damage_type);
+                                // console.log(color);
+                                if(item.author!=='member')
+                                {
+                                    return <polygon author={item.author} style={{display:this.state.AIRectDisplay}} key={index} id={item.id} onMouseDownCapture={()=>this.selectPolygon(item.id)} textx={item.textx} texty={item.texty} damage={item.damage_type} points={item.points}  fill={this.getDamageTypeColor(item.damage_type)} stroke="#0099CC"/>
+
+                                }
+                                else
+                                {
+                                    return <polygon author={item.author} style={{display:this.state.rectDisplay}} key={index} id={item.id} onMouseDownCapture={()=>this.selectPolygon(item.id)} textx={item.textx} texty={item.texty} damage={item.damage_type} points={item.points}  fill={this.getDamageTypeColor(item.damage_type)} stroke="red"/>
+
+                                }
+                            })
                         }
-                        else
-                        {
-                            return <polygon author={item.author} style={{display:this.state.rectDisplay}} key={index} id={item.id} onMouseDownCapture={()=>this.selectPolygon(item.id)} textx={item.textx} texty={item.texty} damage={item.damage_type} points={item.points}  fill={this.getDamageTypeColor(item.damage_type)} stroke="red"/>
-                        
-                        }
-                    })
-                    }
 
 
-                    { <polygon points=  {this.state.polygonPoints}
-                        fill="red" stroke="black"
+                        { <polygon points=  {this.state.polygonPoints}
+                                   fill="red" stroke="black"
                         />
-                    }
-
-                    {polygList.map((item,index)=>{
-                        if(item.author!=='member') {
-                            return <text style={{display:this.state.AIDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx - 35} y={item.texty - 3} >{item.damage_name}</text>
-                        
-                        }else{
-                            return <text style={{display:this.state.drawDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx - 35} y={item.texty - 3} >{item.damage_name}</text>
-                        
                         }
-                    })
-                    };
 
-                    {polygList.map((item,index)=>{
-                        return <text style={{display:this.state.AIDamageBeliefDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx + 10} y={item.texty - 3} >{item.belief}</text>
-                    })
-                    };
+                        {polygList.map((item,index)=>{
+                            if(item.author!=='member') {
+                                return <text style={{display:this.state.AIDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx - 35} y={item.texty - 3} >{item.damage_name}</text>
 
-                    {/*{<polygon points="320,120 340,95 370,105 380,125 380,145 360,165 330,155 "*/}
-                    {/*           stroke="blue"*/}
-                    {/*/>}*/}
-                    {/*onDoubleClick={()=>this.deleteRect(item.id)}   onMouseUpCapture={this.judegeColor}*/}
-                    {/*{rectList.map((item,index)=>{*/}
-                    {/*    if(item.author!=='member') {*/}
-                    {/*        return <text style={{display:this.state.AIDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.x} y={item.y - 3} >{item.damage_name} </text>*/}
+                            }else{
+                                return <text style={{display:this.state.drawDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx - 35} y={item.texty - 3} >{item.damage_name}</text>
 
-                    {/*    }else{*/}
-                    {/*        return <text style={{display:this.state.drawDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.x} y={item.y - 3} >{item.damage_name}</text>*/}
-                    {/*    }*/}
-                    {/*})*/}
-                    {/*};*/}
+                            }
+                        })
+                        };
 
-                    {/*{rectList.map((item,index)=>{*/}
-                    {/*    if(item.author!=='member') {*/}
-                    {/*        return <text  style={{display:this.state.AIConfDisplay}} id={'conf'+item.id} key={'text'+index}  rect_conf={item.conf} x={item.x} y={item.y - 16 } >{( parseInt(item.conf*1000)/1000).toFixed(3)}</text>*/}
+                        {polygList.map((item,index)=>{
+                            return <text style={{display:this.state.AIDamageBeliefDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx + 10} y={item.texty - 3} >{item.belief}</text>
+                        })
+                        };
 
-                    {/*    }else{*/}
-                    {/*        // return <text  style={{display:this.state.drawConfDisplay}} id={'conf'+item.id} key={'text'+index}  rect_conf={item.conf} x={item.x} y={item.y - 16} >{( parseInt(item.conf*1000)/1000).toFixed(3)}</text>*/}
-                    {/*    }*/}
-                    {/*})*/}
-                    {/*}*/}
+                        {/*{<polygon points="320,120 340,95 370,105 380,125 380,145 360,165 330,155 "*/}
+                        {/*           stroke="blue"*/}
+                        {/*/>}*/}
+                        {/*onDoubleClick={()=>this.deleteRect(item.id)}   onMouseUpCapture={this.judegeColor}*/}
+                        {/*{rectList.map((item,index)=>{*/}
+                        {/*    if(item.author!=='member') {*/}
+                        {/*        return <text style={{display:this.state.AIDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.x} y={item.y - 3} >{item.damage_name} </text>*/}
 
-                    {/*{rectList.map((item,index)=>{*/}
-                    {/*    if(item.author!=='member') {*/}
-                    {/*        return <text  style={{display:this.state.clsconfdispaly}} id={'cls_conf'+item.id} key={'text'+index}  rect_cls_conf={item.cls_conf} x={item.x} y={item.y - 16} >{( parseInt(item.cls_conf*1000)/1000).toFixed(3)}</text>*/}
+                        {/*    }else{*/}
+                        {/*        return <text style={{display:this.state.drawDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.x} y={item.y - 3} >{item.damage_name}</text>*/}
+                        {/*    }*/}
+                        {/*})*/}
+                        {/*};*/}
 
-                    {/*    }else{*/}
-                    {/*        return <text  style={{display:this.state.clsconfdispaly}} id={'cls_conf'+item.id} key={'text'+index}  rect_cls_conf={item.cls_conf} x={item.x} y={item.y - 16} >{( parseInt(item.cls_conf*1000)/1000).toFixed(3)}</text>*/}
-                    {/*    }*/}
-                    {/*})*/}
-                    {/*}*/}
-                </svg>
-            </div>
+                        {/*{rectList.map((item,index)=>{*/}
+                        {/*    if(item.author!=='member') {*/}
+                        {/*        return <text  style={{display:this.state.AIConfDisplay}} id={'conf'+item.id} key={'text'+index}  rect_conf={item.conf} x={item.x} y={item.y - 16 } >{( parseInt(item.conf*1000)/1000).toFixed(3)}</text>*/}
+
+                        {/*    }else{*/}
+                        {/*        // return <text  style={{display:this.state.drawConfDisplay}} id={'conf'+item.id} key={'text'+index}  rect_conf={item.conf} x={item.x} y={item.y - 16} >{( parseInt(item.conf*1000)/1000).toFixed(3)}</text>*/}
+                        {/*    }*/}
+                        {/*})*/}
+                        {/*}*/}
+
+                        {/*{rectList.map((item,index)=>{*/}
+                        {/*    if(item.author!=='member') {*/}
+                        {/*        return <text  style={{display:this.state.clsconfdispaly}} id={'cls_conf'+item.id} key={'text'+index}  rect_cls_conf={item.cls_conf} x={item.x} y={item.y - 16} >{( parseInt(item.cls_conf*1000)/1000).toFixed(3)}</text>*/}
+
+                        {/*    }else{*/}
+                        {/*        return <text  style={{display:this.state.clsconfdispaly}} id={'cls_conf'+item.id} key={'text'+index}  rect_cls_conf={item.cls_conf} x={item.x} y={item.y - 16} >{( parseInt(item.cls_conf*1000)/1000).toFixed(3)}</text>*/}
+                        {/*    }*/}
+                        {/*})*/}
+                        {/*}*/}
+                    </svg>
+                </div>
                 <div className="Legends">
                     <table>
                         <tr>
@@ -1453,29 +1486,29 @@ class PictureManage extends Component{
                 {/*    </Row>*/}
                 {/*</div>*/}
                 <div className="Utils" >
-                <br/>
-                <Button onClick={this.AIprocess}>进行AI检测</Button>
+                    <br/>
+                    <Button onClick={this.AIprocess}>进行AI检测</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                <Select placeholder="请选择损伤类型" style={{ width: 200 }} defaultValue={this.state.damageType.damagetype_name} onChange={this.updateDamageTypeByselect}>
-                    {this.state.damageTypeList.map((item,index)=>{
-                        return <Option value={item.damagetype_id}>{item.damagetype_name}</Option>
-                    })
-                    }
-                </Select>
+                    <Select placeholder="请选择损伤类型" style={{ width: 200 }} defaultValue={this.state.damageType.damagetype_name} onChange={this.updateDamageTypeByselect}>
+                        {this.state.damageTypeList.map((item,index)=>{
+                            return <Option value={item.damagetype_id}>{item.damagetype_name}</Option>
+                        })
+                        }
+                    </Select>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                {/*<Button onClick={()=>this.deleteRect(clickRectClor)}>删除矩形框</Button>*/}
-                {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
-                <Button onClick={this.changeFdDispaly}>关闭/开启放大镜</Button>
+                    {/*<Button onClick={()=>this.deleteRect(clickRectClor)}>删除矩形框</Button>*/}
+                    {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
+                    <Button onClick={this.changeFdDispaly}>关闭/开启放大镜</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button onClick={this.changeRectDisplay}>关闭/开启人工绘制框</Button>
+                    <Button onClick={this.changeRectDisplay}>关闭/开启人工绘制框</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button onClick={this.changeAIRectDisplay}>关闭/开启AI检测框</Button>
+                    <Button onClick={this.changeAIRectDisplay}>关闭/开启AI检测框</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
 
-                {/*<Button onClick={this.changeDisplay}>关闭/开启置信度</Button>*/}
-                {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
-                {/*<Button onClick={this.changeClsDisplay}>关闭/开启分类置信度</Button>*/}
-                {/*    &nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>*/}
+                    {/*<Button onClick={this.changeDisplay}>关闭/开启置信度</Button>*/}
+                    {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
+                    {/*<Button onClick={this.changeClsDisplay}>关闭/开启分类置信度</Button>*/}
+                    {/*    &nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>*/}
                     <Button onClick={this.changeDamageTypeDisplay}>关闭/开启损伤信息</Button>
                     <br/><br/>
 
@@ -1493,11 +1526,11 @@ class PictureManage extends Component{
 
                     <br/><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                <div style={{textAlign:"center"}}>
-                    <Button onClick={this.getUpPagePicture}>上一张</Button>
+                    <div style={{textAlign:"center"}}>
+                        <Button onClick={this.getUpPagePicture}>上一张</Button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                    <Button onClick={this.getNextPagePicture}>下一张</Button>
-                </div>
+                        <Button onClick={this.getNextPagePicture}>下一张</Button>
+                    </div>
                     <Divider>确认影像图信息</Divider>
                     <Form  layout="vertical"  onSubmit={this.handleSubmit}>
                         <Row gutter={20} >
@@ -1549,7 +1582,7 @@ class PictureManage extends Component{
                                             }
                                         </Select>
 
-                                      )}
+                                    )}
                                 </Form.Item>
                             </Col>
                             <Col span={4}>
@@ -1567,7 +1600,7 @@ class PictureManage extends Component{
                                             }
                                         </Select>
 
-                                        )}
+                                    )}
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -1651,7 +1684,7 @@ class PictureManage extends Component{
 
             </div>
         );
-        }
+    }
 }
 
 
