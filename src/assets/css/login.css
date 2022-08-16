@@ -1,0 +1,27 @@
+.login-div {
+    /* The image used */
+    background-image: url(../images/login.jpg);
+
+    /* Full height */
+    width: 100%;
+    height: 100%;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+}
+.login-div .login-form {
+    max-width: 300px;
+    text-align: center;
+    margin: 15% 10% 0px 0px ;
+    float: right;
+    /*border: black;*/
+}
+.login-div .login-form-forgot {
+    float: right;
+}
+.login-div .login-form-button {
+    width: 100%;
+    font-size: larger;
+}

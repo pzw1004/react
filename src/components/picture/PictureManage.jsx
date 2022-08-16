@@ -79,6 +79,7 @@ class PictureManage extends Component{
             drawConfDisplay:'',
             drawDamageTypeDisplay:"none",
             AIDamageTypeDisplay:"none",
+            AIDamageBeliefDisplay:"none",
             rectDisplay:'',
             AIRectDisplay:'',
             svgG:'',
@@ -197,6 +198,8 @@ class PictureManage extends Component{
         polygonPointsNum = 0;
         polygonPointsString = "";
     }
+
+
 
 
     getPicturePolygon=(picture_id)=>{
@@ -624,6 +627,28 @@ class PictureManage extends Component{
             });
     }
 
+    generateReport=()=>{
+        const w=window.open('about:blank');
+        let display = '';
+        if (this.state.rectDisplay == 'none' && this.state.AIRectDisplay == 'none') {
+            display = 'none';
+        } else if (this.state.rectDisplay == 'none') {
+            display = 'Algorithm';
+        } else if (this.state.AIRectDisplay == 'none') {
+            display = 'member';
+        } else {
+            display = 'all';
+        }
+        w.location.href=`/printReportForSingleImage/${this.props.match.params.picture_id}/${display}`;
+        //以下为备用方法，可直接写在button标签内，但经过实测IE浏览器可能出现无法传值的情况
+        // <Link to="/printReport" target="_blank">测试弹出</Link>
+        // <Link to={`/printReport/${this.props.RequisitionList.state.requisition.requisition_id}`}
+    };
+
+    rotate=()=>{
+      console.log("待做")  
+    };
+
     saveRect=()=>{
         saveLoginInfo('对编号'+this.state.picture.picture_number+'的损伤标记框进行了保存');
         let svgDOM = document.getElementById('svgG');
@@ -1018,7 +1043,8 @@ class PictureManage extends Component{
         }else{
             this.setState({
                 AIRectDisplay: "none",
-                //AIDamageTypeDisplay:"none",
+                AIDamageTypeDisplay:"none",
+                AIDamageBeliefDisplay:"none",
                 //AIConfDisplay:"none"
             })
         }
@@ -1069,6 +1095,21 @@ class PictureManage extends Component{
             this.setState({
                 AIDamageTypeDisplay:"none",
                 drawDamageTypeDisplay:"none",
+            })
+        }
+    };
+
+    changeDamageBeliefDisplay=()=>{
+        if(this.state.AIDamageBeliefDisplay === "none" && this.state.AIRectDisplay === "" ){
+            // console.log(this.state.polygonList);
+            this.setState({
+                AIDamageBeliefDisplay:"",
+                // drawDamageTypeDisplay:"",
+            })
+        }else{
+            this.setState({
+                AIDamageBeliefDisplay:"none",
+                // drawDamageTypeDisplay:"none",
             })
         }
     };
@@ -1178,13 +1219,15 @@ class PictureManage extends Component{
         else if(damageTypeId == 1)
             return "#E4EE5D";
         else if(damageTypeId == 2)
-            return "#00B109";
+            return "#996699";
         else if(damageTypeId == 3)
             return "#00CEA6";
-        else if(damageTypeId == 3)
-            return "#003CB1";
         else if(damageTypeId == 4)
+            return "#003CB1";
+        else if(damageTypeId == 5)
             return "#A300B1";
+        // else if(damageTypeId == 5)
+        //     return "#00B109";
     }
 
     render() {
@@ -1238,6 +1281,7 @@ class PictureManage extends Component{
         {
             let polygon_id = polyg[i].polygon_id;
             let polygon_pt = polyg[i].polygon_pt;
+            let polygon_belief = polyg[i].polygon_belief;
           //  let polygon_picture_id = polyg[i].polygon_picture_id;
             let polygon_author = polyg[i].polygon_author;
             let polygon_damage_type = polyg[i].polygon_damage_type;
@@ -1256,26 +1300,8 @@ class PictureManage extends Component{
                     }
                 }
             }
-            polygList.push({id:polygon_id,points:polygon_pt,author:polygon_author,damage_type:polygon_damage_type,damage_name:polygon_damage_name,textx:topx,texty:topy})
+            polygList.push({id:polygon_id,points:polygon_pt,author:polygon_author,damage_type:polygon_damage_type,damage_name:polygon_damage_name,textx:topx,texty:topy,belief:polygon_belief})
         }
-
-        let colorForDamageTypeList = [
-            {
-                id: 1,
-                name: "我和我的祖国"
-            },
-            {
-                id: 2,
-                name: "中国机长"
-            },
-            {
-                id: 3,
-                name: "攀登者"
-            }
-        ];
-        let colorForAuthorList = [];
-
-        colorForDamageTypeList = {books:['巴黎圣母院','悲惨世界','爱的教育','简·爱','钢铁是怎样炼成的','安徒生童话']}
 
         return (
             <div >
@@ -1322,12 +1348,12 @@ class PictureManage extends Component{
                         // console.log(color);
                         if(item.author!=='member')
                         {
-                            return <polygon author={item.author} style={{display:this.state.AIRectDisplay}} key={index} id={item.id} onMouseDownCapture={()=>this.selectPolygon(item.id)} textx={item.textx} texty={item.texty} damage={item.damage_type} points={item.points}  fill="#0099CC" stroke={this.getDamageTypeColor(item.damage_type)}/>
+                            return <polygon author={item.author} style={{display:this.state.AIRectDisplay}} key={index} id={item.id} onMouseDownCapture={()=>this.selectPolygon(item.id)} textx={item.textx} texty={item.texty} damage={item.damage_type} points={item.points}  fill={this.getDamageTypeColor(item.damage_type)} stroke="#0099CC"/>
                         
                         }
                         else
                         {
-                            return <polygon author={item.author} style={{display:this.state.rectDisplay}} key={index} id={item.id} onMouseDownCapture={()=>this.selectPolygon(item.id)} textx={item.textx} texty={item.texty} damage={item.damage_type} points={item.points}  fill="red" stroke={this.getDamageTypeColor(item.damage_type)}/>
+                            return <polygon author={item.author} style={{display:this.state.rectDisplay}} key={index} id={item.id} onMouseDownCapture={()=>this.selectPolygon(item.id)} textx={item.textx} texty={item.texty} damage={item.damage_type} points={item.points}  fill={this.getDamageTypeColor(item.damage_type)} stroke="red"/>
                         
                         }
                     })
@@ -1341,12 +1367,17 @@ class PictureManage extends Component{
 
                     {polygList.map((item,index)=>{
                         if(item.author!=='member') {
-                            return <text style={{display:this.state.AIDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx} y={item.texty - 3} >{item.damage_name}</text>
+                            return <text style={{display:this.state.AIDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx - 35} y={item.texty - 3} >{item.damage_name}</text>
                         
                         }else{
-                            return <text style={{display:this.state.drawDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx} y={item.texty - 3} >{item.damage_name}</text>
+                            return <text style={{display:this.state.drawDamageTypeDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx - 35} y={item.texty - 3} >{item.damage_name}</text>
                         
                         }
+                    })
+                    };
+
+                    {polygList.map((item,index)=>{
+                        return <text style={{display:this.state.AIDamageBeliefDisplay}}  id={'text'+item.id} key={'text'+index}  damage={item.damage_type} x={item.textx + 10} y={item.texty - 3} >{item.belief}</text>
                     })
                     };
 
@@ -1388,28 +1419,26 @@ class PictureManage extends Component{
                 <div className="Legends">
                     <table>
                         <tr>
-                            <td >
+                            {
+                                this.state.damageTypeList.map((item, index) => {
+                                    return <td >
+                                        <div className="LegendsDiv">
+                                            <span className="LegendsDivSymbol" style={{color:this.getDamageTypeColor(item.damagetype_id)}}>■</span>
+                                            <span className="LegendsDivText">&nbsp;{item.damagetype_name}</span>
+                                        </div>
+                                    </td>
+                                })
+                            }
+                            <td>
                                 <div className="LegendsDiv">
-                                    <span className="LegendsDivSymbol" style={{color: 'red'}}>■</span>
-                                    <span className="LegendsDivText">&nbsp;123</span>
+                                    <span className="LegendsDivBoundarySymbol" style={{color: '#0099CC'}}>□</span>
+                                    <span className="LegendsDivText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AI标注</span>
                                 </div>
                             </td>
                             <td>
                                 <div className="LegendsDiv">
-                                    <span className="LegendsDivSymbol">■</span>
-                                    <span>456</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div className="LegendsDiv">
-                                    <span className="LegendsDivSymbol">■</span>
-                                    <span>789</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div className="LegendsDiv">
-                                    <span className="LegendsDivSymbol">□</span>
-                                    <span>789</span>
+                                    <span className="LegendsDivBoundarySymbol" style={{color: 'red'}}>□</span>
+                                    <span className="LegendsDivText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;人工标注</span>
                                 </div>
                             </td>
                         </tr>
@@ -1440,6 +1469,11 @@ class PictureManage extends Component{
                     &nbsp;&nbsp;&nbsp;&nbsp;
                 {/*<Button onClick={()=>this.deleteRect(clickRectClor)}>删除矩形框</Button>*/}
                 {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
+                
+                    <Button   onClick={()=>this.rotate()}>显示焊缝</Button>
+                <br></br>
+                <br></br>
+                
                 <Button onClick={this.changeFdDispaly}>关闭/开启放大镜</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button onClick={this.changeRectDisplay}>关闭/开启人工绘制框</Button>
@@ -1451,17 +1485,27 @@ class PictureManage extends Component{
                 {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
                 {/*<Button onClick={this.changeClsDisplay}>关闭/开启分类置信度</Button>*/}
                 {/*    &nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>*/}
-                <Button onClick={this.changeDamageTypeDisplay}>关闭/开启损伤信息</Button>
-                    <br/><br/>
-
+                    <Button onClick={this.changeDamageTypeDisplay}>关闭/开启损伤信息</Button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
                     <Button onClick={this.polygonModel}>(启动/关闭) 多边形模式</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button onClick={this.rePolygon}>重新画</Button>
+                    <Button onClick={this.changeDamageBeliefDisplay}>关闭/开启可信度信息</Button>
+                    <br/><br/>
+
+                    
+                    
+                    <Button onClick={this.rePolygon}>重新画</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <Button onClick={this.savetmpPolygon}>保存多边形</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <Button onClick={()=>this.deletePolygon()}>删除多边形</Button>
-
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                    <Button   onClick={()=>this.rotate()}>上下翻转图片</Button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <Button  onClick={()=>this.rotate()}>左右翻转图片</Button>
+                    
                     <br/><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                 <div style={{textAlign:"center"}}>

@@ -19,6 +19,10 @@
   color: white;
 }
 
+body{
+  background-color: rgba(239,241,244,1);
+}
+
 .App-link {
   color: #61dafb;
 }

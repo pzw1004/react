@@ -1,0 +1,62 @@
+body{
+
+}
+.picManage {
+    /*float:left;*/
+    /*position:relative;*/
+    /*left:20%;*/
+    /*clear:both;*/
+}
+
+
+.picManage .svgG{
+
+    position: absolute;
+    z-index: 2;
+}
+
+.picManage .tifImg{
+
+    position: absolute;
+    z-index: 1;
+}
+
+.Utils {
+
+    position: absolute;
+    top: 460px;
+    /*top: 450px;*/
+    /*bottom: 500px;*/
+}
+
+.Legends {
+
+    position: absolute;
+    top: 430px;
+    /*bottom: 500px;*/
+}
+
+.LegendsDiv {
+    width: 120px;
+}
+
+.LegendsDivSymbol {
+    vertical-align: middle;
+    font-size: 20px;
+    line-height: 30px;
+    height: 30px;
+}
+
+.LegendsDivBoundarySymbol {
+    vertical-align: middle;
+    font-size: 28px;
+    line-height: 30px;
+    height: 30px;
+    position: absolute;
+    top: -2px;
+}
+
+
+.LegendsDivText {
+    vertical-align:middle;
+}

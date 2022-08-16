@@ -1,0 +1,50 @@
+.report {
+    text-align: center;
+    margin: 1cm auto;
+}
+
+.report .report-title{
+    /*设置靠左居中*/
+    text-align:  left;
+    /*设置段落文字首行缩进*/
+    text-indent: 2em;
+    /*设置文字间距*/
+    letter-spacing: 2px;
+    /*设置所有 4 个外边距都是0*/
+    margin: 0cm auto;
+    /*设置table表占当前屏幕的百分比*/
+    width: 90%;
+}
+
+.report .report-table{
+    /*设置靠左居中*/
+    text-align:  left;
+    /*设置段落文字首行缩进*/
+    text-indent: 0.5em;
+    /*设置文字间距*/
+    letter-spacing: 2px;
+    /*设置所有 4 个外边距都是0*/
+    margin: 0cm auto;
+    /*设置table表占当前屏幕的百分比*/
+    width: 95%;
+    /*line-height 属性设置行间的距离（行高）*/
+    line-height: 30px;
+
+    border: 1px;
+}
+
+.report .report-table td{
+/*    !*设置靠左居中*!*/
+/*    text-align:  left;*/
+/*    !*设置段落文字首行缩进*!*/
+/*    text-indent: 0.5em;*/
+/*    !*设置文字间距*!*/
+/*    letter-spacing: 2px;*/
+/*    !*设置所有 4 个外边距都是0*!*/
+/*    margin: 0cm auto;*/
+/*    !*设置table表占当前屏幕的百分比*!*/
+/*    width: 95%;*/
+/*    !*line-height 属性设置行间的距离（行高）*!*/
+/*    line-height: 30px;*/
+
+}

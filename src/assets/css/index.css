@@ -1,4 +1,4 @@
-@import '../../node_modules/antd/dist/antd.css';
+@import '../../../node_modules/antd/dist/antd.css';
 
 body {
   margin: 0;
@@ -10,7 +10,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/*#root{*/
+/*  height: 100%;*/
+/*body{*/
+/*  background-color: rgba(239,241,244,1);*/
+/*}*/
+/*}*/
+
+body, html {
+  height: 100%;
+  margin: 0;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.indexCustom .trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color .3s;
+}
+
+.indexCustom .trigger:hover {
+  color: #1890ff;
+}
+
+.ant-upload-select-picture-card i {
+  color: #999;
+  font-size: 32px;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
 }
