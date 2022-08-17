@@ -22,6 +22,7 @@ import LogList from '../log/LogList'
 import NoMatch from './Nomatch'
 import Index from '../../components/index/Index'
 import Setting from '../setting/Setting'
+import Signature from '../personalpage/Signature'
 import '../../assets/css/index.css'
 
 const {Content, } = Layout;
@@ -72,6 +73,7 @@ class App extends Component {
                             <Route exact path="/app/requisition" component={RequisitionList}/>
                             <Route exact path="/app/addRequisition" component={AddRequisition}/>
                             <Route exact path="/app/addPictureList" component={AddPictureList}/>
+                            <Route exact path="/app/signature" component={Signature}/>
                             <Route exact path="/app/Statistics" component={Statistics}/>
                             <Route exact path="/app/log" component={LogList}/>
                             <Route exact path="/app/memberUpdate/:member_id" component={Member_update} />

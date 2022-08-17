@@ -601,10 +601,11 @@ class RequisitionList extends Component{
 
         return (
             <div>
-                
-            <Button type="primary"  >
+                <div style={{textAlign: "center"}}>
+            <Button size="large">
             超级无敌厉害的大船头
-            </Button>
+            </Button></div>
+            <br></br>
             
 
                 

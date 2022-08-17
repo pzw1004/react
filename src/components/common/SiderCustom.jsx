@@ -67,7 +67,7 @@ class SiderCustom extends Component {
                     <SubMenu key="sub1" title={<span><Icon type="profile" theme="twoTone" /><span>申请单处理</span></span>}>
                         <Menu.Item key="0"><Link to="/app">首页</Link></Menu.Item>
                         <SubMenu key="1" title={<Link to="/app/requisition" ><span>查看申请信息</span></Link>}>
-                          <Menu.Item key='11' style={{height: "auto" , "white-space": "break-spaces","line-height":"18px"}} ><Link to="/app/requisition" ><span>超级无敌厉害的大船头啊啊啊啊啊啊啊红红火火恍恍惚惚哈哈哈哈</span></Link></Menu.Item>
+                          <Menu.Item key='11' style={{height: "auto" , "white-space": "break-spaces","line-height":"18px"}} ><Link to="/app/requisition" ><span>大船头啊啊啊啊啊啊啊红红火火恍恍惚惚哈哈哈哈</span></Link></Menu.Item>
                           <Menu.Item key='12'><span>船身</span></Menu.Item>
                           <Menu.Item key='13'><span>船尾</span></Menu.Item>
                         </SubMenu>
@@ -89,6 +89,7 @@ class SiderCustom extends Component {
 
                     <SubMenu key="sub2" title={<span><Icon type="idcard" theme="twoTone" /><span>个人信息管理</span></span>}>
                         <Menu.Item key="5" ><Link to="/app/personalPage"><span>个人信息</span></Link></Menu.Item>
+                        <Menu.Item key="6" ><Link to="/app/signature"><span>电子签名</span></Link></Menu.Item>
                     </SubMenu>
 
                     <SubMenu key="sub3" title={<span><Icon type="notification" theme="twoTone"/><span>系统</span></span>}>

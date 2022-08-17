@@ -127,7 +127,11 @@ class Setting extends Component{
                     <Badge status={this.state.retrainStatus} />
                     <span style={{fontSize:15,color: "black"}} >
                       {this.state.retrainState}
-                    </span><br/><br/>
+                    </span>
+                    <br></br>
+                    <br></br>
+                    <Button style={{width:80}} onClick={this.retrain}>自主学习</Button>
+                    <br/><br/>
                     <Button style={{width:80}} onClick={this.retrain}>重新训练</Button>
                 </div><br/><br/><br/><br/><br/><br/>
                 <Divider>其他</Divider>
