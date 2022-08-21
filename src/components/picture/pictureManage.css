@@ -1,3 +1,30 @@
+.rect_info {
+    opacity:1;
+}
+.defectInfo{
+    float: left;
+    margin-left: 1020px;
+}
+.defectInfo Table{
+    height: 100px;
+    width: 270px;
+}
+.blue {
+    background-color: #00a0e9;
+}
+.defectchart{
+    position: absolute;
+    float: left;
+    margin-top: 280px;
+    margin-left: 1000px;
+}
+.barchart{
+    width: 300px;
+}
+polygon:hover {
+    opacity: 0.6;
+    stroke-Width:5px;
+}
 body{
 
 }
@@ -7,7 +34,6 @@ body{
     /*left:20%;*/
     /*clear:both;*/
 }
-
 
 .picManage .svgG{
 
