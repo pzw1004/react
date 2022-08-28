@@ -223,6 +223,22 @@ class PictureManage extends Component {
             });
     }
 
+    getFile=()=>{
+
+        let api = global.AppConfig.serverIP + '/getRequisitionFile';
+        axios.post(api)
+            .then((response)=> {
+                console.log(response);
+                console.log(JSON.stringify(response.data));
+                this.setState({
+                    requisitionFile: response.data,
+                })
+            })
+            .catch( (error)=> {
+                console.log(error);
+            });
+    };
+
     getPictureRect = (picture_id) => {
 
         let api = global.AppConfig.serverIP + '/getPictureRect?picture_id=' + picture_id;
