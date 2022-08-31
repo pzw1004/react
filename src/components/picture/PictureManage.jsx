@@ -1364,8 +1364,7 @@ showDefectInfo = (item) => (e) => {
 
 }
 showDefectInfoBytable = (item) => {
-        console.log("！！！！！！！！！！" + item.id)
-        if (item) {
+        if(item) {
             console.log("缺陷区域监听到了进入事件！！！！！！！！！！")
             var p = document.getElementById(item.id)
             var polygon_text = document.getElementById('text' + item.id)
@@ -1377,8 +1376,6 @@ showDefectInfoBytable = (item) => {
             console.log("最近x" + n_x_y[0])
             console.log("最近y" + n_x_y[1])
         }
-
-
     }
 closeDefectInfoforTable = (item) =>  {
     if (item.id !== this.state.pid ) {
@@ -1473,16 +1470,19 @@ render_Rect_Polygon_List = () => {
                 }
             }
         }
-        polygList.push({
-            id: polygon_id,
-            points: polygon_pt,
-            author: polygon_author,
-            damage_type: polygon_damage_type,
-            damage_name: polygon_damage_name,
-            textx: topx,
-            texty: topy,
-            belief: polygon_belief
-        })
+        if(polygon_damage_type!=6){
+            polygList.push({
+                id: polygon_id,
+                points: polygon_pt,
+                author: polygon_author,
+                damage_type: polygon_damage_type,
+                damage_name: polygon_damage_name,
+                textx: topx,
+                texty: topy,
+                belief: polygon_belief
+            })
+        }
+
     }
     this.setState({
             polygonList: ''
