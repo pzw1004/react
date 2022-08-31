@@ -1904,6 +1904,11 @@ render()
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <br/>
                 <br/>
+                图片调整：
+                <Button onClick={this.changeDamageTypeDisplay}>水平翻转</Button>
+                <Button onClick={this.changeDamageTypeDisplay}>垂直翻转</Button>
+                <br/>
+                <br/>
                 报告功能：
                 <Button onClick={() => this.generateReport()}>生成报告</Button>
                 <br/>
