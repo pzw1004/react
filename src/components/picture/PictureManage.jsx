@@ -84,6 +84,7 @@ class PictureManage extends Component {
             fdDispaly: "none",
             propsPictureId: '',
             requisition: '',
+            hanfengdisplay: "none",
             clsconfdispaly: "",
             AIConfDisplay: "",
             drawConfDisplay: '',
@@ -1129,19 +1130,22 @@ changeDamageTypeDisplay = () => {
     }
 };
 
-changeDamageBeliefDisplay = () => {
-    if (this.state.AIDamageBeliefDisplay === "none" && this.state.AIRectDisplay === "") {
-        // console.log(this.state.polygonList);
+changehanfengDisplay = () => {
+    if (this.state.hanfengdisplay == "none") {
+        console.log(this.state.hanfengdisplay);
         this.setState({
-            AIDamageBeliefDisplay: "",
+            hanfengdisplay: "",
             // drawDamageTypeDisplay:"",
         })
     } else {
+        console.log("ssssssssssssssssssssssssaa");
         this.setState({
-            AIDamageBeliefDisplay: "none",
+            hanfengdisplay: "none",
             // drawDamageTypeDisplay:"none",
         })
     }
+
+
 };
 
 changeDisplay = () => {
@@ -1256,6 +1260,8 @@ getDamageTypeColor = (damageTypeId) => {
         return "#003CB1";
     else if (damageTypeId == 5)
         return "#A300B1";
+    else if (damageTypeId == 6)
+        return "#b1000f";
     // else if(damageTypeId == 5)
     //     return "#00B109";
 }
@@ -1364,7 +1370,7 @@ showDefectInfoBytable = (item) => {
             var p = document.getElementById(item.id)
             var polygon_text = document.getElementById('text' + item.id)
             var rect_info = document.getElementById('rect_info' + item.id)
-            p.style.cssText = " opacity: 0.6;stroke-Width:5px;"
+            p.style.cssText = "opacity: 0.6;stroke-Width:5px;"
             rect_info.style.display = ''
             polygon_text.style.display = ''
             var n_x_y = this.getNearestToCenterOfSVG(item.points)
@@ -1390,7 +1396,6 @@ closeDefectInfoById=(id)=>{
     var p = document.getElementById(id)
     var polygon_text = document.getElementById('text' +id)
     var rect_info = document.getElementById('rect_info' +id)
-    p.style.cssText = ""
     rect_info.style.display = 'none'
     polygon_text.style.display = 'none'
 }
@@ -1519,6 +1524,29 @@ tableDown=(record,index)=>{
 
 
 }
+sendToApitest=()=>{
+    loadinghide = message.info('该图片标注确认成功!', 2);
+    // let api = global.AppConfig.serverIP + '/sendToApitest/' + this.state.picture.picture_id;
+    // axios.post(api)
+    //     .then((response) => {
+    //         if (this.state.propsPictureId == response.data) {
+    //             message.info("已经到第一张了");
+    //         } else {
+    //             //window.location.href= "/app/pictureManage/"+response.data;
+    //             // this.props.tiaozhuan();
+    //             const path = `/app`;
+    //             history.push(path);
+    //             const path2 = `/app/pictureManage/${response.data}`;
+    //             history.push(path2)
+    //
+    //         }
+    //         //message.success("完成影像图信息更新！")
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     });
+
+}
 getTypeNumber=()=>{
     var count = new Array(5)
     for(let i=0;i<count.length;i++)
@@ -1635,28 +1663,42 @@ render()
                         polygList.map((item, index) => {
                             // let color = this.getDamageTypeColor(item.damage_type);
                             // console.log(color);
-                            if (item.author !== 'member') {
-                                return <polygon onMouseLeave={this.closeDefectInfo(item)}
-                                                onMouseEnter={this.showDefectInfo(item)} author={item.author}
-                                                style={{display: this.state.AIRectDisplay}} key={index} id={item.id}
-                                                onMouseDownCapture={() => this.selectPolygon(item.id)}
-                                                textx={item.textx} texty={item.texty} damage={item.damage_type}
-                                                points={item.points} fill={this.getDamageTypeColor(item.damage_type)}
-                                                stroke="#0099CC">
-                                </polygon>
+                            if(item.damage_type !== 6){
+                                if (item.author !== 'member') {
+                                    return <polygon onMouseLeave={this.closeDefectInfo(item)}
+                                                    onMouseEnter={this.showDefectInfo(item)} author={item.author}
+                                                    style={{display: this.state.AIRectDisplay}} key={index} id={item.id}
+                                                    onMouseDownCapture={() => this.selectPolygon(item.id)}
+                                                    textx={item.textx} texty={item.texty} damage={item.damage_type}
+                                                    points={item.points} fill={this.getDamageTypeColor(item.damage_type)}
+                                                    stroke="#0099CC" opacity={0.8}>
+                                    </polygon>
 
-                            } else {
-                                return <polygon onMouseLeave={this.closeDefectInfo(item)}
-                                                onMouseEnter={this.showDefectInfo(item)} author={item.author}
-                                                style={{display: this.state.rectDisplay}} key={index} id={item.id}
-                                                onMouseDownCapture={() => this.selectPolygon(item.id)}
-                                                textx={item.textx} texty={item.texty} damage={item.damage_type}
-                                                points={item.points} fill={this.getDamageTypeColor(item.damage_type)}
-                                                stroke="red">
-                                </polygon>
+                                } else {
+                                    return <polygon onMouseLeave={this.closeDefectInfo(item)}
+                                                    onMouseEnter={this.showDefectInfo(item)} author={item.author}
+                                                    style={{display: this.state.rectDisplay}} key={index} id={item.id}
+                                                    onMouseDownCapture={() => this.selectPolygon(item.id)}
+                                                    textx={item.textx} texty={item.texty} damage={item.damage_type}
+                                                    points={item.points} fill={this.getDamageTypeColor(item.damage_type)}
+                                                    stroke="red" opacity={0.8}>
+                                    </polygon>
 
+                                }
                             }
-                        })
+                           else {
+                                return <polygon onMouseLeave={this.closeDefectInfo(item)}
+                                                onMouseEnter={this.showDefectInfo(item)} author={item.author}
+                                                tag = {'hanfeng'}
+                                                style={{display: this.state.hanfengdisplay}} key={index} id={item.id}
+                                                onMouseDownCapture={() => this.selectPolygon(item.id)}
+                                                textx={item.textx} texty={item.texty} damage={item.damage_type}
+                                                points={item.points} fill={this.getDamageTypeColor(item.damage_type)}
+                                                stroke="red" opacity={0.8} >
+                                </polygon>
+                            }
+                        }
+                        )
                     }
 
 
@@ -1818,7 +1860,13 @@ render()
             {/*</div>*/}
             <div className="Utils">
                 <br/>
+                AI &nbsp;检测 &nbsp;：
                 <Button onClick={this.AIprocess}>进行AI检测</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <br/>
+                <br/>
+                标注功能：
+                <Button onClick={this.polygonModel}>(启动/关闭) 多边形模式</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <Select placeholder="请选择损伤类型" style={{width: 200}} defaultValue={this.state.damageType.damagetype_name}
                         onChange={this.updateDamageTypeByselect}>
@@ -1828,6 +1876,15 @@ render()
                     }
                 </Select>
                 &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button onClick={this.rePolygon}>重新画</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button onClick={this.savetmpPolygon}>保存多边形</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button onClick={() => this.deletePolygon()}>删除多边形</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <br/>
+                <br/>
+                信息展示：
                 {/*<Button onClick={()=>this.deleteRect(clickRectClor)}>删除矩形框</Button>*/}
                 {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
                 <Button onClick={this.changeFdDispaly}>关闭/开启放大镜</Button>
@@ -1842,20 +1899,17 @@ render()
                 {/*<Button onClick={this.changeClsDisplay}>关闭/开启分类置信度</Button>*/}
                 {/*    &nbsp;&nbsp;&nbsp;&nbsp;<br/><br/>*/}
                 <Button onClick={this.changeDamageTypeDisplay}>关闭/开启损伤信息</Button>
-                <br/><br/>
-
-                <Button onClick={this.polygonModel}>(启动/关闭) 多边形模式</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button onClick={this.rePolygon}>重新画</Button>
+                <Button onClick={this.changehanfengDisplay}>关闭/开启焊缝显示</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button onClick={this.savetmpPolygon}>保存多边形</Button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button onClick={() => this.deletePolygon()}>删除多边形</Button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button onClick={this.changeDamageBeliefDisplay}>关闭/开启可信度信息</Button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                <br/>
+                <br/>
+                报告功能：
                 <Button onClick={() => this.generateReport()}>生成报告</Button>
-
+                <br/>
+                <br/>
+                确认标注：
+                <Button type="danger" onClick={() => this.sendToApitest()}>确认该图标注无误</Button>
                 <br/><br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <div style={{textAlign: "center"}}>
