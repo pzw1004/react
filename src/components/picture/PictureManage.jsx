@@ -1909,7 +1909,7 @@ render()
                 <br/>
                 <br/>
                 确认标注：
-                <Button type="danger" onClick={() => this.sendToApitest()}>确认该图标注无误</Button>
+                <Button type="primary" onClick={() => this.sendToApitest()}>确认该图标注无误</Button>
                 <br/><br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <div style={{textAlign: "center"}}>
@@ -2057,7 +2057,7 @@ render()
                     <Row gutter={16}>
                         <Col span={4}>
                             <Form.Item>
-                                <Button type="danger" htmlType="submit">更新影像图信息</Button>
+                                <Button type="primary" htmlType="submit">更新影像图信息</Button>
                             </Form.Item>
                         </Col>
                     </Row>
