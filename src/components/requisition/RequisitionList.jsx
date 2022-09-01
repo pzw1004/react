@@ -78,7 +78,21 @@ class RequisitionList extends Component{
                 requisition_entrytime: '',
                 requisition_last_thickness:'',
                 requisition_last_teststandard:'',
-
+                requisition_product_id:'',
+                requisition_complete_date:'',
+                requisition_testing_rate:'',
+                requisition_bevel_form:'',
+                requisition_transillumination:'',
+                requisition_testing_date:'',
+                requisition_testing_instrument:'',
+                requisition_source_strength:'',
+                requisition_focus_size:'',
+                requisition_material:'',
+                requisition_sensitization_method:'',
+                requisition_film_processing_method:'',
+                requisition_military_inspection_id:'',
+                requisition_real_id:'',
+                requisition_source_age:''
             },
             picture:[],
             visible: false,
@@ -158,12 +172,6 @@ class RequisitionList extends Component{
     //         ifuploading:val
     //     })
     // }
-
-
-
-
-
-
 
     showDrawer = (requisition_id) => {
         this.getRequisition(requisition_id);
@@ -570,7 +578,7 @@ class RequisitionList extends Component{
 
 
     columns = [                     //最外层列表
-        { title: '来样编号', dataIndex: 'requisition_number',  ...this.getColumnSearchProps('requisition_number'),width:110,},
+        { title: '军检号', dataIndex: 'requisition_military_inspection_id',  ...this.getColumnSearchProps('requisition_military_inspection_id'),width:110,},
         { title: '工程编号', dataIndex: 'requisition_name',  ...this.getColumnSearchProps('requisition_name'),width:110,},
         { title: '结构名称', dataIndex: 'requisition_structurename', ...this.getColumnSearchProps('requisition_structurename'), width:180,},
         { title: '施工单位', dataIndex: 'requisition_constructunit', ...this.getColumnSearchProps('requisition_constructunit'),width:110,},

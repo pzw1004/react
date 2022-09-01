@@ -316,14 +316,7 @@ class AddRequisition extends Component{
                                 })(<Input placeholder="军检号" />)}
                             </Form.Item>
                         </Col>
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="结构名称">*/}
-                        {/*        {getFieldDecorator('requisition_structurename', {*/}
-                        {/*            rules: [{ required: true, message: '请输入结构名称' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_structurename*/}
-                        {/*        })(<Input placeholder="结构名称" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
+
 
                         <Col span={4}>
                             <Form.Item label="完工日期">
@@ -359,24 +352,10 @@ class AddRequisition extends Component{
                                     />)}
                             </Form.Item>
                         </Col>
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="焊接方法">*/}
-                        {/*        {getFieldDecorator('requisition_weldingmethod', {*/}
-                        {/*            rules: [{ required: true, message: '请输入焊接方法' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_weldingmethod*/}
-                        {/*        })(<Input placeholder="焊接方法" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
+
                     </Row>
                     <Row gutter={20}>
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="存放位置">*/}
-                        {/*        {getFieldDecorator('requisition_saveplace', {*/}
-                        {/*            rules: [{ required: true, message: '请输入存放位置' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_saveplace*/}
-                        {/*        })(<Input placeholder="存放位置" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
+
                         <Col span={4}>
                             <Form.Item label="坡口形式">
                                 {getFieldDecorator('requisition_bevel_form', {
@@ -461,14 +440,7 @@ class AddRequisition extends Component{
                                 })(<Input placeholder="检测设备" />)}
                             </Form.Item>
                         </Col>
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="黑度值">*/}
-                        {/*        {getFieldDecorator('requisition_density', {*/}
-                        {/*            rules: [{ required: true, message: '请输入黑度值' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_density*/}
-                        {/*        })(<Input placeholder="黑度值" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
+
                     </Row>
                     <Row gutter={20}>
                         <Col span={4}>
@@ -536,27 +508,7 @@ class AddRequisition extends Component{
 
 
 
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="增感屏">*/}
-                        {/*        {getFieldDecorator('requisition_intensifyscreen', {*/}
-                        {/*            rules: [{ required: true, message: '请输入增感屏' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_intensifyscreen*/}
-                        {/*        })(<Input placeholder="增感屏" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
 
-
-
-
-
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="敏感度">*/}
-                        {/*        {getFieldDecorator('requisition_sensitivity', {*/}
-                        {/*            rules: [{ required: true, message: '请输入敏感度' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_sensitivity*/}
-                        {/*        })(<Input placeholder="敏感度" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
                     </Row>
                     <Row gutter={20}>
                         <Col span={4}>
@@ -638,22 +590,7 @@ class AddRequisition extends Component{
                                 })(<Input placeholder="曝光时间" />)}
                             </Form.Item>
                         </Col>
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="显影时间">*/}
-                        {/*        {getFieldDecorator('requisition_developmenttime', {*/}
-                        {/*            rules: [{ required: true, message: '请输入显影时间' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_developmenttime*/}
-                        {/*        })(<Input placeholder="显影时间" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="显影温度">*/}
-                        {/*        {getFieldDecorator('requisition_developertemperature', {*/}
-                        {/*            rules: [{ required: true, message: '请输入显影温度' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_developertemperature*/}
-                        {/*        })(<Input placeholder="显影温度" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
+
                         {/*<Col span={4}>*/}
                         {/*    <Form.Item label="钢号">*/}
                         {/*        {getFieldDecorator('requisition_steelnumber', {*/}
@@ -662,22 +599,7 @@ class AddRequisition extends Component{
                         {/*        })(<Input placeholder="钢号" />)}*/}
                         {/*    </Form.Item>*/}
                         {/*</Col>*/}
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="接头形式">*/}
-                        {/*        {getFieldDecorator('requisition_jointform', {*/}
-                        {/*            rules: [{ required: true, message: '请输入接头形式' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_jointform*/}
-                        {/*        })(<Input placeholder="接头形式" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="仪器型号">*/}
-                        {/*        {getFieldDecorator('requisition_instrumenttype', {*/}
-                        {/*            rules: [{ required: true, message: '请输入仪器型号' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_instrumenttype*/}
-                        {/*        })(<Input placeholder="仪器型号" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
+
                     </Row>
                     <Row gutter={20}>
                         <Col span={4}>
@@ -689,29 +611,46 @@ class AddRequisition extends Component{
                             </Form.Item>
                         </Col>
                         <Col span={4}>
-                            <Form.Item label="施工部门">
+                            <Form.Item label="施工单位">
                                 {getFieldDecorator('requisition_constructunit', {
-                                    rules: [{ required: true, message: '请输入施工部门' }],
+                                    rules: [{ required: true, message: '请输入施工单位' }],
                                     // initialValue: this.props.RequisitionList.state.requisition.requisition_constructunit
-                                })(<Input placeholder="施工部门" />)}
+                                })(<Input placeholder="施工单位" />)}
                             </Form.Item>
                         </Col>
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="影像图数量">*/}
-                        {/*        {getFieldDecorator('requisition_totalnumber', {*/}
-                        {/*            rules: [{ required: true, message: '请输入影像图数量' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_totalnumber*/}
-                        {/*        })(<Input placeholder="影像图数量" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
-                        {/*<Col span={4}>*/}
-                        {/*    <Form.Item label="返工次数">*/}
-                        {/*        {getFieldDecorator('requisition_reworktimes', {*/}
-                        {/*            rules: [{ required: true, message: '请输入返工次数' }],*/}
-                        {/*            // initialValue: this.props.RequisitionList.state.requisition.requisition_reworktimes*/}
-                        {/*        })(<Input placeholder="返工次数" />)}*/}
-                        {/*    </Form.Item>*/}
-                        {/*</Col>*/}
+                        <Col span={4}>
+                            <Form.Item label="钢号">
+                                {getFieldDecorator('requisition_steelnumber', {
+                                    rules: [{ required: true, message: '请输入钢号' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_steelnumber
+                                })(<Input placeholder="钢号" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="焊接方法">
+                                {getFieldDecorator('requisition_weldingmethod', {
+                                    rules: [{ required: true, message: '请输入焊接方法' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_weldingmethod
+                                })(<Input placeholder="焊接方法" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="厚度">
+                                {getFieldDecorator('requisition_density', {
+                                    rules: [{ required: true, message: '请输入厚度' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_totalnumber
+                                })(<Input placeholder="厚度" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="焊缝数量">
+                                {getFieldDecorator('requisition_totalnumber', {
+                                    rules: [{ required: true, message: '请输入焊缝数量' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_density
+                                })(<Input placeholder="焊缝数量" />)}
+                            </Form.Item>
+                        </Col>
+
                         {/*<Col span={4}>*/}
                         {/*    <Form.Item label="检测比例">*/}
                         {/*        {getFieldDecorator('requisition_testing_rate', {*/}
@@ -786,6 +725,84 @@ class AddRequisition extends Component{
                         {/*</Col>*/}
 
                     </Row>
+                    <Row gutter={20}>
+                        <Col span={4}>
+                            <Form.Item label="结构名称">
+                                {getFieldDecorator('requisition_structurename', {
+                                    rules: [{ required: true, message: '请输入结构名称' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_structurename
+                                })(<Input placeholder="结构名称" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="存放位置">
+                                {getFieldDecorator('requisition_saveplace', {
+                                    rules: [{ required: true, message: '请输入存放位置' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_saveplace
+                                })(<Input placeholder="存放位置" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="增感屏">
+                                {getFieldDecorator('requisition_intensifyscreen', {
+                                    rules: [{ required: true, message: '请输入增感屏' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_intensifyscreen
+                                })(<Input placeholder="增感屏" />)}
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={4}>
+                            <Form.Item label="敏感度">
+                                {getFieldDecorator('requisition_sensitivity', {
+                                    rules: [{ required: true, message: '请输入敏感度' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_sensitivity
+                                })(<Input placeholder="敏感度" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="显影时间">
+                                {getFieldDecorator('requisition_developmenttime', {
+                                    rules: [{ required: true, message: '请输入显影时间' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_developmenttime
+                                })(<Input placeholder="显影时间" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="显影温度">
+                                {getFieldDecorator('requisition_developertemperature', {
+                                    rules: [{ required: true, message: '请输入显影温度' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_developertemperature
+                                })(<Input placeholder="显影温度" />)}
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={20}>
+                        <Col span={4}>
+                            <Form.Item label="返工次数">
+                                {getFieldDecorator('requisition_reworktimes', {
+                                    rules: [{ required: true, message: '请输入返工次数' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_reworktimes
+                                })(<Input placeholder="返工次数" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="接头形式">
+                                {getFieldDecorator('requisition_jointform', {
+                                    rules: [{ required: true, message: '请输入接头形式' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_jointform
+                                })(<Input placeholder="接头形式" />)}
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item label="仪器型号">
+                                {getFieldDecorator('requisition_instrumenttype', {
+                                    rules: [{ required: true, message: '请输入仪器型号' }],
+                                    // initialValue: this.props.RequisitionList.state.requisition.requisition_instrumenttype
+                                })(<Input placeholder="仪器型号" />)}
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
                     <Row gutter={16}>
                         <Col span={16}>
                             <Form.Item label="申请单备注信息">
