@@ -37,6 +37,7 @@ var damage_type = 1;
 //
 var rectList = []
 var polygList = []
+var hanfenglist = []
 //
 var timer;
 var db_picture_thickness;
@@ -590,6 +591,7 @@ class PictureManage extends Component {
                 //这里存在state里没有必要
                 let picture_id = this.props.match.params.picture_id;
                 this.getPicturePolygon(picture_id);
+                this.getPicture(picture_id);
             })
             .catch((error) => {
                 console.log(error);
@@ -1447,6 +1449,7 @@ render_Rect_Polygon_List = () => {
     //     rectList.push({x:x1,y:y1,width:rectangle_width,height:rectangle_height,author:retangle_author,id:retangle_id,damage_type:retangle_damage_type,damage_name:retangle_damage_name,conf:conf,cls_conf:cls_conf});
     // }
     //获取polygon信息
+    hanfenglist = [];
     polygList = [];//前端标签<>用于展示用
     let polyg = this.state.polygonList;//将数据库的数据逐个取出来，push到polygList进行展示
     console.log("assssssssssd" + this.state.polygonList)
@@ -1471,7 +1474,7 @@ render_Rect_Polygon_List = () => {
             }
         }
         if(polygon_damage_type!=6){
-            polygList.push({
+            hanfenglist.push({
                 id: polygon_id,
                 points: polygon_pt,
                 author: polygon_author,
@@ -1482,6 +1485,16 @@ render_Rect_Polygon_List = () => {
                 belief: polygon_belief
             })
         }
+        polygList.push({
+            id: polygon_id,
+            points: polygon_pt,
+            author: polygon_author,
+            damage_type: polygon_damage_type,
+            damage_name: polygon_damage_name,
+            textx: topx,
+            texty: topy,
+            belief: polygon_belief,
+        })
 
     }
     this.setState({
@@ -1547,27 +1560,50 @@ sendToApitest=()=>{
     //     });
 
 }
+horizontaFilpPicture=()=>{
+    let api = global.AppConfig.serverIP + '/horizontaFilpPicture/' + this.state.picture.picture_id;
+    let a = this.state.picture.picture_id
+    axios.post(api)
+        .then((response) => {
+            if ( response.data == "success") {
+                loadinghide = message.info('图片翻转成功!', 2);
+
+            } else {
+
+            }
+
+            //message.success("完成影像图信息更新！")
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
 getTypeNumber=()=>{
-    var count = new Array(5)
+    var count = new Array(6)
     for(let i=0;i<count.length;i++)
         count[i]=0;
     for(let i=0;i<polygList.length;i++)
     {
         switch (parseInt(polygList[i].damage_type)) {
-            case 1:
+            case 0:
                 count[0]++ ;
                 break;
-            case 3:
+            case 1:
                 count[1]++;
                 break;
-            case 4:
+            case 2:
                 count[2]++;
                 break;
-            case 5:
+            case 3:
                 count[3]++;
                 break;
-            case 0:
+            case 4:
                 console.log(count[4])
+                count[4]++;
+                console.log("++++++++++++"+count[4])
+                break;
+            case 5:
+                console.log(count[5])
                 count[4]++;
                 console.log("++++++++++++"+count[4])
                 break;
@@ -1575,6 +1611,9 @@ getTypeNumber=()=>{
     }
     return count
     console.log("counttttttttttt"+count)
+}
+getRandom=()=>{
+    return Math.random()
 }
 render()
 {
@@ -1596,11 +1635,11 @@ render()
     console.log(this.state.picture.picture_dir)
     const {getFieldDecorator} = this.props.form;
 
-    const COLORS = ["#E4EE5D","#00CEA6","#003CB1","#A300B1","#ED9D01"];
+    const COLORS = ["#ED9D01","#E4EE5D","#996699","#00CEA6","#003CB1","#A300B1"];
     const option = {
         xAxis:{
             type: 'category',
-            data: ['未确定','未焊透','未熔合','裂纹','气孔']
+            data: ['气泡','未确定','夹渣','裂纹','未熔合','未焊透']
         },
         yAxis:{
             type: 'value'
@@ -1618,7 +1657,12 @@ render()
         }]
 
     }
+    const a = this.getRandom()
     return (
+
+        // <meta httpEquiv="Pragma" content="no-cache">
+        //     <meta httpEquiv="Cache-Control" content="no-cache">
+        //         <meta httpEquiv="Expires" content="0">
         <div>
             <div className="picManage">
                 {/*<RectangleManage PictureManage={this}/>
@@ -1694,7 +1738,7 @@ render()
                                                 onMouseDownCapture={() => this.selectPolygon(item.id)}
                                                 textx={item.textx} texty={item.texty} damage={item.damage_type}
                                                 points={item.points} fill={this.getDamageTypeColor(item.damage_type)}
-                                                stroke="red" opacity={0.8} >
+                                                stroke="red" opacity={0.3} >
                                 </polygon>
                             }
                         }
@@ -1805,19 +1849,19 @@ render()
                     }
                     })}
                     columns={columns}
-                    dataSource={polygList}
+                    dataSource={hanfenglist}
                     scroll={{y :'200px'}}
 
                     // onChange={this.handleChange}
                     // rowKey="log_id"
                 />
-                <p align="center" style={{fontWeight: "bold"}}>共 {polygList.length} 条记录</p>
+                <p align="center" style={{fontWeight: "bold"}}>共 {hanfenglist.length} 条记录</p>
             </div>
             <div className="defectchart">
                 <EChartsReact option={option} className="barchart"/>
             </div>
             <div className="Legends">
-                <table>
+                <table width="800px">
                     <tr>
                         {
                             this.state.damageTypeList.map((item, index) => {
@@ -1830,21 +1874,24 @@ render()
                                 </td>
                             })
                         }
-                        <td>
-                            <div className="LegendsDiv">
-                                <span className="LegendsDivBoundarySymbol" style={{color: '#0099CC'}}>□</span>
-                                <span className="LegendsDivText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AI标注</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div className="LegendsDiv">
-                                <span className="LegendsDivBoundarySymbol" style={{color: 'red'}}>□</span>
-                                <span className="LegendsDivText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;人工标注</span>
-                            </div>
-                        </td>
                     </tr>
+                    {/*<tr>*/}
+                    {/*    <td>*/}
+                    {/*        <div className="LegendsDiv">*/}
+                    {/*            <span className="LegendsDivBoundarySymbol" style={{color: '#0099CC'}}>□</span>*/}
+                    {/*            <span className="LegendsDivText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AI标注</span>*/}
+                    {/*        </div>*/}
+                    {/*    </td>*/}
+                    {/*    <td>*/}
+                    {/*        <div className="LegendsDiv">*/}
+                    {/*            <span className="LegendsDivBoundarySymbol" style={{color: 'red'}}>□</span>*/}
+                    {/*            <span className="LegendsDivText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;人工标注</span>*/}
+                    {/*        </div>*/}
+                    {/*    </td>*/}
+                    {/*</tr>*/}
                 </table>
             </div>
+            <br/>
 
             {/*<div className="Legends">*/}
             {/*    <Row>*/}
@@ -1902,11 +1949,12 @@ render()
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button onClick={this.changehanfengDisplay}>关闭/开启焊缝显示</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <br/>
-                <br/>
-                图片调整：
-                <Button onClick={this.changeDamageTypeDisplay}>水平翻转</Button>
-                <Button onClick={this.changeDamageTypeDisplay}>垂直翻转</Button>
+                {/*<br/>*/}
+                {/*<br/>*/}
+                {/*图片调整：*/}
+                {/*<Button type="primary"  onClick={this.horizontaFilpPicture}>水平翻转</Button>*/}
+                {/*&nbsp;&nbsp;&nbsp;&nbsp;*/}
+                {/*<Button type="primary"   onClick={this.changeDamageTypeDisplay}>垂直翻转</Button>*/}
                 <br/>
                 <br/>
                 报告功能：
@@ -1937,7 +1985,7 @@ render()
                             <Form.Item label="厚度">
                                 {getFieldDecorator('picture_thickness', {
                                     rules: [{required: true, message: '请输入厚度'}],
-                                    initialValue: db_picture_thickness == null ? this.state.requisition.requisition_last_thickness : db_picture_thickness,
+                                    initialValue: this.state.picture.picture_thickness,
                                 })(<Input placeholder="厚度"/>)}
                             </Form.Item>
                         </Col>
@@ -2055,7 +2103,7 @@ render()
                                     initialValue: this.state.picture.picture_id,
                                 })(<Input placeholder="影像图id" disabled={"true"}/>)}
                             </Form.Item>
-                        </Col>
+                      </Col>
                     </Row>
                     {/*<br/><br/>*/}
                     <Divider/>

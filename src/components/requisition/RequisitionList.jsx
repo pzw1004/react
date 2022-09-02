@@ -178,7 +178,6 @@ class RequisitionList extends Component{
     };
 
     getRequisition=(requisition_id)=>{
-
         saveLoginInfo('查看了申请单列表信息');
         let api = global.AppConfig.serverIP + '/getRequisition?requisition_id=' + requisition_id;
         axios.post(api)
@@ -609,10 +608,6 @@ class RequisitionList extends Component{
 
         return (
             <div>
-                <div style={{textAlign: "center"}}>
-            <Button size="large">
-            超级无敌厉害的大船头
-            </Button></div>
             <br></br>
             
 

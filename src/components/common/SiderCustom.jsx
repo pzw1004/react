@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {  Link, } from "react-router-dom";
 import {Icon, Layout,Menu ,Switch} from 'antd';
 import Setting from "../setting/Setting";
+import axios from "axios";
 
 
 
@@ -15,7 +16,7 @@ class SiderCustom extends Component {
         this.state = {
             collapsed: null,
             theme: 'dark',
-
+            productList: [],
             username: null,
             password: null,
             authority: null,
@@ -32,7 +33,7 @@ class SiderCustom extends Component {
         if(JSON.parse(sessionStorage.getItem("temp_user")).member_role==1){
             temp_dispaly = 'true';
         }
-
+        this.getProductlist()
         this.setState({
             username: JSON.parse(sessionStorage.getItem("temp_user")).member_username,
             authority: JSON.parse(sessionStorage.getItem("temp_user")).member_role,
@@ -43,7 +44,20 @@ class SiderCustom extends Component {
 
     }
 
+getProductlist=()=>{
+    let api = global.AppConfig.serverIP+'/getAllProduct';
+    axios.get(api)
+        .then((response)=>{
+            console.log(response);
+            this.setState({
+                productList: response.data,
+            })
+        })
+        .catch( (error) =>{
+            console.log(error);
+        });
 
+}
 
 
     render() {
@@ -67,9 +81,16 @@ class SiderCustom extends Component {
                     <SubMenu key="sub1" title={<span><Icon type="profile" theme="twoTone" /><span>申请单处理</span></span>}>
                         <Menu.Item key="0"><Link to="/app">首页</Link></Menu.Item>
                         <SubMenu key="1" title={<Link to="/app/requisition" ><span>查看申请信息</span></Link>}>
-                          <Menu.Item key='11' style={{height: "auto" , "white-space": "break-spaces","line-height":"18px"}} ><Link to="/app/requisition" ><span>大船头啊啊啊啊啊啊啊红红火火恍恍惚惚哈哈哈哈</span></Link></Menu.Item>
-                          <Menu.Item key='12'><span>船身</span></Menu.Item>
-                          <Menu.Item key='13'><span>船尾</span></Menu.Item>
+                          {/*<Menu.Item key='11' style={{height: "auto" , "white-space": "break-spaces","line-height":"18px"}} ><Link to="/app/requisition" ><span>大船头啊啊啊啊啊啊啊红红火火恍恍惚惚哈哈哈哈</span></Link></Menu.Item>*/}
+                          {/*<Menu.Item key='12'><span>船身</span></Menu.Item>*/}
+                          {/*<Menu.Item key='13'><span>船尾</span></Menu.Item>*/}
+                          {/*  {*/}
+                          {/*      this.state.productList.map((item,index)=>{*/}
+                          {/*          let link =  "/app/requisition/"+item.product_id*/}
+                          {/*          return <Menu.Item key='12'><span>{item.product_name}</span><Link to={link} ></Link></Menu.Item>*/}
+                          {/*      })*/}
+
+                        }
                         </SubMenu>
                         <Menu.Item key="2"><Link to="/app/addRequisition" ><span>增加新申请单</span></Link></Menu.Item>
                         <Menu.Item key="3"><Link to="/app/addPictureList" ><span>导入影像图</span></Link></Menu.Item>
