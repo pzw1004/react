@@ -16,7 +16,7 @@ class Index extends Component{
 
     render() {
 
-        return(<div style={{textAlign:'center',fontSize:'large'}}>欢迎登录无损探伤胶片数字化系统！</div>)
+        return(<div style={{textAlign:'center',fontSize:'large'}}>欢迎登录射线底片数字化管理及辅助判读技术！</div>)
     }
 }
 

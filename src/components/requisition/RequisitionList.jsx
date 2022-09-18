@@ -92,7 +92,8 @@ class RequisitionList extends Component{
                 requisition_film_processing_method:'',
                 requisition_military_inspection_id:'',
                 requisition_real_id:'',
-                requisition_source_age:''
+                requisition_source_age:'',
+                requisition_product_name:'',
             },
             picture:[],
             visible: false,
@@ -202,7 +203,7 @@ class RequisitionList extends Component{
                 console.log("-------------------");
                 //console.log(firstName);
                 console.log("-------------------");
-                var t=setTimeout(()=>{
+                var t =setTimeout(()=>{
                     this.setState({
                         visible: true,
                         requisition: response.data,
@@ -210,7 +211,7 @@ class RequisitionList extends Component{
                         requisition_button_disabled: temp_state,
                     })
                 },100);
-
+                // this.productNameState();
             })
             .catch( (error)=> {
                 console.log(error);
@@ -435,6 +436,7 @@ class RequisitionList extends Component{
             .then((response)=>{
                 console.log(response);
                 this.shenpiState(response.data);
+                // this.productNameState(response.data);
                 this.setState({
                     // requisitionList: response.data,
                 })
@@ -515,6 +517,23 @@ class RequisitionList extends Component{
 
      };
 
+    // productNameState=(requisitionList)=>{
+    //     console.log("testestest!!!!!!!!");
+    //     requisitionList.map((item)=> {
+    //         // eslint-disable-next-line array-callback-return
+    //         let api = global.AppConfig.serverIP + '/getProductByProductId?product_id=' + item.requisition_product_id;
+    //         axios.post(api)
+    //             .then((response) => {
+    //                 console.log(JSON.stringify(response.data));
+    //                 item.requisition_product_name = response.data.requisition_product_name;
+    //             });
+    //     });
+    //
+    //     this.setState({
+    //         requisitionList: requisitionList,
+    //     })
+    // };
+
     getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
@@ -579,11 +598,12 @@ class RequisitionList extends Component{
     columns = [                     //最外层列表
         { title: '军检号', dataIndex: 'requisition_military_inspection_id',  ...this.getColumnSearchProps('requisition_military_inspection_id'),width:110,},
         { title: '工程编号', dataIndex: 'requisition_name',  ...this.getColumnSearchProps('requisition_name'),width:110,},
-        { title: '结构名称', dataIndex: 'requisition_structurename', ...this.getColumnSearchProps('requisition_structurename'), width:180,},
-        { title: '施工单位', dataIndex: 'requisition_constructunit', ...this.getColumnSearchProps('requisition_constructunit'),width:110,},
-        { title: '钢号', dataIndex: 'requisition_steelnumber',  ...this.getColumnSearchProps('requisition_steelnumber'),width:80,},
+        // { title: '结构名称', dataIndex: 'requisition_structurename', ...this.getColumnSearchProps('requisition_structurename'), width:180,},
+        // { title: '施工单位', dataIndex: 'requisition_constructunit', ...this.getColumnSearchProps('requisition_constructunit'),width:110,},
+        // { title: '钢号', dataIndex: 'requisition_steelnumber',  ...this.getColumnSearchProps('requisition_steelnumber'),width:80,},
         { title: '焊接方法', dataIndex: 'requisition_weldingmethod', ...this.getColumnSearchProps('requisition_weldingmethod'),width:110,},
-        { title: '厚度', dataIndex: 'requisition_density', ...this.getColumnSearchProps('requisition_density'),width:80,},
+        // { title: '厚度', dataIndex: 'requisition_density', ...this.getColumnSearchProps('requisition_density'),width:80,},
+        { title: '完工日期', dataIndex: 'requisition_complete_date', ...this.getColumnSearchProps('requisition_complete_date'),width:110,},
         { title: '检测标准', dataIndex: 'requisition_testingstandard', ...this.getColumnSearchProps('requisition_testingstandard'),width:110,},
         { title: '合格级别', dataIndex: 'requisition_qualificationlevel', ...this.getColumnSearchProps('requisition_qualificationlevel'),width:110,},
         { title: '焊缝数量', dataIndex: 'requisition_totalnumber', ...this.getColumnSearchProps('requisition_totalnumber'),width:110,},
