@@ -7,14 +7,6 @@ import axios from "axios";
 import { PlusOutlined ,UploadOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-}
 
 function onBlur() {
     console.log('blur');
@@ -30,15 +22,6 @@ function onSearch(val) {
 const { TreeNode, DirectoryTree } = Tree;
 
 
-
-
-
-
-
-
-
-
-
 class Signature extends Component {
 
     constructor(props) {
@@ -48,61 +31,16 @@ class Signature extends Component {
             requisitionFile: [],
             fileList: [],
             uploading: false,
-            selectRequisition_id: '',
-
+            member_id: JSON.parse(sessionStorage.getItem("temp_user")).member_id,
+            member_name: JSON.parse(sessionStorage.getItem("temp_user")).member_name,
         };
     }
 
 
 
 
-    onChange=(value)=>{
-
-        console.log(`selected ${value}`);
-
-        this.setState({
-            selectRequisition_id: value,
-        })
-
-    };
 
 
-    // componentWillMount() {
-    //     this.getFileList();
-    //     this.getFile();
-    // }
-
-    // getFileList=()=>{
-
-    //     let api = global.AppConfig.serverIP + '/getRequisitionFileList';
-    //     axios.post(api)
-    //         .then((response)=> {
-    //             console.log(response);
-    //             console.log(JSON.stringify(response.data));
-    //             this.setState({
-    //                 requisitionTree: response.data,
-    //             })
-    //         })
-    //         .catch( (error)=> {
-    //             console.log(error);
-    //         });
-    // };
-
-    // getFile=()=>{
-
-    //     let api = global.AppConfig.serverIP + '/getRequisitionFile';
-    //     axios.post(api)
-    //         .then((response)=> {
-    //             console.log(response);
-    //             console.log(JSON.stringify(response.data));
-    //             this.setState({
-    //                 requisitionFile: response.data,
-    //             })
-    //         })
-    //         .catch( (error)=> {
-    //             console.log(error);
-    //         });
-    // };
 
     handleUpload = () => {
         const { fileList } = this.state;
@@ -111,7 +49,7 @@ class Signature extends Component {
             //formData.append('files[]', file);
             formData.append('uploadFile', file);
         });
-
+        console.log(this.state.member_id);
         this.setState({
             uploading: true,
         });
@@ -121,7 +59,8 @@ class Signature extends Component {
         // this.uploadFileList(formData);
 
         reqwest({
-            url: global.AppConfig.serverIP + '/uploadFileList/'+ this.state.selectRequisition_id,
+            
+            url: global.AppConfig.serverIP + '/uploadSignature/'+ this.state.member_id,
             method: 'post',
             processData: false,
             contentType: false,
@@ -131,8 +70,7 @@ class Signature extends Component {
                     fileList: [],
                     uploading: false,
                 });
-                message.success('已经全部导入成功！');
-                this.getFileList();
+                message.success('电子签名上传成功！');
             },
             error: () => {
                 this.setState({
@@ -161,17 +99,6 @@ class Signature extends Component {
                 console.log(error);
             });
     };
-
-    onSelect = (keys, event) => {
-        console.log('Trigger Select', keys, event);
-    };
-
-    onExpand = () => {
-        console.log('Trigger Expand');
-    };
-
-
-
 
 
     render() {
@@ -211,45 +138,11 @@ class Signature extends Component {
             },
             fileList,
         };
-
+               
+               
 
         return (
             <div>
-
-                {/* <DirectoryTree multiple defaultExpandAll onSelect={this.onSelect} onExpand={this.onExpand}>
-                    {this.state.requisitionTree.map((item,key)=>{
-                        console.log(JSON.stringify(item));
-                        return(
-                            <TreeNode title={item.requisition_number} key={key}>
-                                {item.pictures.map((item,key)=>{
-                                    return <TreeNode title={item.picture_number} key={item.picture_id} isLeaf />
-                                })}
-                            </TreeNode>
-                        )
-                    })
-                    }
-                </DirectoryTree> */}
-                <br/>
-                {/* <Select
-                    showSearch
-                    style={{ width: 200 }}
-                    placeholder="选择要导入的电子签名"
-                    optionFilterProp="children"
-                    onChange={this.onChange}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    onSearch={onSearch}
-                    filterOption={(input, option) =>
-                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
-                >
-                    {this.state.requisitionFile.map((item,key)=>{
-                        return(
-                            <Option value={item.requisition_id}>{item.requisition_number}</Option>
-                        )
-                    })}
-                </Select> */}
-                <br/>
 
                 <Upload {...props}
                         multiple="multiple">

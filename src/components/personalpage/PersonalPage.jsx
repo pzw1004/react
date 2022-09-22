@@ -32,6 +32,7 @@ class RegistrationForm extends Component {
                 member_sex: '',
                 member_phone: '',
                 member_address: '',
+                signature:'',
             },
             //updateState: 0,  // 定义当前页面提交状态，0表示当前页面没有提交，1时为提交
 
@@ -304,6 +305,20 @@ class RegistrationForm extends Component {
                         <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
                     )}
                 </Form.Item>
+
+                <Form.Item
+                    label="电子签名图片位置"
+                >
+                    {getFieldDecorator('signature', {
+                        rules: [{
+                            required: true, message: '请输入',
+                        }],
+                        initialValue: this.state.member.signature,
+                    })(
+                        <Input disabled={true} style={{ width: '100%' }}/>
+                    )}
+                </Form.Item>
+                <img src={global.AppConfig.serverIP+"/images/"+this.state.member.signature} style={{width: 600, height: 300}} />
 
                 <Form.Item {...tailFormItemLayout}>
                     <Button type="primary" htmlType="submit">提交更改</Button>
