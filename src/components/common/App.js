@@ -58,7 +58,7 @@ class App extends Component {
 
     return (
 
-        <div className="indexCustom" >
+        <div  className="indexCustom" >
         <Layout  style={{minHeight: '100vh'}}>
             <SiderCustom  collapsed={this.state.collapsed} AppObj={this}/>
             {/*<Content style={{ padding: '0 50px' }}>*/}
@@ -66,11 +66,12 @@ class App extends Component {
                     {/*<BreadcrumbCustom/>*/}
                     <HeaderCustom   collapsed={this.state.collapsed} toggle={this.toggle} message={this.state.msg} AppObj={this}/>
                     <Divider orientation="left"></Divider>
+                    <div key={this.props.location.key}>
                     <Content style={{ margin: '15px 16px', padding: 0, background: '#fff', minHeight: '140vh' }}>
                         <Switch>
                             <Route exact path="/app" component={Index}/>
                             <Route exact path="/app/member" component={MemberList}/>
-                            <Route exact path="/app/requisition" component={RequisitionList}/>
+                            <Route exact path="/app/requisition/:product_id" component={RequisitionList}/>
                             <Route exact path="/app/addRequisition" component={AddRequisition}/>
                             <Route exact path="/app/addPictureList" component={AddPictureList}/>
                             <Route exact path="/app/signature" component={Signature}/>
@@ -83,6 +84,7 @@ class App extends Component {
                             <Route component={NoMatch}/>
                         </Switch>
                     </Content>
+                    </div>
                     {/*<FooterCustom/>*/}
                 </Layout>
 

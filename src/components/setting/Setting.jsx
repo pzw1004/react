@@ -177,9 +177,10 @@ class Setting extends Component {
         return (
             <div>
                 <Divider>模型训练相关</Divider>
-                当前训练轮数：{this.state.epoch}
-                <div>
-                    <Progress percent={this.state.epoch/100} status="active"></Progress>
+
+                <div style={{textAlign:"center"}}>
+                    当前训练轮数：{this.state.epoch}<br/>
+                    <Progress type={"circle"} percent={this.state.epoch/5000}   status="active"></Progress>
                 </div>
 
                 <br/>

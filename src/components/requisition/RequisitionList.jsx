@@ -1,5 +1,5 @@
 import { DownOutlined} from '@ant-design/icons';
-import { Table, Input, Button, Dropdown,Icon ,Badge, Menu,Popconfirm,message} from 'antd';
+import {Table, Input, Button, Dropdown, Icon, Badge, Menu, Popconfirm, message, Steps, Divider} from 'antd';
 import Highlighter from 'react-highlight-words';
 import React,{Component} from "react";
 import axios from "axios";
@@ -14,7 +14,6 @@ import history from "../common/history";
 // import Observer from './observer'   传值，监听是否正在上传，实时刷新
 
 const data = [];
-
 const handleMenuClick = (e) => {
     message.info('Click on menu item.');
     console.log('click', e);
@@ -31,9 +30,9 @@ class RequisitionList extends Component{
 
             selectedRowKeys: [], // Check here to configure the default column
             loading: false,
-
+            current_product_name: '',
             // ifuploading:false,
-
+            product_id: '',
             searchText: '',
             requisitionList: [],
             requisition: {
@@ -430,14 +429,23 @@ class RequisitionList extends Component{
 
 
     showPageList=()=>{
-
-        let api = global.AppConfig.serverIP+'/getRequisitionList';
+        let product_id = this.props.match.params.product_id
+        let api = global.AppConfig.serverIP+'/getRequisitionListByProductId/'+product_id;
         axios.get(api)
             .then((response)=>{
-                console.log(response);
                 this.shenpiState(response.data);
+            })
+            .catch( (error) =>{
+                console.log(error);
+            });
+
+        let api3 = global.AppConfig.serverIP+'/getProductByProductId/'+product_id;
+        axios.get(api3)
+            .then((response)=>{
+                console.log("response.data.product_name"+response.data.product_name);
                 // this.productNameState(response.data);
                 this.setState({
+                    current_product_name: response.data.product_name
                     // requisitionList: response.data,
                 })
             })
@@ -456,12 +464,11 @@ class RequisitionList extends Component{
             .catch( (error) =>{
                 console.log(error);
             });
-
     };
 
     componentWillMount() {
+        console.log("!!!!!!!!!!!")
         this.showPageList();
-
     }
 
     componentDidMount() {
@@ -509,11 +516,10 @@ class RequisitionList extends Component{
 
 
         });
-
          this.setState({
              requisitionList: requisitionList,
          })
-
+        console.log(this.state.requisitionList)
 
      };
 
@@ -579,7 +585,11 @@ class RequisitionList extends Component{
                 highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
                 searchWords={[this.state.searchText]}
                 autoEscape
-                textToHighlight={text.toString()}
+                textToHighlight={()=>{
+                    text.toString()
+                }
+
+                }
             />
         ),
     });
@@ -596,17 +606,17 @@ class RequisitionList extends Component{
 
 
     columns = [                     //最外层列表
-        { title: '军检号', dataIndex: 'requisition_military_inspection_id',  ...this.getColumnSearchProps('requisition_military_inspection_id'),width:110,},
-        { title: '工程编号', dataIndex: 'requisition_name',  ...this.getColumnSearchProps('requisition_name'),width:110,},
+        { title: '军检号', dataIndex: 'requisition_military_inspection_id', width:110,},
+        { title: '工程编号', dataIndex: 'requisition_name',  width:110,},
         // { title: '结构名称', dataIndex: 'requisition_structurename', ...this.getColumnSearchProps('requisition_structurename'), width:180,},
         // { title: '施工单位', dataIndex: 'requisition_constructunit', ...this.getColumnSearchProps('requisition_constructunit'),width:110,},
         // { title: '钢号', dataIndex: 'requisition_steelnumber',  ...this.getColumnSearchProps('requisition_steelnumber'),width:80,},
-        { title: '焊接方法', dataIndex: 'requisition_weldingmethod', ...this.getColumnSearchProps('requisition_weldingmethod'),width:110,},
+        { title: '焊接方法', dataIndex: 'requisition_weldingmethod', width:110,},
         // { title: '厚度', dataIndex: 'requisition_density', ...this.getColumnSearchProps('requisition_density'),width:80,},
-        { title: '完工日期', dataIndex: 'requisition_complete_date', ...this.getColumnSearchProps('requisition_complete_date'),width:110,},
-        { title: '检测标准', dataIndex: 'requisition_testingstandard', ...this.getColumnSearchProps('requisition_testingstandard'),width:110,},
-        { title: '合格级别', dataIndex: 'requisition_qualificationlevel', ...this.getColumnSearchProps('requisition_qualificationlevel'),width:110,},
-        { title: '焊缝数量', dataIndex: 'requisition_totalnumber', ...this.getColumnSearchProps('requisition_totalnumber'),width:110,},
+        { title: '完工日期', dataIndex: 'requisition_complete_date', width:110,},
+        { title: '检测标准', dataIndex: 'requisition_testingstandard', width:110,},
+        { title: '合格级别', dataIndex: 'requisition_qualificationlevel', width:110,},
+        { title: '焊缝数量', dataIndex: 'requisition_totalnumber', width:110,},
         { title: '一级状态', key: 'state1',width:110, render: (record) => <span><Badge status={record.firstStatus} />{record.requisition_firstexam}</span> },
         { title: '二级状态', key: 'state2',width:110, render: (record) => <span><Badge status={record.secondStatus}/>{record.requisition_secondexam}</span> },
         { title: '三级状态', key: 'state3',width:110, render: (record) => <span><Badge status={record.thirdStatus} />{record.requisition_thirdexam}</span> },
@@ -625,16 +635,25 @@ class RequisitionList extends Component{
 
 
     render() {
-
+        console.log(this.state.requisitionList)
+        console.log(this.state.current_product_name)
         return (
             <div>
             <br></br>
-            
-
-                
                 {/* eslint-disable-next-line react/jsx-pascal-case */}
                 <Requisition_manage RequisitionList={this}/>
                 {/*<PictureManage tiaozhuan={this.tiaozhuan}/>*/}
+                <div style={{width:"700px"}}>
+                <Steps size={"default"} current={2}>
+                    <Steps.Step icon={<Icon type="database" />} title="查看信息" />
+                    <Steps.Step icon={<Icon type="folder-open" />} title="产品类别" description={this.state.current_product_name}/>
+                    <Steps.Step title="申请单" description={"总数:"+this.state.requisitionList.length}/>
+                </Steps></div>
+                <br/>
+                <strong><font size={4}>产品:</font></strong><font size={4}>&ensp;{this.state.current_product_name}</font>
+                <br/>
+                <br/>
+                <br/>
                 <Table
                 className="components-table-demo-nested"
                 columns={this.columns}
@@ -647,6 +666,7 @@ class RequisitionList extends Component{
                     y: 600,
                   }}
                 />
+
             </div>
     );
 

@@ -1,6 +1,7 @@
 import {
-    message,Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Radio,
+    message, Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Radio, Upload,
 } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import React, { Component } from 'react';
 import '../../config/config'
 import axios from "axios";
@@ -18,6 +19,14 @@ class RegistrationForm extends Component {
         super(props);
 
         this.state = {
+            fileList: [
+                {
+                    uid: '-1',
+                    name: 'xxx.png',
+                    status: 'done',
+                    url: 'http://www.baidu.com/xxx.png',
+                },
+            ],
             confirmDirty: false,
             autoCompleteResult: [],
             member_id: '',
@@ -39,6 +48,24 @@ class RegistrationForm extends Component {
         };
 
     }
+    handleChange = info => {
+        let fileList = [...info.fileList];
+
+        // 1. Limit the number of uploaded files
+        // Only to show two recent uploaded files, and old ones will be replaced by the new
+        fileList = fileList.slice(-2);
+
+        // 2. Read from response and show file link
+        fileList = fileList.map(file => {
+            if (file.response) {
+                // Component will show file.url as link
+                file.url = file.response.url;
+            }
+            return file;
+        });
+
+        this.setState({ fileList });
+    };
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -131,6 +158,24 @@ class RegistrationForm extends Component {
             });
 
     };
+    handleChange = info => {
+        let fileList = [...info.fileList];
+
+        // 1. Limit the number of uploaded files
+        // Only to show two recent uploaded files, and old ones will be replaced by the new
+        fileList = fileList.slice(-1);
+
+        // 2. Read from response and show file link
+        fileList = fileList.map(file => {
+            if (file.response) {
+                // Component will show file.url:link
+                file.url = file.response.url;
+            }
+            return file;
+        });
+
+        this.setState({ fileList });
+    };
 
 
     render() {
@@ -164,7 +209,7 @@ class RegistrationForm extends Component {
         const prefixSelector = getFieldDecorator('prefix', {
             initialValue: '86',
         })(
-            <Select style={{ width: 70 }}>
+            <Select style={{ width: 70 ,height:"30px"}}>
                 <Option value="86">+86</Option>
                 <Option value="87">+87</Option>
             </Select>
@@ -173,8 +218,14 @@ class RegistrationForm extends Component {
         // const websiteOptions = autoCompleteResult.map(website => (
         //     <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
         // ));
+        const props = {
+            action: '',
+            onChange: this.handleChange,
+            multiple: false,
+        };
 
         return (
+
             <Form {...formItemLayout} onSubmit={this.handleSubmit} className="personPalge">
                 <Form.Item
                     style={{display: "none"}}
@@ -302,7 +353,10 @@ class RegistrationForm extends Component {
                         rules: [{ required: true, message: '请输入您的联系方式!' }],
                         initialValue: this.state.member.member_phone,
                     })(
-                        <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                        <Input.Group compact>
+                            {prefixSelector}
+                        <Input style={{ width: '200px' }} />
+                        </Input.Group>
                     )}
                 </Form.Item>
 
