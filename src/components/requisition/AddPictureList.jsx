@@ -533,7 +533,7 @@ class AddPictureList extends Component {
                 <br/>
 
                 <Upload {...props}
-                        multiple="multiple">
+                        multiple="picture">
                     <Button>
                         <UploadOutlined /> 选择要上传的图片
                     </Button>

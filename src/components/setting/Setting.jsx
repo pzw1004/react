@@ -11,6 +11,7 @@ class Setting extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            retrainNum: 0,
             epoch: 0,
             updateRectClor: 'red',
             retrainStatus: 'success',
@@ -24,7 +25,8 @@ class Setting extends Component {
     componentWillMount() {
         this.getTrainState();
         this.getConnectState();
-        this.getepoch()
+        this.getepoch();
+        this.getReTrainDataNum();
         //设置监控时间间隔发送请求
         setTimeout(() => {
             var i = 0;
@@ -37,7 +39,7 @@ class Setting extends Component {
         }, 0);
     };
   getepoch = ()=>{
-      let api = global.AppConfig.aiIP + '/epoch';
+      let api = global.AppConfig.aiIP + '/getEpochs';
       axios.post(api)
           .then((response) => {
               console.log(response);
@@ -68,7 +70,18 @@ class Setting extends Component {
                 })
             });
     };
-
+    getReTrainDataNum=()=>{
+        let api = global.AppConfig.aiIP + '/getReTrainDataNum';
+        axios.post(api)
+            .then((response) => {
+                this.setState({
+                   retrainNum: response.data,
+                })
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
     retrain = () => {
         // if(this.state.connectStatus=='success'){
         //     if(this.state.istraining){
@@ -103,7 +116,7 @@ class Setting extends Component {
                 alert("已有训练任务进行中！")
             } else {
                 alert("开始训练");
-                let api = global.AppConfig.aiIP + '/retrainT';
+                let api = global.AppConfig.aiIP + '/retrainNew';
                 axios.post(api)
                     .then((response) => {
                     })
@@ -156,7 +169,7 @@ class Setting extends Component {
         if (this.state.connectStatus == 'success') {
             if (this.state.istraining) {
                 alert("确认取消正在训练中的模型吗？")
-                let api = global.AppConfig.aiIP + '/retrainF';
+                let api = global.AppConfig.aiIP + '/destroyTrain';
                 axios.post(api)
                     .then((response) => {
                     })
@@ -179,7 +192,8 @@ class Setting extends Component {
                 <Divider>模型训练相关</Divider>
 
                 <div style={{textAlign:"center"}}>
-                    当前训练轮数：{this.state.epoch}<br/>
+                    <strong>已训练轮数：{this.state.epoch}</strong><br/>
+                    <strong>新增训练图片总数：{this.state.retrainNum}</strong><br/>
                     <Progress type={"circle"} percent={this.state.epoch/5000}   status="active"></Progress>
                 </div>
 

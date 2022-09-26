@@ -1,5 +1,5 @@
 ﻿global.AppConfig = {
-    tiffPicsIP:'http://1172.24.71.145:8080//XrayImageDB//',
+    tiffPicsIP:'http://172.24.71.145:8080//XrayImageDB//',
 
     //serverIP为java后端服务器地址
     serverIP:'http://172.24.71.145:8085',

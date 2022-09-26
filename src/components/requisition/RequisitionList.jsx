@@ -430,6 +430,7 @@ class RequisitionList extends Component{
 
     showPageList=()=>{
         let product_id = this.props.match.params.product_id
+
         let api = global.AppConfig.serverIP+'/getRequisitionListByProductId/'+product_id;
         axios.get(api)
             .then((response)=>{

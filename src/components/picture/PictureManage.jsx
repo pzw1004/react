@@ -1280,15 +1280,15 @@ class PictureManage extends Component {
 
 
     getDamageTypeColor = (damageTypeId) => {//TODO getcolor
-        if (damageTypeId === 1)
+        if (damageTypeId === 0)
             return "#ED9D01";
-        else if (damageTypeId === 2)
+        else if (damageTypeId === 1)
             return "#E4EE5D";
-        else if (damageTypeId === 3)
+        else if (damageTypeId === 2)
             return "#0aff02";
-        else if (damageTypeId === 4)
+        else if (damageTypeId === 3)
             return "#00CEA6";
-        else if (damageTypeId === 5)
+        else if (damageTypeId === 4)
             return "#003CB1";
         else if (damageTypeId === 6)
             return "#A300B1";
@@ -1646,19 +1646,19 @@ class PictureManage extends Component {
             count[i] = 0;
         for (let i = 0; i < polygList.length; i++) {
             switch (parseInt(polygList[i].damage_type)) {
-                case 1:
+                case 0:
                     count[0]++;
                     break;
-                case 2:
+                case 1:
                     count[1]++;
                     break;
-                case 3:
+                case 2:
                     count[2]++;
                     break;
-                case 4:
+                case 3:
                     count[3]++;
                     break;
-                case 5:
+                case 4:
                     console.log(count[4])
                     count[4]++;
                     console.log("++++++++++++" + count[4])
@@ -1899,7 +1899,7 @@ class PictureManage extends Component {
                                                 <tspan x={rect_x + 5}
                                                        y={rect_y + 12 + 12 + 5}>标注来源：{item.author}</tspan>
                                                 <tspan x={rect_x + 5}
-                                                       y={rect_y + 12 + 12 + 5 + 12 + 5}>置&ensp;信&ensp;度：人工标注
+                                                       y={rect_y + 12 + 12 + 5 + 12 + 5}>置&ensp;信&ensp;度：{item.belief}
                                                 </tspan>
                                                 <tspan x={rect_x + 5}
                                                        y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + 5}>缺陷大小：{item.lengths+"mm"}
@@ -2024,10 +2024,10 @@ class PictureManage extends Component {
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <Button type="primary" onClick={this.VerticalFlipPicture}>垂直翻转</Button>
                     <br/>
-                    <br/>
-                    &emsp;报告功能：
-                    <Button onClick={() => this.generateReport()}>生成报告</Button>
-                    <br/>
+                    {/*<br/>*/}
+                    {/*&emsp;报告功能：*/}
+                    {/*<Button onClick={() => this.generateReport()}>生成报告</Button>*/}
+                    {/*<br/>*/}
                     <br/>
                     &emsp;确认标注：
                     <Button type="primary" onClick={() => this.sendToApitest()}>确认该图标注无误</Button>

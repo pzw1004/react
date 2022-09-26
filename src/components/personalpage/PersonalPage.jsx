@@ -1,12 +1,13 @@
 import {
-    message, Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Radio, Upload,
+    Upload, message,Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Radio,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 import React, { Component } from 'react';
 import '../../config/config'
 import axios from "axios";
 import './personalPage.css';
 import saveLoginInfo from '../../utils/saveLogInfo'
+import reqwest from 'reqwest';
+import { PlusOutlined ,UploadOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
@@ -19,17 +20,8 @@ class RegistrationForm extends Component {
         super(props);
 
         this.state = {
-            fileList: [
-                {
-                    uid: '-1',
-                    name: 'xxx.png',
-                    status: 'done',
-                    url: 'http://www.baidu.com/xxx.png',
-                },
-            ],
             confirmDirty: false,
             autoCompleteResult: [],
-            member_id: '',
             member: {
                 member_id: '',
                 member_name: '',
@@ -43,29 +35,14 @@ class RegistrationForm extends Component {
                 member_address: '',
                 signature:'',
             },
+            fileList: [],
+            uploading: false,
+            member_id: JSON.parse(sessionStorage.getItem("temp_user")).member_id,
             //updateState: 0,  // 定义当前页面提交状态，0表示当前页面没有提交，1时为提交
 
         };
 
     }
-    handleChange = info => {
-        let fileList = [...info.fileList];
-
-        // 1. Limit the number of uploaded files
-        // Only to show two recent uploaded files, and old ones will be replaced by the new
-        fileList = fileList.slice(-2);
-
-        // 2. Read from response and show file link
-        fileList = fileList.map(file => {
-            if (file.response) {
-                // Component will show file.url as link
-                file.url = file.response.url;
-            }
-            return file;
-        });
-
-        this.setState({ fileList });
-    };
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -150,7 +127,7 @@ class RegistrationForm extends Component {
             .then((response)=> {
                 message.success("个人信息更新完成！");
                 this.setState({
-                   // updateState: 1,
+                    // updateState: 1,
                 })
             })
             .catch( (error)=> {
@@ -158,24 +135,46 @@ class RegistrationForm extends Component {
             });
 
     };
-    handleChange = info => {
-        let fileList = [...info.fileList];
 
-        // 1. Limit the number of uploaded files
-        // Only to show two recent uploaded files, and old ones will be replaced by the new
-        fileList = fileList.slice(-1);
-
-        // 2. Read from response and show file link
-        fileList = fileList.map(file => {
-            if (file.response) {
-                // Component will show file.url:link
-                file.url = file.response.url;
-            }
-            return file;
+    handleUpload = () => {
+        const { fileList } = this.state;
+        const formData = new FormData();
+        fileList.forEach(file => {
+            //formData.append('files[]', file);
+            formData.append('uploadFile', file);
+        });
+        console.log(this.state.member_id);
+        this.setState({
+            uploading: true,
         });
 
-        this.setState({ fileList });
+        // You can use any AJAX library you like
+
+        // this.uploadFileList(formData);
+
+        reqwest({
+
+            url: global.AppConfig.serverIP + '/uploadSignature/'+ this.state.member_id,
+            method: 'post',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: () => {
+                this.setState({
+                    fileList: [],
+                    uploading: false,
+                });
+                message.success('电子签名上传成功！');
+            },
+            error: () => {
+                this.setState({
+                    uploading: false,
+                });
+                message.error('upload failed.');
+            },
+        });
     };
+
 
 
     render() {
@@ -183,33 +182,62 @@ class RegistrationForm extends Component {
 
         const { getFieldDecorator } = this.props.form;
         const { autoCompleteResult } = this.state;
+        const { uploading, fileList } = this.state;
+        const props = {
+            listType: 'picture',
+            onRemove: file => {
+                console.log(file)
+                this.setState(state => {
+                    const index = state.fileList.indexOf(file);
+                    console.log(index)
+                    const newFileList = state.fileList.slice();
+                    newFileList.splice(index, 1);
+                    console.log(newFileList)
+                    return {
+                        fileList: newFileList,
+                    };
+                });
+            },
+            beforeUpload: file => {
+                console.log(file)
+                file.url = global.AppConfig.tiffPicsIP+ "0//"+file.name;//预览图片保存的地址
+
+                this.setState(state => ({
+                        fileList: [...state.fileList, file],
+                    }
+                ));
+                console.log(this.state.fileList)
+                return false;
+            },
+            fileList,
+        };
 
         const formItemLayout = {
             labelCol: {
-                xs: { span: 24 },
-                sm: { span: 8 },
+                xs: { span: 8 },
+                sm: { span: 10 },
             },
             wrapperCol: {
-                xs: { span: 24 },
-                sm: { span: 16 },
+                xs: { span: 8 },
+                sm: { span: 10 },
             },
         };
         const tailFormItemLayout = {
             wrapperCol: {
                 xs: {
-                    span: 24,
-                    offset: 0,
+                    span: 8,
+                    offset: 8,
                 },
                 sm: {
-                    span: 16,
-                    offset: 8,
+                    span: 10,
+                    offset: 10,
                 },
             },
         };
         const prefixSelector = getFieldDecorator('prefix', {
             initialValue: '86',
         })(
-            <Select style={{ width: 70 ,height:"30px"}}>
+            <Select>
                 <Option value="86">+86</Option>
                 <Option value="87">+87</Option>
             </Select>
@@ -218,14 +246,8 @@ class RegistrationForm extends Component {
         // const websiteOptions = autoCompleteResult.map(website => (
         //     <AutoCompleteOption key={website}>{website}</AutoCompleteOption>
         // ));
-        const props = {
-            action: '',
-            onChange: this.handleChange,
-            multiple: false,
-        };
 
         return (
-
             <Form {...formItemLayout} onSubmit={this.handleSubmit} className="personPalge">
                 <Form.Item
                     style={{display: "none"}}
@@ -292,8 +314,8 @@ class RegistrationForm extends Component {
                 </Form.Item>
 
                 <Form.Item label={(
-                        <span> 性别&nbsp; </span>
-                    )}
+                    <span> 性别&nbsp; </span>
+                )}
                 >
 
                     {getFieldDecorator('member_sex',{
@@ -306,8 +328,8 @@ class RegistrationForm extends Component {
                 </Form.Item>
 
                 <Form.Item label={(
-                        <span> 管理权限&nbsp;  </span>
-                    )}
+                    <span> 管理权限&nbsp;  </span>
+                )}
                 >
                     {getFieldDecorator('member_role',{
                             initialValue: this.state.member.member_role,
@@ -323,12 +345,12 @@ class RegistrationForm extends Component {
                 </Form.Item>
 
                 <Form.Item label={(
-                        <span> 工号&nbsp;
-                            <Tooltip title="工作使用的工号">
+                    <span> 工号&nbsp;
+                        <Tooltip title="工作使用的工号">
                             <Icon type="question-circle-o" />
                             </Tooltip>
                         </span>
-                    )}
+                )}
                 >
                     {getFieldDecorator('member_number', {
                         rules: [{ required: true, message: '请输入您的工号!', whitespace: true }],
@@ -352,28 +374,51 @@ class RegistrationForm extends Component {
                     {getFieldDecorator('member_phone', {
                         rules: [{ required: true, message: '请输入您的联系方式!' }],
                         initialValue: this.state.member.member_phone,
-                    })(
-                        <Input.Group compact>
-                            {prefixSelector}
-                        <Input style={{ width: '200px' }} />
-                        </Input.Group>
+                    })(<Input.Group compact>
+                        {prefixSelector}
+                        <Input style={{ width: '35%' }} /></Input.Group>
                     )}
                 </Form.Item>
 
                 <Form.Item
-                    label="电子签名图片位置"
+                    label="电子签名上传"
                 >
-                    {getFieldDecorator('signature', {
+                    <div>
+
+                        <Upload {...props}
+                                multiple="multiple">
+                            <Button>
+                                <UploadOutlined /> 选择要上传的电子签名
+                            </Button>
+                        </Upload>
+                        <Button
+                            type="primary"
+                            onClick={this.handleUpload}
+                            disabled={fileList.length === 0}
+                            loading={uploading}
+                            style={{ marginTop: 16 }}
+                        >
+                            {uploading ? '正在导入' : '开始导入'}
+                        </Button>
+
+                    </div>
+                    {/* {getFieldDecorator('signature', {
                         rules: [{
                             required: true, message: '请输入',
                         }],
                         initialValue: this.state.member.signature,
                     })(
                         <Input disabled={true} style={{ width: '100%' }}/>
-                    )}
+                    )} */}
                 </Form.Item>
-                <img src={global.AppConfig.serverIP+"/images/"+this.state.member.signature} style={{width: 600, height: 300}} />
-
+                <Form.Item label="电子签名图片">
+                    {/* <div align={"center"}> */}
+                    <div>
+                        <img alt={"还未上传电子签名"}  src={global.AppConfig.serverIP+"/images/"+this.state.member.signature} style={{width: 300, height: 150}} onError={(e) => {e.target.src=''}} />
+                    </div>
+                </Form.Item>
+                <br></br>
+                <br></br>
                 <Form.Item {...tailFormItemLayout}>
                     <Button type="primary" htmlType="submit">提交更改</Button>
                 </Form.Item>

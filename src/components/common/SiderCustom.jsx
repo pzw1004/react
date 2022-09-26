@@ -63,10 +63,11 @@ changeCurrentIter=(iter)=>{
 
     render() {
         const  current_iter = this.state.current_iter
-        let max_iter = Math.ceil(this.state.productList.length /5) - 1
+        let max_iter = Math.ceil(this.state.productList.length /5)
         if( (this.state.productList.length %5)>0){
             max_iter=max_iter+1;
         }
+        console.log("current_iter"+current_iter)
         console.log("current_iter"+current_iter)
         return (
 
@@ -85,27 +86,33 @@ changeCurrentIter=(iter)=>{
 
                     <Menu.Item key="0"><Icon type="profile" theme="twoTone" />首页<Link to="/app"></Link></Menu.Item>
                     <SubMenu key="sub1" title={<span><Icon type="profile" theme="twoTone" /><span>申请单处理</span></span>}>
-
-                        <SubMenu style={{marginLeft: '32px'}}mode="vertical" key="1" onTitleClick={this.getProductlist} title={<span>查看申请信息</span>}>
+                        <SubMenu style={{marginLeft: '32px'}} mode="vertical" key="122"  title={<span>查看申请信息</span>}>
 
                           {/*<Menu.Item key='11' style={{height: "auto" , "white-space": "break-spaces","line-height":"18px"}} ><Link to="/app/requisition" ><span>大船头啊啊啊啊啊啊啊红红火火恍恍惚惚哈哈哈哈</span></Link></Menu.Item>*/}
                           {/*<Menu.Item key='12'><span>船身</span></Menu.Item>*/}
-                          {/*<Menu.Item key='13'><span>船尾</span></Menu.Item>*/}
+                          {/*<Menu.Item key='ss'><span>产品列表</span></Menu.Item>*/}
+                            <Menu.ItemGroup title={<span><strong> &emsp;产品列表</strong></span>}>
+                                <Menu.Divider></Menu.Divider>
                             {
                                 this.state.productList.map((item,index)=>{
                                     let id = item.product_id
+                                    console.log("ididididid"+id)
                                     let link =  "/app/requisition/" + id
                                     let linkParams = {
                                         pathname: link,
-                                        state: { product_id: 1 },
+                                        state: { product_id: id },
                                     }
                                     if(index>=current_iter*5&&index<(current_iter+1)*5){
-                                        return <Menu.Item key={10+ index}><span>{item.product_name}</span>
-                                            <Link to={linkParams} component={RequisitionList}></Link></Menu.Item>
+                                        return <Menu.Item key={1000+ index} onClick={()=>{
+                                            window.location.href = link
+                                        }
+                                        }><span>{item.product_name}</span>
+                                            </Menu.Item>
                                     }
                                 })
 
                         }
+                                </Menu.ItemGroup>
 
                         <Menu.Divider></Menu.Divider>
                             {/*<font size="1" color="white">page</font>*/}
@@ -140,7 +147,7 @@ changeCurrentIter=(iter)=>{
 
                     <SubMenu key="sub2" title={<span><Icon type="idcard" theme="twoTone" /><span>个人信息管理</span></span>}>
                         <Menu.Item key="5" ><Link to="/app/personalPage"><span>个人信息</span></Link></Menu.Item>
-                        <Menu.Item key="6" ><Link to="/app/signature"><span>电子签名</span></Link></Menu.Item>
+                        {/*<Menu.Item key="6" ><Link to="/app/signature"><span>电子签名</span></Link></Menu.Item>*/}
                     </SubMenu>
 
                     <SubMenu key="sub3" title={<span><Icon type="notification" theme="twoTone"/><span>模型训练</span></span>}>

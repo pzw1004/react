@@ -5,6 +5,7 @@ import axios from "axios";
 import saveLoginInfo from '../../../utils/saveLogInfo'
 import printJS from "print-js";
 import moment from "moment";
+import {Button} from "antd";
 class PrintReport extends Component {
     constructor(props){
         super(props);
@@ -15,6 +16,9 @@ class PrintReport extends Component {
             name1: '',
             name2: '',
             name3: '',
+            member1: '',
+            member2: '',
+            member3: '',
         };
     }
     openPrint(){
@@ -35,6 +39,9 @@ class PrintReport extends Component {
         // this.getMemberName1(this.state.requisition.requisition_firstexam_member)
         // this.getMemberName2(this.state.requisition.requisition_secondexam_member)
         // this.getMemberName3(this.state.requisition.requisition_thirdexam_member)
+        // this.getMember1(this.state.requisition.requisition_firstexam_member)
+        // this.getMember2(this.state.requisition.requisition_secondexam_member)
+        // this.getMember3(this.state.requisition.requisition_thirdexam_member)
     }
 
     componentDidMount() {
@@ -55,9 +62,10 @@ class PrintReport extends Component {
             .catch( (error)=> {
                 console.log(error);
             });
-        this.getMemberName1(this.state.requisition.requisition_firstexam_member)
-        this.getMemberName2(this.state.requisition.requisition_secondexam_member)
-        this.getMemberName3(this.state.requisition.requisition_thirdexam_member)
+
+        // this.getMemberName1(this.state.requisition.requisition_firstexam_member)
+        // this.getMemberName2(this.state.requisition.requisition_secondexam_member)
+        // this.getMemberName3(this.state.requisition.requisition_thirdexam_member)
     };
 
     getRequisition=(requisition_id)=>{
@@ -69,9 +77,9 @@ class PrintReport extends Component {
                 this.setState({
                     requisition: response.data,
                 })
-                this.getMemberName1(response.data.requisition_firstexam_member)
-                this.getMemberName2(response.data.requisition_secondexam_member)
-                this.getMemberName3(response.data.requisition_thirdexam_member)
+                this.getMember1(this.state.requisition.requisition_firstexam_member)
+                this.getMember2(this.state.requisition.requisition_secondexam_member)
+                this.getMember3(this.state.requisition.requisition_thirdexam_member)
             })
             .catch( (error)=> {
                 console.log(error);
@@ -92,48 +100,97 @@ class PrintReport extends Component {
                 console.log(error);
             });
     }
-    getMemberName1=(member_id)=>{
-        let api = global.AppConfig.serverIP + '/getMemberNameById?member_id=' + member_id;
+    // getMemberName1=(member_id)=>{
+    //     let api = global.AppConfig.serverIP + '/getMemberNameById?member_id=' + member_id;
+    //     axios.post(api)
+    //         .then((response)=> {
+    //             this.setState({
+    //                 name1: response.data,
+    //             })
+    //         })
+    //         .catch( (error)=> {
+    //             console.log(error);
+    //         });
+    //
+    // }
+    // getMemberName2=(member_id)=>{
+    //     let api = global.AppConfig.serverIP + '/getMemberNameById?member_id=' + member_id;
+    //     axios.post(api)
+    //         .then((response)=> {
+    //             this.setState({
+    //                 name2: response.data,
+    //             })
+    //         })
+    //         .catch( (error)=> {
+    //             console.log(error);
+    //         });
+    // }
+    // getMemberName3=(member_id)=>{
+    //     let api = global.AppConfig.serverIP + '/getMemberNameById?member_id=' + member_id;
+    //     axios.post(api)
+    //         .then((response)=> {
+    //             this.setState({
+    //                 name3: response.data,
+    //             })
+    //         })
+    //         .catch( (error)=> {
+    //             console.log(error);
+    //         });
+    // }
+    getMember1=(member_id)=>{
+        let api = global.AppConfig.serverIP + '/RestgetMemberById/' + member_id;
         axios.post(api)
             .then((response)=> {
+                console.log(response.data)
                 this.setState({
-                    name1: response.data,
+                    member1: response.data,
                 })
             })
             .catch( (error)=> {
                 console.log(error);
             });
+    }
+    getMember2=(member_id)=>{
+        let api = global.AppConfig.serverIP + '/RestgetMemberById/' + member_id;
+        axios.post(api)
+            .then((response)=> {
+                this.setState({
+                    member2: response.data,
+                })
+            })
+            .catch( (error)=> {
+                console.log(error);
+            });
+    }
+    getMember3=(member_id)=>{
+        let api = global.AppConfig.serverIP + '/RestgetMemberById/' + member_id;
+        axios.post(api)
+            .then((response)=> {
+                this.setState({
+                    member3: response.data,
+                })
+            })
+            .catch( (error)=> {
+                console.log(error);
+            });
+    }
+    getSign=(index, state)=>{
+        if(state === "审批完成"){
+            if(index === 1){
+                return<img  width="80" height="40" src={global.AppConfig.serverIP+"/images/"+this.state.member1.signature} onError={(e) => {e.target.src=''}}/>
+            }else if(index === 2){
+                return <img width="80" height="40" src={global.AppConfig.serverIP+"/images/"+this.state.member2.signature} onError={(e) => {e.target.src=''}}/>
+            }else{
 
-    }
-    getMemberName2=(member_id)=>{
-        let api = global.AppConfig.serverIP + '/getMemberNameById?member_id=' + member_id;
-        axios.post(api)
-            .then((response)=> {
-                this.setState({
-                    name2: response.data,
-                })
-            })
-            .catch( (error)=> {
-                console.log(error);
-            });
-    }
-    getMemberName3=(member_id)=>{
-        let api = global.AppConfig.serverIP + '/getMemberNameById?member_id=' + member_id;
-        axios.post(api)
-            .then((response)=> {
-                this.setState({
-                    name3: response.data,
-                })
-            })
-            .catch( (error)=> {
-                console.log(error);
-            });
+            }return <img width="80" height="40" src={global.AppConfig.serverIP+"/images/"+this.state.member3.signature} onError={(e) => {e.target.src=''}}/>
+        }
+
     }
     render() {
         saveLoginInfo('查看了申请单编号'+this.state.requisition.requisition_number+'的报告单')
         return (
             <div>
-                <input type="button" value="打印此页面" onClick={()=>this.openPrint()}/>
+                <Button type="primary" onClick={()=>this.openPrint()}>打印此页面</Button>
                 <div className="report" id="Ptabel">
                     <div className="top-title">
                         <span>
@@ -268,9 +325,9 @@ class PrintReport extends Component {
                     </table>
                     <table className="report-title" border={0}>
                         <tr>
-                            <td colSpan="1" >探伤员：{this.state.name1}</td>
-                            <td colSpan="1" >复评：{this.state.name2}</td>
-                            <td colSpan="1">无损检测室主任：{this.state.name3}</td>
+                            <td colSpan="1" >探伤员：{this.getSign(1,this.state.requisition.requisition_firstexam)}</td>
+                            <td colSpan="1" >复评：{this.getSign(2,this.state.requisition.requisition_secondexam)}</td>
+                            <td colSpan="1">无损检测室主任：{this.getSign(3,this.state.requisition.requisition_thirdexam)}</td>
                             <td colSpan="1" >报告日期：{moment().format('YYYY-MM-DD HH:mm:ss')}</td>
 
                         </tr>
