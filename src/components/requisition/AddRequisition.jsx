@@ -357,16 +357,16 @@ class AddRequisition extends Component{
                                 {getFieldDecorator('requisition_product_name', {
                                     rules: [{ required: true, message: '请输入产品名称' }],
                                     // initialValue: this.props.RequisitionList.state.requisition.requisition_number
-                                })(<AutoComplete
+                                })(<Select
                                     showSearch
                                     placeholder="产品名称"
-                                    optionFilterProp="children"
-                                    dataSource={   this.state.productList.map((item,key)=>{
+                                    optionFilterProp="children">
+                                    {   this.state.productList.map((item,key)=>{
                                         return(
                                             <Option value={item.product_name}>{item.product_name}</Option>
                                         )
                                     })}
-                                />)}
+                                </Select>)}
                             </Form.Item>
                         </Col>
 

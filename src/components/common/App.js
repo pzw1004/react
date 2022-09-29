@@ -24,7 +24,7 @@ import Index from '../../components/index/Index'
 import Setting from '../setting/Setting'
 import Signature from '../personalpage/Signature'
 import '../../assets/css/index.css'
-
+import productManage from "../product/productManage";
 const {Content, } = Layout;
 
 class App extends Component {
@@ -81,6 +81,8 @@ class App extends Component {
                             <Route exact path="/app/personalPage" component={PersonalPage} />
                             <Route exact path="/app/pictureManage/:picture_id" component={PictureManage} />
                             <Route exact path="/app/settings" component={Setting}/>
+
+                            <Route exact path="/app/productManage" component={productManage}/>
                             <Route component={NoMatch}/>
                         </Switch>
                     </Content>

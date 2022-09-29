@@ -1,0 +1,27 @@
+.ant-carousel .slick-slide {
+    text-align: center;
+    height: 300px;
+    line-height: 160px;
+    background: #364d79;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.ant-carousel .slick-slide h3 {
+    color: #fff;
+}
+
+.cdiv{
+}
+.cdiv img{
+    width: 1000px;
+    height: 300px;
+}
+
+.alldiv{
+    text-align: center;
+    margin-left: 330px;
+    margin-bottom: 50px;
+    width: 1000px;
+
+}

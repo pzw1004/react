@@ -16,6 +16,7 @@ import {
     Switch,
     InputNumber
 } from 'antd';
+import cv, {COLOR_BGR2GRAY} from "@techstark/opencv-js";
 import {ShrinkOutlined, PoweroffOutlined, SearchOutlined} from '@ant-design/icons';
 import React, {Component} from "react";
 import axios from "axios";
@@ -33,7 +34,7 @@ import {render} from "react-dom";
 import ReactTooltip from 'react-tooltip';
 import windows from '../../assets/images/windows.png';
 import tools from '../../assets/images/tools.png'
-
+window.cv = cv;
 const {Option} = Select;
 message.config({
     maxCount: 2
@@ -79,13 +80,14 @@ let polygonBeginTag = "";
 let uploadV = '';
 let globalPolygon;//globalPolygon指向每次创建后多边形，操控多边形属性
 let polygonId = "";//点击多边形框后，暂存该框的id，用于更新类型或者删除   //东哥放在state里了
+let lastPolygonId = "";
 let polygonTopx = 1050;
 let polygonTopy = 350;//先设置成最大，只要每次变小就更新，找到最上方点作为损伤类型位置
 let polygonClickflag = false;//用于改变损伤框类型(为了与rect框区分)   若点击多边形，设置为true，发送给后端对应的接口
 
 //单击延时触发
 var clickTimeId;
-
+let enhance = false;
 let updateRectClor = '';
 let clickRectClor = '';  // rect的Id?
 const confirm = Modal.confirm;
@@ -93,8 +95,9 @@ class PictureManage extends Component {
 
     constructor(props) {
         super(props);
-
+        this.cannyEdgeRef = React.createRef();
         this.state = {
+            chan: " ",
             labeltools: " ",
             pagesize: 5,
             current: 1,
@@ -457,6 +460,7 @@ class PictureManage extends Component {
 
 
     deletePolygon = () => {
+        lastPolygonId=""
         this.deleteAllCircle();
         if (polygonFlag == false) {
             if (polygonId != "") {
@@ -856,9 +860,24 @@ class PictureManage extends Component {
     };
 
     selectPolygon = (polygon_id) => {
-        polygonId = polygon_id;//polygonId为全局变量
+        //todo 1111
+        polygonId = polygon_id;
+        //polygonId为全局变量
         polygonClickflag = true;//改变缺陷类型用到
-        message.success("多边形损伤框已选中,请“添加缺陷类型” 或 “删除损伤框”")
+        var p = document.getElementById(polygonId)
+
+        if(lastPolygonId !== ""){
+            var last_p = document.getElementById(lastPolygonId)
+            last_p.style.cssText = ""
+        }
+        if(lastPolygonId === polygonId){
+            p.style.cssText = ""
+        }
+        else{
+            p.style.cssText = "opacity: 0.6;stroke-Width:5px;"
+            message.success("多边形损伤框已选中,请“添加缺陷类型” 或 “删除损伤框”")
+        }
+        lastPolygonId = polygon_id;
     };
 
     updateDamageType = (retangle_id, author) => {
@@ -1439,6 +1458,7 @@ class PictureManage extends Component {
     }
     showDefectInfoBytable = (item) => {
         if (item) {
+            //todo
             console.log("缺陷区域监听到了进入事件！！！！！！！！！！")
             var p = document.getElementById(item.id)
             var polygon_text = document.getElementById('text' + item.id)
@@ -1688,7 +1708,41 @@ class PictureManage extends Component {
         }
 
     }
+    imgEnhance = () =>{
+        let img = document.getElementById("img111")
+        let img_org = cv.imread(img)
+        let mat = new cv.Mat() ;
+        cv.cvtColor(img_org,img_org,COLOR_BGR2GRAY)
+        if(!enhance){
+            cv.equalizeHist(img_org,mat);
+            //  cv.Canny(img_org, mat, 10, 50);
+             // mat = cv.add(img_org,mat,mat)
+            cv.imshow(this.cannyEdgeRef.current,mat)
+            enhance = true
+        }
+        else{
+            cv.imshow(this.cannyEdgeRef.current,img_org)
+            enhance = false
+        }
+}
 
+    imgCanyEnhance = () =>{
+        let img = document.getElementById("img111")
+        let img_org = cv.imread(img)
+        let mat = new cv.Mat() ;
+        cv.cvtColor(img_org,img_org,COLOR_BGR2GRAY)
+        if(!enhance){
+            // cv.equalizeHist(img_org,mat);
+            cv.Canny(img_org, mat, 50, 70);
+            cv.add(mat,img_org,mat)
+            cv.imshow(this.cannyEdgeRef.current,mat)
+            enhance = true
+        }
+        else{
+            cv.imshow(this.cannyEdgeRef.current,img_org)
+            enhance = false
+        }
+    }
     render() {
         //this.getTypeNumber();
         console.log(polygList)
@@ -1794,6 +1848,24 @@ class PictureManage extends Component {
                         </div>
                     </div>
                 </div>
+                <br/>
+                <div className="Legends">
+                    <table width="800px">
+                        <tr>
+                            {
+                                this.state.damageTypeList.map((item, index) => {
+                                    return <td>
+                                        <div className="LegendsDiv">
+                                        <span className="LegendsDivSymbol"
+                                              style={{color: this.getDamageTypeColor(item.damagetype_id)}}>■</span>
+                                            <span className="LegendsDivText">&nbsp;{item.damagetype_name}</span>
+                                        </div>
+                                    </td>
+                                })
+                            }
+                        </tr>
+                    </table>
+                </div>
                 <div className="picManage">
                     {/*<div id="raw-view">*/}
                     {/*    <img className="tifImg"*/}
@@ -1802,8 +1874,11 @@ class PictureManage extends Component {
                     {/*</div>*/}
                     <div className="svgpanel">
                         <img className="tifImg"
+                             id="img111"
                              src={global.AppConfig.XrayDBIP + this.state.picture.picture_dir + "?rand=" + Math.random()}
-                             style={{width: 1000, height: 300}}/>
+                             style={{width: 1000, height: 300}}
+                        crossOrigin="anonymous"/>
+                        <canvas className="tifImg" id="canvans111" style={{width: 1000, height: 300}} ref={this.cannyEdgeRef} />
                         <svg
                             onMouseDown={this.mousedown}
                             onMouseMove={this.mousemove}
@@ -2017,11 +2092,17 @@ class PictureManage extends Component {
                     &emsp;AI &nbsp;检测 &nbsp;：
                     <Button onClick={this.AIprocess}>AI检测</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;
+                    <Button type="danger" onClick={this.deletePolygon}>删除AI检测框</Button>
+                    <br/>
+                    <br/>
+                    &emsp;图像增强：
+                    <Button onClick={this.imgEnhance}>对比度增强</Button>&emsp;
+                    <Button onClick={this.imgCanyEnhance}>边缘增强</Button>
                     <br/>
                     <br/>
                     &emsp;图片调整：
                     <Button type="primary" onClick={this.HorizatalFlipPicture}>水平翻转</Button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&emsp;
                     <Button type="primary" onClick={this.VerticalFlipPicture}>垂直翻转</Button>
                     <br/>
                     {/*<br/>*/}
@@ -2048,30 +2129,10 @@ class PictureManage extends Component {
                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button onClick={this.changehanfengDisplay}>关闭/开启焊缝显示</Button>
                     <br/><br/>
                 </div>
-
-                <div className="Legends">
-                    <table width="800px">
-                        <tr>
-                            {
-                                this.state.damageTypeList.map((item, index) => {
-                                    return <td>
-                                        <div className="LegendsDiv">
-                                        <span className="LegendsDivSymbol"
-                                              style={{color: this.getDamageTypeColor(item.damagetype_id)}}>■</span>
-                                            <span className="LegendsDivText">&nbsp;{item.damagetype_name}</span>
-                                        </div>
-                                    </td>
-                                })
-                            }
-                        </tr>
-                    </table>
-                </div>
-                <div className="defectInfoUtils">
-                    <div style={{textAlign: "center"}}>
+                    <div className="defectInfoUtils">
                         <Button onClick={this.getUpPagePicture}>上一张</Button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <Button onClick={this.getNextPagePicture}>下一张</Button>
-                    </div>
                 </div>
 
                 {/*<div className="Legends">*/}

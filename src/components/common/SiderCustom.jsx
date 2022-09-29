@@ -130,6 +130,7 @@ changeCurrentIter=(iter)=>{
                         </div>
                         </SubMenu>
                         <Menu.Item key="2"><Link to="/app/addRequisition" ><span>增加新申请单</span></Link></Menu.Item>
+                        <Menu.Item key="4"><Link to="/app/productManage" ><span>管理产品类</span></Link></Menu.Item>
                         <Menu.Item key="3"><Link to="/app/addPictureList" ><span>导入影像图</span></Link></Menu.Item>
                         {/*<Menu.Item key="4"><Link to="/app/Statistics"><span>统计信息</span></Link></Menu.Item>*/}
                         {/*<Menu.Item key="2"><Link to="/printReport" target="_blank">测试弹出</Link></Menu.Item>*/}

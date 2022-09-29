@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import saveLoginInfo from '../../utils/saveLogInfo'
-import {Badge, Divider, message, Button,Progress} from "antd";
+import {Badge, Divider, message, Button, Progress, Carousel} from "antd";
 import SubMenu from "antd/es/menu/SubMenu";
 import axios from "axios";
-
+import './setting.css'
 
 class Setting extends Component {
 
@@ -11,6 +11,7 @@ class Setting extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            recentfilelist: [],
             retrainNum: 0,
             epoch: 0,
             updateRectClor: 'red',
@@ -27,6 +28,7 @@ class Setting extends Component {
         this.getConnectState();
         this.getepoch();
         this.getReTrainDataNum();
+        this.getRecentImg();
         //设置监控时间间隔发送请求
         setTimeout(() => {
             var i = 0;
@@ -165,6 +167,17 @@ class Setting extends Component {
         });
         message.success("改变state状态后" + this.state.updateRectClor);
     }
+    getRecentImg=()=>{
+        let api = global.AppConfig.aiIP + '/RecentNewImgs';
+        axios.post(api)
+            .then((response) => {
+                this.setState({
+                    recentfilelist: response.data
+                })
+            })
+    }
+
+
     canceltrain = () => {
         if (this.state.connectStatus == 'success') {
             if (this.state.istraining) {
@@ -189,11 +202,26 @@ class Setting extends Component {
     render() {
         return (
             <div>
-                <Divider>模型训练相关</Divider>
+                <Divider>新增训练数据</Divider>
+                <div className="alldiv">
+                    <strong>新增训练图片总数：{this.state.retrainNum}</strong><br/>
+                    <br/>
+                    部分最新增加标注图片
+                    <br/>
+                <Carousel effect="fade" autoplay="true" autoplaySpeed={2000} arrows={true}>
+                    <div className="cdiv" >
+                        <img src={global.AppConfig.serverIP+"/images/"+this.state.recentfilelist[0]}/></div>
+                    <div className="cdiv">
+                        <img src={global.AppConfig.serverIP+"/images/"+this.state.recentfilelist[1]}/></div>
+                    <div className="cdiv">
+                        <img src={global.AppConfig.serverIP+"/images/"+this.state.recentfilelist[2]}/></div>
+                    <div className="cdiv">
+                        <img src={global.AppConfig.serverIP+"/images/"+this.state.recentfilelist[3]}/></div>
 
+                </Carousel></div>
+                <Divider>模型训练相关</Divider>
                 <div style={{textAlign:"center"}}>
                     <strong>已训练轮数：{this.state.epoch}</strong><br/>
-                    <strong>新增训练图片总数：{this.state.retrainNum}</strong><br/>
                     <Progress type={"circle"} percent={this.state.epoch/5000}   status="active"></Progress>
                 </div>
 
@@ -216,7 +244,7 @@ class Setting extends Component {
                 <Button onClick={this.ttt} style={{display: "none"}}>ces</Button>
 
             </div>)
-    }
-}
 
+}
+}
 export default Setting;

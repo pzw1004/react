@@ -279,7 +279,7 @@
 
 
 
-import { Upload, Button, Icon, message, Modal } from 'antd';
+import {Upload, Button, Icon, message, Modal, Progress} from 'antd';
 import reqwest from 'reqwest';
 import React,{Component} from "react";
 import { Tree } from 'antd';
@@ -317,7 +317,7 @@ const { TreeNode, DirectoryTree } = Tree;
 
 
 
-
+let allfilelens = 0;
 
 
 class AddPictureList extends Component {
@@ -325,12 +325,14 @@ class AddPictureList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            lens: 0,
+            donef: 0,
             requisitionTree: [],
             requisitionFile: [],
             fileList: [],
             uploading: false,
             selectRequisition_id: '',
-
+            percent: '',
         };
     }
 
@@ -392,35 +394,55 @@ class AddPictureList extends Component {
             //formData.append('files[]', file);
             formData.append('uploadFile', file);
         });
-
+        console.log(fileList.length)
         this.setState({
             uploading: true,
+            lens: fileList.length
         });
 
         // You can use any AJAX library you like
 
         // this.uploadFileList(formData);
 
-        reqwest({
+        axios({
+            onUploadProgress:  (progressEvent)=>{
+                console.log(progressEvent)
+                this.setState({
+                   percent: Math.round(progressEvent.loaded / progressEvent.total * 100)
+                })
+            },
             url: global.AppConfig.serverIP + '/uploadFileList/'+ this.state.selectRequisition_id,
             method: 'post',
             processData: false,
             contentType: false,
             data: formData,
-            success: () => {
-                this.setState({
-                    fileList: [],
-                    uploading: false,
-                });
-                message.success('已经全部导入成功！');
-                this.getFileList();
-            },
-            error: () => {
+            //
+            // success: () => {
+            //     this.setState({
+            //         fileList: [],
+            //         uploading: false,
+            //     });
+            //     message.success('已经全部导入成功！');
+            //     this.getFileList();
+            // },
+            // error: () => {
+            //     this.setState({
+            //         uploading: false,
+            //     });
+            //     message.error('upload failed.');
+            // },
+        }).then((response)=> {
+               this.setState({
+                           fileList: [],
+                           uploading: false,
+                       });
+                       message.success('已经全部导入成功！');
+                       this.getFileList();
+        }).catch( (error)=> {
                 this.setState({
                     uploading: false,
                 });
                 message.error('upload failed.');
-            },
         });
     };
 
@@ -459,11 +481,15 @@ class AddPictureList extends Component {
 
 
 
-
         const { uploading, fileList } = this.state;
 
-
-
+        // const event = info.event;
+        // if(event){
+        //     let percent = Math.floor((event.loaded/event.total)*100)
+        //     this.setState({
+        //         percent: percent
+        //     })
+        // }
         const props = {
             listType: 'picture',
             onRemove: file => {
@@ -478,6 +504,7 @@ class AddPictureList extends Component {
                         fileList: newFileList,
                     };
                 });
+
             },
             beforeUpload: file => {
                 console.log(file)
@@ -490,16 +517,27 @@ class AddPictureList extends Component {
                 console.log(this.state.fileList)
                 return false;
             },
+            onChange: ({ file, fileList }) => {
+                let d = this.state.donef
+
+                if(file.status == "done"){
+                    console.log("done")
+                    this.setState({
+                        donef: d+1
+                    })
+                }
+                console.log(file);
+
+            },
             fileList,
         };
 
 
         return (
             <div>
-
                 <DirectoryTree multiple defaultExpandAll onSelect={this.onSelect} onExpand={this.onExpand}>
                     {this.state.requisitionTree.map((item,key)=>{
-                        console.log(JSON.stringify(item));
+                        // console.log(JSON.stringify(item));
                         return(
                             <TreeNode title={item.requisition_number} key={key}>
                                 {item.pictures.map((item,key)=>{
@@ -530,14 +568,6 @@ class AddPictureList extends Component {
                         )
                     })}
                 </Select>
-                <br/>
-
-                <Upload {...props}
-                        multiple="picture">
-                    <Button>
-                        <UploadOutlined /> 选择要上传的图片
-                    </Button>
-                </Upload>
                 <Button
                     type="primary"
                     onClick={this.handleUpload}
@@ -547,6 +577,15 @@ class AddPictureList extends Component {
                 >
                     {uploading ? '正在导入' : '开始导入'}
                 </Button>
+                <Progress percent={this.state.percent}></Progress>
+                <br/>
+
+                <Upload {...props}
+                        multiple="picture">
+                    <Button>
+                        <UploadOutlined /> 选择要上传的图片
+                    </Button>
+                </Upload>
 
             </div>
         );

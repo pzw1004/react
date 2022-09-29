@@ -376,7 +376,7 @@ class RegistrationForm extends Component {
                         initialValue: this.state.member.member_phone,
                     })(<Input.Group compact>
                         {prefixSelector}
-                        <Input style={{ width: '35%' }} /></Input.Group>
+                        <Input style={{ width: '50%' }} /></Input.Group>
                     )}
                 </Form.Item>
 

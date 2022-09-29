@@ -1,5 +1,19 @@
 import { DownOutlined} from '@ant-design/icons';
-import {Table, Input, Button, Dropdown, Icon, Badge, Menu, Popconfirm, message, Steps, Divider} from 'antd';
+import {
+    Table,
+    Input,
+    Button,
+    Dropdown,
+    Icon,
+    Badge,
+    Menu,
+    Popconfirm,
+    message,
+    Steps,
+    Divider,
+    Drawer,
+    Form
+} from 'antd';
 import Highlighter from 'react-highlight-words';
 import React,{Component} from "react";
 import axios from "axios";
@@ -27,7 +41,7 @@ class RequisitionList extends Component{
     constructor(props) {
         super(props);
         this.state={
-
+            Dvisible: false,
             selectedRowKeys: [], // Check here to configure the default column
             loading: false,
             current_product_name: '',
@@ -633,9 +647,21 @@ class RequisitionList extends Component{
                 <a href="#">删除申请单</a>
             </Popconfirm>},
     ];
+    changeDrawer=()=>{
+        this.setState({
+            Dvisible: true
+        })
+    }
 
+    DonClose = () => {
+        this.setState({
+            Dvisible: false,
+        });
+    };
 
     render() {
+
+
         console.log(this.state.requisitionList)
         console.log(this.state.current_product_name)
         return (
@@ -651,7 +677,7 @@ class RequisitionList extends Component{
                     <Steps.Step title="申请单" description={"总数:"+this.state.requisitionList.length}/>
                 </Steps></div>
                 <br/>
-                <strong><font size={4}>产品:</font></strong><font size={4}>&ensp;{this.state.current_product_name}</font>
+                <strong><font size={4}>产品:</font></strong><font size={4}>&ensp;{this.state.current_product_name}</font> &emsp;
                 <br/>
                 <br/>
                 <br/>
