@@ -8,6 +8,7 @@ import './SiderCustom.css'
 
 const {Sider,} = Layout;
 const { SubMenu } = Menu;
+let maxiter = 0
 class SiderCustom extends Component {
 
     constructor(props){
@@ -60,7 +61,23 @@ changeCurrentIter=(iter)=>{
             current_iter:iter -1,
         })
 }
+btnDownPage=()=>{
+        if(this.state.current_iter+1 > 1){
+            this.setState({
+                current_iter:this.state.current_iter-1,
+            })
+        }
 
+}
+btnUpPage=()=>{
+
+        if(this.state.current_iter+1 < maxiter){
+            this.setState({
+                current_iter:this.state.current_iter+1,
+            })
+        }
+
+    }
     render() {
         const  current_iter = this.state.current_iter
         let max_iter = Math.ceil(this.state.productList.length/5) - 1
@@ -68,7 +85,7 @@ changeCurrentIter=(iter)=>{
         if( (this.state.productList.length %5)>0){
             max_iter=max_iter+1;
         }
-
+        maxiter = max_iter
         console.log("current_iter"+current_iter)
         console.log("current_iter"+current_iter)
         return (
@@ -122,8 +139,9 @@ changeCurrentIter=(iter)=>{
                             {/*<Button size="small" shape="circle" icon="caret-up" type="primary"></Button>&nbsp;*/}
 
                             {/*<font size="1">当前页码:{current_iter+1}</font>&nbsp;*/}
-                                <InputNumber width="10px" size="small" min={1} max={max_iter} defaultValue={1} onChange={this.changeCurrentIter} />
-                                <strong> / {max_iter}</strong>
+                                <Button type="primary" size="small" onClick={this.btnDownPage}>上一页</Button>&emsp;
+                                <InputNumber id="pagenum" width="10px" size="small" min={1} max={max_iter} defaultValue={1} value={this.state.current_iter + 1} onChange={this.changeCurrentIter} />
+                                <strong> / {max_iter}</strong> &emsp; <Button type="primary" size="small" onClick={this.btnUpPage}>下一页</Button>&emsp;
                             {/*<Button size="small" shape="circle" icon="caret-down" type="primary" onClick={()=>{*/}
                             {/*    this.setState({*/}
                             {/*        current_iter:current_iter+1*/}
