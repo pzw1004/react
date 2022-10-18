@@ -236,57 +236,15 @@
 // export default AddPictureList;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import {Upload, Button, Icon, message, Modal, Progress} from 'antd';
 import reqwest from 'reqwest';
-import React,{Component} from "react";
-import { Tree } from 'antd';
-import { Select } from 'antd';
+import React, {Component} from "react";
+import {Tree} from 'antd';
+import {Select} from 'antd';
 import axios from "axios";
-import { PlusOutlined ,UploadOutlined } from '@ant-design/icons';
-const { Option } = Select;
+import {PlusOutlined, UploadOutlined} from '@ant-design/icons';
+
+const {Option} = Select;
 
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -308,13 +266,8 @@ function onFocus() {
 function onSearch(val) {
     console.log('search:', val);
 }
-const { TreeNode, DirectoryTree } = Tree;
 
-
-
-
-
-
+const {TreeNode, DirectoryTree} = Tree;
 
 
 let allfilelens = 0;
@@ -337,9 +290,7 @@ class AddPictureList extends Component {
     }
 
 
-
-
-    onChange=(value)=>{
+    onChange = (value) => {
 
         console.log(`selected ${value}`);
 
@@ -355,40 +306,40 @@ class AddPictureList extends Component {
         this.getFile();
     }
 
-    getFileList=()=>{
+    getFileList = () => {
 
         let api = global.AppConfig.serverIP + '/getRequisitionFileList';
         axios.post(api)
-            .then((response)=> {
+            .then((response) => {
                 console.log(response);
                 console.log(JSON.stringify(response.data));
                 this.setState({
                     requisitionTree: response.data,
                 })
             })
-            .catch( (error)=> {
+            .catch((error) => {
                 console.log(error);
             });
     };
 
-    getFile=()=>{
+    getFile = () => {
 
         let api = global.AppConfig.serverIP + '/getRequisitionFile';
         axios.post(api)
-            .then((response)=> {
+            .then((response) => {
                 console.log(response);
                 console.log(JSON.stringify(response.data));
                 this.setState({
                     requisitionFile: response.data,
                 })
             })
-            .catch( (error)=> {
+            .catch((error) => {
                 console.log(error);
             });
     };
 
     handleUpload = () => {
-        const { fileList } = this.state;
+        const {fileList} = this.state;
         const formData = new FormData();
         fileList.forEach(file => {
             //formData.append('files[]', file);
@@ -403,15 +354,17 @@ class AddPictureList extends Component {
         // You can use any AJAX library you like
 
         // this.uploadFileList(formData);
-
+        let loaded = 0
         axios({
-            onUploadProgress:  (progressEvent)=>{
+            onUploadProgress: (progressEvent) => {
                 console.log(progressEvent)
+                loaded = loaded + 1
+                console.log(loaded)
                 this.setState({
-                   percent: Math.round(progressEvent.loaded / progressEvent.total * 100)
+                    percent: parseInt((progressEvent.loaded /progressEvent.total) * 100 - Math.random()*10-4)
                 })
             },
-            url: global.AppConfig.serverIP + '/uploadFileList/'+ this.state.selectRequisition_id,
+            url: global.AppConfig.serverIP + '/uploadFileList/' + this.state.selectRequisition_id,
             method: 'post',
             processData: false,
             contentType: false,
@@ -431,26 +384,29 @@ class AddPictureList extends Component {
             //     });
             //     message.error('upload failed.');
             // },
-        }).then((response)=> {
-               this.setState({
-                           fileList: [],
-                           uploading: false,
-                       });
-                       message.success('已经全部导入成功！');
-                       this.getFileList();
-        }).catch( (error)=> {
-                this.setState({
-                    uploading: false,
-                });
-                message.error('upload failed.');
+        }).then((response) => {
+            this.setState({
+                fileList: [],
+                uploading: false,
+            });
+            this.setState({
+                percent: 100
+            })
+            message.success('已经全部导入成功！');
+            this.getFileList();
+        }).catch((error) => {
+            this.setState({
+                uploading: false,
+            });
+            message.error('upload failed.');
         });
     };
 
     //用axios传递有点问题,暂时留下代码，不用
-    uploadFileList=(formData)=>{
+    uploadFileList = (formData) => {
         let api = global.AppConfig.serverIP + '/uploadFileList';
-        axios.post(api,formData)
-            .then((response)=> {
+        axios.post(api, formData)
+            .then((response) => {
                 console.log(response);
                 console.log(JSON.stringify(response.data));
                 this.setState({
@@ -460,7 +416,7 @@ class AddPictureList extends Component {
                 message.success('upload successfully.');
                 //this.getFileList();
             })
-            .catch( (error)=> {
+            .catch((error) => {
                 console.log(error);
             });
     };
@@ -474,14 +430,10 @@ class AddPictureList extends Component {
     };
 
 
-
-
-
     render() {
 
 
-
-        const { uploading, fileList } = this.state;
+        const {uploading, fileList} = this.state;
 
         // const event = info.event;
         // if(event){
@@ -508,22 +460,22 @@ class AddPictureList extends Component {
             },
             beforeUpload: file => {
                 console.log(file)
-                file.url = global.AppConfig.tiffPicsIP+ "0//"+file.name;//预览图片保存的地址
+                file.url = global.AppConfig.tiffPicsIP + "0//" + file.name;//预览图片保存的地址
 
                 this.setState(state => ({
-                    fileList: [...state.fileList, file],
-                }
+                        fileList: [...state.fileList, file],
+                    }
                 ));
                 console.log(this.state.fileList)
                 return false;
             },
-            onChange: ({ file, fileList }) => {
+            onChange: ({file, fileList}) => {
                 let d = this.state.donef
 
-                if(file.status == "done"){
+                if (file.status == "done") {
                     console.log("done")
                     this.setState({
-                        donef: d+1
+                        donef: d + 1
                     })
                 }
                 console.log(file);
@@ -536,12 +488,12 @@ class AddPictureList extends Component {
         return (
             <div>
                 <DirectoryTree multiple defaultExpandAll onSelect={this.onSelect} onExpand={this.onExpand}>
-                    {this.state.requisitionTree.map((item,key)=>{
+                    {this.state.requisitionTree.map((item, key) => {
                         // console.log(JSON.stringify(item));
-                        return(
+                        return (
                             <TreeNode title={item.requisition_number} key={key}>
-                                {item.pictures.map((item,key)=>{
-                                    return <TreeNode title={item.picture_number} key={item.picture_id} isLeaf />
+                                {item.pictures.map((item, key) => {
+                                    return <TreeNode title={item.picture_number} key={item.picture_id} isLeaf/>
                                 })}
                             </TreeNode>
                         )
@@ -551,7 +503,7 @@ class AddPictureList extends Component {
                 <br/>
                 <Select
                     showSearch
-                    style={{ width: 200 }}
+                    style={{width: 200}}
                     placeholder="选择要导入的申请单"
                     optionFilterProp="children"
                     onChange={this.onChange}
@@ -562,8 +514,8 @@ class AddPictureList extends Component {
                         option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
                 >
-                    {this.state.requisitionFile.map((item,key)=>{
-                        return(
+                    {this.state.requisitionFile.map((item, key) => {
+                        return (
                             <Option value={item.requisition_id}>{item.requisition_number}</Option>
                         )
                     })}
@@ -573,7 +525,7 @@ class AddPictureList extends Component {
                     onClick={this.handleUpload}
                     disabled={fileList.length === 0}
                     loading={uploading}
-                    style={{ marginTop: 16 }}
+                    style={{marginTop: 16}}
                 >
                     {uploading ? '正在导入' : '开始导入'}
                 </Button>
@@ -583,7 +535,7 @@ class AddPictureList extends Component {
                 <Upload {...props}
                         multiple="picture">
                     <Button>
-                        <UploadOutlined /> 选择要上传的图片
+                        <UploadOutlined/> 选择要上传的图片
                     </Button>
                 </Upload>
 
@@ -592,4 +544,5 @@ class AddPictureList extends Component {
     }
 
 }
+
 export default AddPictureList;

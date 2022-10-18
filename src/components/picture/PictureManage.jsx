@@ -34,6 +34,7 @@ import {render} from "react-dom";
 import ReactTooltip from 'react-tooltip';
 import windows from '../../assets/images/windows.png';
 import tools from '../../assets/images/tools.png'
+import TextArea from "antd/es/input/TextArea";
 window.cv = cv;
 const {Option} = Select;
 message.config({
@@ -1078,7 +1079,7 @@ class PictureManage extends Component {
     };
 
     updatePicture = (picture) => {//该picture为当前框中的值
-
+        //todo 更新
         let picture_id = this.props.match.params.picture_id;
         this.setState({
             propsPictureId: picture_id,
@@ -1095,18 +1096,25 @@ class PictureManage extends Component {
         {
             flag = false;
         } else {
-            obj_updatepicture = Object.assign({}, this.state.requisition, {
-                requisition_last_teststandard: picture.picture_teststandard,
-                requisition_last_thickness: picture.picture_thickness
+            obj_updatepicture = Object.assign({}, this.state.picture, {
+                picture_teststandard: picture.picture_teststandard,
+                picture_thickness: picture.picture_thickness,
+                picture_density:picture.picture_density,
+                picture_quality:picture.picture_quality,
+                picture_entrytime:picture.picture_entrytime,
+                picture_qualifylevel:picture.picture_qualifylevel,
+                picture_testmethod:picture.picture_testmethod,
+                picture_jointform:picture.picture_jointform,
+                picture_parts_Introductions:picture.picture_parts_Introductions,
             });
         }
         if (flag == true) {
             console.log("图片更新后requisition是否改  id:" + obj_updatepicture.requisition_id + " last-test-standard:" + obj_updatepicture.requisition_last_teststandard)
             this.setState({
-                requisition: obj_updatepicture,
+                picture: obj_updatepicture,
             });
             //更新requisition的last_thickness,即上一次处理的厚度
-            let api1 = global.AppConfig.serverIP + '/updateRequisition';
+            let api1 = global.AppConfig.serverIP + '/updatePicture';
 
             axios.post(api1, obj_updatepicture)
                 .then((response) => {
@@ -2196,7 +2204,7 @@ class PictureManage extends Component {
                                         {getFieldDecorator('picture_number', {
                                             rules: [{required: true, message: '请输入影像图编号'}],
                                             initialValue: this.state.picture.picture_number,
-                                        })(<Input placeholder="影像图编号"/>)}
+                                        })(<Input placeholder="影像图编号"  disabled={"true"}/>)}
                                     </Form.Item>
                                 </Col>
                                 <Col span={4}>
@@ -2241,28 +2249,54 @@ class PictureManage extends Component {
                                     </Form.Item>
                                 </Col>
                                 <Col span={4}>
-                                    <Form.Item label="评定级别">
-                                        {getFieldDecorator('picture_level', {
-                                            rules: [{required: true, message: '请输入评定级别'}],
-                                            initialValue: this.state.picture.picture_level,
-                                        })(
-                                            <Select placeholder="评定级别">
-                                                {
-                                                    this.state.pictureLevel.map(function (value, key) {
-                                                        return <option key={value}>{value}</option>
-                                                    })
-                                                }
-                                            </Select>
-                                        )}
+                                    <Form.Item label="影像图存放路径">
+                                        {getFieldDecorator('picture_dir', {
+                                            rules: [{required: true, message: '请输入影像图存放路径'}],
+                                            initialValue: this.state.picture.picture_dir,
+                                        })(<Input placeholder="影像图存放路径" disabled={"true"}/>)}
                                     </Form.Item>
                                 </Col>
+                                {/*<Col span={4}>*/}
+                                {/*    <Form.Item label="评定级别">*/}
+                                {/*        {getFieldDecorator('picture_level', {*/}
+                                {/*            rules: [{required: true, message: '请输入评定级别'}],*/}
+                                {/*            initialValue: this.state.picture.picture_level,*/}
+                                {/*        })(*/}
+                                {/*            <Select placeholder="评定级别">*/}
+                                {/*                {*/}
+                                {/*                    this.state.pictureLevel.map(function (value, key) {*/}
+                                {/*                        return <option key={value}>{value}</option>*/}
+                                {/*                    })*/}
+                                {/*                }*/}
+                                {/*            </Select>*/}
+                                {/*        )}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
                             </Row>
                             <Row gutter={20}>
+                                <Col span={4}>
+                                    <Form.Item label="底片黑度">
+                                        {getFieldDecorator('picture_density', {
+                                            rules: [{required: true, message: '请输入底片黑度'}],
+                                            initialValue: this.state.picture.picture_density,
+                                        })(<Input placeholder="底片黑度"/>)}
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={4}>
+                                    <Form.Item label="像质指数">
+                                        {getFieldDecorator('picture_quality', {
+                                            rules: [{required: true, message: '像质指数'}],
+                                            initialValue: this.state.picture.picture_quality,
+                                        })(<Input placeholder="像质指数"/>)}
+                                    </Form.Item>
+                                </Col>
+
                                 <Col span={4}>
                                     <Form.Item label="接头形式">
                                         {getFieldDecorator('picture_jointform', {
                                             rules: [{required: true, message: '请输入接头形式'}],
-                                            initialValue: this.state.requisition.requisition_jointform,
+                                            initialValue: this.state.picture.picture_jointform,
                                         })(<Input placeholder="接头形式"/>)}
                                     </Form.Item>
                                 </Col>
@@ -2291,11 +2325,11 @@ class PictureManage extends Component {
                                     </Form.Item>
                                 </Col>
                                 <Col span={4}>
-                                    <Form.Item label="影像图存放路径">
-                                        {getFieldDecorator('picture_dir', {
-                                            rules: [{required: true, message: '请输入影像图存放路径'}],
-                                            initialValue: this.state.picture.picture_dir,
-                                        })(<Input placeholder="影像图存放路径" disabled={"true"}/>)}
+                                    <Form.Item label="检测部位以及说明">
+                                        {getFieldDecorator('picture_parts_Introductions', {
+                                            rules: [{required: true, message: '请输入检测部位以及说明'}],
+                                            initialValue: this.state.picture.picture_parts_Introductions,
+                                        })(<TextArea placeholder="请输入检测部位以及说明"/>)}
                                     </Form.Item>
                                 </Col>
                                 <Col span={4} style={{display: "none"}}>

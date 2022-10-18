@@ -672,9 +672,9 @@ class RequisitionList extends Component{
                 {/*<PictureManage tiaozhuan={this.tiaozhuan}/>*/}
                 <div style={{width:"700px"}}>
                 <Steps size={"default"} current={2}>
-                    <Steps.Step icon={<Icon type="database" />} title="查看信息" />
-                    <Steps.Step icon={<Icon type="folder-open" />} title="产品类别" description={this.state.current_product_name}/>
-                    <Steps.Step title="申请单" description={"总数:"+this.state.requisitionList.length}/>
+                    <Steps.Step icon={<Icon type="database" />} title={<strong>查看信息</strong>} />
+                    <Steps.Step icon={<Icon type="folder-open" />} title={<strong>产品类别</strong>} description={this.state.current_product_name}/>
+                    <Steps.Step title={<strong>申请单</strong>} description={"总数:"+this.state.requisitionList.length}/>
                 </Steps></div>
                 <br/>
                 <strong><font size={4}>产品:</font></strong><font size={4}>&ensp;{this.state.current_product_name}</font> &emsp;

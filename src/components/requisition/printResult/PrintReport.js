@@ -10,6 +10,7 @@ class PrintReport extends Component {
     constructor(props){
         super(props);
         this.state = {
+            picturePolygon:[],
             requisition: [],
             pictureList:[],
             statistic: [],
@@ -36,6 +37,7 @@ class PrintReport extends Component {
         this.getRequisition(this.props.match.params.requisition_id);
         this.getPictureList(this.props.match.params.requisition_id);
         this.getDamageTypeStatistic(this.props.match.params.requisition_id);
+        this.getPicturePolygon(this.props.match.params.requisition_id);
         // this.getMemberName1(this.state.requisition.requisition_firstexam_member)
         // this.getMemberName2(this.state.requisition.requisition_secondexam_member)
         // this.getMemberName3(this.state.requisition.requisition_thirdexam_member)
@@ -45,6 +47,7 @@ class PrintReport extends Component {
     }
 
     componentDidMount() {
+        // this.renderFlaw();
         // this.getRequisition(this.props.match.params.requisition_id);
         // this.getDamageTypeStatistic(this.props.match.params.requisition_id);
 
@@ -88,12 +91,27 @@ class PrintReport extends Component {
 
     getPictureList=(requisition_id)=>{
 
-        let api = global.AppConfig.serverIP + '/getPictureListByReqId?requisition_id=' + requisition_id;
-        axios.post(api)
+        let api = global.AppConfig.serverIP + '/getPictureListByReqId/' + requisition_id;
+        axios.get(api)
             .then((response)=> {
-                console.log(JSON.stringify(response.data));
+                console.log("adsadadsad",response.data);
                 this.setState({
+
                     pictureList: response.data,
+                })
+            })
+            .catch( (error)=> {
+                console.log(error);
+            });
+    }
+    getPicturePolygon=(requisition_id)=>{
+        let api = global.AppConfig.serverIP + '/getPicturePolygon/' + requisition_id;
+        axios.get(api)
+            .then((response)=> {
+                console.log("adsadadsad",response.data);
+                this.setState({
+
+                    picturePolygon: response.data,
                 })
             })
             .catch( (error)=> {
@@ -186,7 +204,35 @@ class PrintReport extends Component {
         }
 
     }
+    renderFlaw=()=>{
+        console.log("执行了")
+        this.state.picturePolygon.map((item,index)=>{
+            console.log("执行了",item.picture.picture_id)
+            if(item.damageType.damagetype_id!==6){
+            let f1 = document.getElementById(item.picture.picture_id + "f1")
+            let f2 = document.getElementById(item.picture.picture_id + "f2")
+            let f3 = document.getElementById(item.picture.picture_id + "f3")
+
+            let tr1 = document.createElement("tr")
+            let tr2= document.createElement("tr")
+            let tr3 = document.createElement("tr")
+            let t1 = document.createTextNode(item.polygon.polygon_flaw_length)  //大小
+            let t2 = document.createTextNode(item.damageType.damagetype_name)  //类型
+            let t3 = document.createTextNode(item.polygon.polygon_author)  //描述（来源）
+
+            tr1.appendChild(t1)
+            tr2.appendChild(t2)
+            tr3.appendChild(t3)
+
+            f1.appendChild(tr1)
+            f2.appendChild(tr2)
+            f3.appendChild(tr3)
+            }
+        })
+
+    }
     render() {
+        let last_pic_id = -1; //上个pic id
         saveLoginInfo('查看了申请单编号'+this.state.requisition.requisition_number+'的报告单')
         return (
             <div>
@@ -267,7 +313,7 @@ class PrintReport extends Component {
                         </tr>
                         <tr>
                             <td>
-                                位置(mm)：&nbsp;&nbsp;&nbsp;&nbsp;
+                                大小(mm)：&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                             <td>
                                 类型：&nbsp;&nbsp;&nbsp;&nbsp;
@@ -278,6 +324,7 @@ class PrintReport extends Component {
                         </tr>
                         {
                             this.state.pictureList.map((picture,index)=>{
+
                                     return(
                                         <tr>
                                             <td colSpan="1" >{index+1}&nbsp;&nbsp;</td>
@@ -286,9 +333,10 @@ class PrintReport extends Component {
                                             <td colSpan="2" >{picture.picture_thickness}&nbsp;&nbsp;</td>
                                             <td colSpan="1" >{picture.picture_density != null ?  picture.picture_density : this.state.requisition.requisition_density}&nbsp;&nbsp;</td>
                                             <td colSpan="1" >{picture.picture_quality}&nbsp;&nbsp;</td>
-                                            <td colSpan="1" >{picture.picture_flaw_position}&nbsp;&nbsp;</td>
-                                            <td colSpan="1" >{picture.picture_flaw_type}&nbsp;&nbsp;</td>
-                                            <td colSpan="1" >{picture.picture_flaw_description}&nbsp;&nbsp;</td>
+
+                                            <td id={picture.picture_id + "f1"} colSpan="1" ><tr>{picture.picture_flaw_position}&nbsp;&nbsp;</tr></td>
+                                            <td id={picture.picture_id + "f2"} colSpan="1" ><tr>{picture.picture_flaw_type}&nbsp;&nbsp;</tr></td>
+                                            <td id={picture.picture_id + "f3"}colSpan="1" ><tr>{picture.picture_flaw_description}&nbsp;&nbsp;</tr></td>
                                             <td colSpan="1" >{picture.picture_conclusion}&nbsp;&nbsp;</td>
                                             <td colSpan="1" >{picture.picture_welding_operator}&nbsp;&nbsp;</td>
                                         </tr>
@@ -296,7 +344,7 @@ class PrintReport extends Component {
                                 }
                             )
                         }
-
+                        {this.renderFlaw()}
 
 
                         {/*<tr>*/}
