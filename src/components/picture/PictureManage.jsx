@@ -52,6 +52,13 @@ const multiView = {
     position: "absolute",
     zIndex: "3",
 };
+//
+var cross_x = 0
+var cross_y = 0
+var set_cross = false
+var setCrossTag;
+//
+
 var damage_type = 7;
 //
 var rectList = []
@@ -138,6 +145,7 @@ class PictureManage extends Component {
             AIClor: 'yellow',
             onClickRectId: '',
             AIDetectLoading: '',
+            crossdisplay:'',
         }
     }
 
@@ -155,6 +163,7 @@ class PictureManage extends Component {
     }
 
     polygonModel = () => {//开启或关闭多边形模式
+        //todo 多边形模式
         this.deleteAllCircle();
         if (polygonFlag == false) {//开启
             polygonTopy = 350;
@@ -360,7 +369,25 @@ class PictureManage extends Component {
             document.getElementById("newc").remove();
         }
     }
-
+    deleteAllCross = () =>{
+        while (document.getElementById("cross")) {
+            document.getElementById("cross").remove();
+        }
+}
+    createCross = (x,y)=>{
+        this.deleteAllCross()
+        var svg = document.getElementById('svgG');
+        var newcircle = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+        newcircle.setAttribute("id", "cross");
+        newcircle.setAttribute("cx", x);
+        newcircle.setAttribute("cy", y);
+        newcircle.setAttribute("r", "3");
+        newcircle.setAttribute("fill", "red");
+        newcircle.setAttribute("stroke", "black");
+        newcircle.setAttribute("stroke-width", "1");
+        svg.appendChild(newcircle);
+        this.updateCross(x,y)
+    }
     //创建顶点
     createCircle = (x, y) => {
         console.log("!!!!!!!!!!!!!!!!!!!!!!")
@@ -378,16 +405,38 @@ class PictureManage extends Component {
         svg.appendChild(newcircle);
 
     }
-
+    updateCross = (x,y)=>{
+        var crossxy = x + "," + y
+        let api = global.AppConfig.serverIP + '/updatePictureCross/' + crossxy + '/' + this.state.picture.picture_id;
+        axios.post(api)
+            .then((response) => {
+                //this.props.MemberList.run();
+                this.setState({
+                    picture: response.data,
+                })
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     mousedown = (e) => {
         console.log(e.offsetX)
+        globalRectX = parseInt(e.clientX - document.getElementById('svgG').getBoundingClientRect().left);
+        globalRectY =  parseInt(e.clientY - document.getElementById('svgG').getBoundingClientRect().top);
+        if(set_cross){
+            cross_x = globalRectX
+            cross_y = globalRectY
+            console.log("crossx,y",cross_x,cross_y)
+            this.createCross(cross_x,cross_y)
+        }
+
         if (polygonFlag) //如果是正在画多边形
         {
             if (polygonPointsNum < 21) {
                 console.log(polygonFlag);
-                globalRectX = parseInt(e.clientX - document.getElementById('svgG').getBoundingClientRect().left);
-                globalRectY =  parseInt(e.clientY - document.getElementById('svgG').getBoundingClientRect().top);
+                // globalRectX = parseInt(e.clientX - document.getElementById('svgG').getBoundingClientRect().left);
+                // globalRectY =  parseInt(e.clientY - document.getElementById('svgG').getBoundingClientRect().top);
                 this.createCircle(globalRectX, globalRectY)
                 console.log(globalRectX + '这是鼠标位置x');
                 console.log(globalRectY + '这是鼠标位置y');
@@ -415,14 +464,15 @@ class PictureManage extends Component {
                 console.log('第' + polygonPointsNum + '个点');
                 polygonPointsNum++;
             }
-        } else {
+        }
+        else{
             // this.judegeColor();
             console.log("点击了svg");
             //message.success(this.state.updateRectClor);
             globalFlag = true;//为true,鼠标移动更新tempx  tempy
             //使用当前界面鼠标位置减去svg画布的距离屏幕左边或上边的距离
-            globalRectX = parseInt(e.clientX - document.getElementById('svgG').getBoundingClientRect().left);
-            globalRectY =  parseInt(e.clientY - document.getElementById('svgG').getBoundingClientRect().top);
+            // globalRectX = parseInt(e.clientX - document.getElementById('svgG').getBoundingClientRect().left);
+            // globalRectY =  parseInt(e.clientY - document.getElementById('svgG').getBoundingClientRect().top);
             //console.log(document.getElementById('svgG').getBoundingClientRect());
             console.log(globalRectX + '这是鼠标位置x');
             console.log(globalRectY + '这是鼠标位置y');
@@ -1751,6 +1801,50 @@ class PictureManage extends Component {
             enhance = false
         }
     }
+    setCross= ()=>{
+        //todo: setcross
+        if(!set_cross){
+            set_cross = true
+            setCrossTag = message.loading('请鼠标点击十字，校准位置', 120);
+        }else{
+            set_cross = false
+            setTimeout(setCrossTag, 1);
+        }
+
+}
+closeCross=()=>{
+        console.log("this.state.crossdisplay",this.state.crossdisplay)
+    if(this.state.crossdisplay === 'none'){
+        this.setState({
+            crossdisplay: ''
+        })}
+        else{
+        this.setState({
+            crossdisplay: 'none'
+        })
+        }
+    }
+
+
+    renderCross = ()=>{
+            if(this.state.picture.picture_cross_point !== null){
+                var xy =this.state.picture.picture_cross_point +""
+                var x = parseInt(xy.split(",")[0])
+                var y = parseInt(xy.split(",")[1])
+                //console.log(this.state.picture.picture_cross_point)
+                // var svg = document.getElementById('svgG');
+                // var newcircle = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+                // newcircle.setAttribute("id", "cross");
+                // newcircle.setAttribute("cx", x);
+                // newcircle.setAttribute("cy", y);
+                // newcircle.setAttribute("r", "3");
+                // newcircle.setAttribute("fill", "red");
+                // newcircle.setAttribute("stroke", "black");
+                // newcircle.setAttribute("stroke-width", "1");
+                // svg.appendChild(newcircle);
+                return <circle id="cross" cx={x} cy={y} fill={"red"} strokeWidth={1} r={3} stroke={"black"} display={this.state.crossdisplay} />
+            }
+    }
     render() {
         //this.getTypeNumber();
         console.log(polygList)
@@ -1895,6 +1989,8 @@ class PictureManage extends Component {
                             className="svgG" id="svgG" version="1.1" width="1000px" height="500px"
                             xmlns="http://www.w3.org/2000/svg"
                         >
+                            {this.renderCross()}
+                            }
                             {
                                 polygList.map((item, index) => {
                                         // let color = this.getDamageTypeColor(item.damage_type);
@@ -2090,37 +2186,45 @@ class PictureManage extends Component {
 
                     </div>
                 </div>
+
                 <div className="defectInfo">
                     <div style={{textAlign: "center"}}>
                         <br/>
-                        <img src={tools} width="30px" height="30px"/>
-                        <strong><font size={3}> 工具栏 </font></strong>
+                        <img src={tools} width="20px" height="20px"/>
+                        <strong><font size={3}> AI检测 </font></strong>
                     </div>
-                    <br/>
-                    &emsp;AI &nbsp;检测 &nbsp;：
-                    <Button onClick={this.AIprocess}>AI检测</Button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <Button type="danger" onClick={this.deletePolygon}>删除AI检测框</Button>
-                    <br/>
-                    <br/>
-                    &emsp;图像增强：
-                    <Button onClick={this.imgEnhance}>对比度增强</Button>&emsp;
-                    <Button onClick={this.imgCanyEnhance}>边缘增强</Button>
-                    <br/>
                     <br/>
                     &emsp;图片调整：
                     <Button type="primary" onClick={this.HorizatalFlipPicture}>水平翻转</Button>
                     &nbsp;&nbsp;&nbsp;&nbsp;&emsp;
                     <Button type="primary" onClick={this.VerticalFlipPicture}>垂直翻转</Button>
                     <br/>
+                    <br/>
+                    &emsp;校准准星：
+                    <Button onClick={this.setCross}> 校准准星</Button>&emsp;&emsp;
+                    <Button onClick={this.closeCross}> 隐藏/显示准星</Button>
+                    <br/>
+                    <br/>
+                    &emsp;AI &nbsp;检测 &nbsp;：
+                    <Button onClick={this.AIprocess}>AI检测</Button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;
+                    <Button type="danger" onClick={this.deletePolygon}>删除AI检测框</Button>
+                    <br/>
+                    <div style={{textAlign: "center"}}>
+                        <br/>
+                        <img src={tools} width="20px" height="20px"/>
+                        <strong><font size={3}> 工&nbsp;具 </font></strong>
+                    </div>
+                    <br/>
+                    &emsp;图像增强：
+                    <Button onClick={this.imgEnhance}>对比度增强</Button>&emsp;
+                    <Button onClick={this.imgCanyEnhance}>文字增强</Button>
+                    <br/>
                     {/*<br/>*/}
                     {/*&emsp;报告功能：*/}
                     {/*<Button onClick={() => this.generateReport()}>生成报告</Button>*/}
                     {/*<br/>*/}
                     <br/>
-                    &emsp;确认标注：
-                    <Button type="primary" onClick={() => this.sendToApitest()}>确认该图标注无误</Button>
-                    <br/><br/>
                     &emsp;信息展示：
                     {/*<Button onClick={()=>this.deleteRect(clickRectClor)}>删除矩形框</Button>*/}
                     {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
@@ -2136,6 +2240,8 @@ class PictureManage extends Component {
                     <br/>
                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button onClick={this.changehanfengDisplay}>关闭/开启焊缝显示</Button>
                     <br/><br/>
+                    &emsp;确认标注：
+                    <Button type="primary" onClick={() => this.sendToApitest()}>标注完成</Button>
                 </div>
                     <div className="defectInfoUtils">
                         <Button onClick={this.getUpPagePicture}>上一张</Button>

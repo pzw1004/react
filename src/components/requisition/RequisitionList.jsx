@@ -27,6 +27,8 @@ import history from "../common/history";
 
 // import Observer from './observer'   传值，监听是否正在上传，实时刷新
 
+
+let product_id ;
 const data = [];
 const handleMenuClick = (e) => {
     message.info('Click on menu item.');
@@ -320,7 +322,7 @@ class RequisitionList extends Component{
         this.getRequisition();
         saveLoginInfo('删除了申请单编号'+requisition_number+'列表信息');
 
-        let api = global.AppConfig.serverIP + '/deleteRequisitionById/'+requisition_id;
+        let api = global.AppConfig.serverIP + '/deleteRequisitionById/'+requisition_id+'/'+product_id;
         axios.post(api)
             .then((response)=> {
                 console.log(JSON.stringify(response.data));
@@ -443,7 +445,7 @@ class RequisitionList extends Component{
 
 
     showPageList=()=>{
-        let product_id = this.props.match.params.product_id
+        product_id = this.props.match.params.product_id
 
         let api = global.AppConfig.serverIP+'/getRequisitionListByProductId/'+product_id;
         axios.get(api)
@@ -622,7 +624,8 @@ class RequisitionList extends Component{
 
     columns = [                     //最外层列表
         { title: '军检号', dataIndex: 'requisition_military_inspection_id', width:110,},
-        { title: '工程编号', dataIndex: 'requisition_name',  width:110,},
+        { title: '工程编号', dataIndex: 'requisition_number',  width:110,},
+        { title: '工程名称', dataIndex: 'requisition_name',  width:110,},
         // { title: '结构名称', dataIndex: 'requisition_structurename', ...this.getColumnSearchProps('requisition_structurename'), width:180,},
         // { title: '施工单位', dataIndex: 'requisition_constructunit', ...this.getColumnSearchProps('requisition_constructunit'),width:110,},
         // { title: '钢号', dataIndex: 'requisition_steelnumber',  ...this.getColumnSearchProps('requisition_steelnumber'),width:80,},
@@ -673,7 +676,7 @@ class RequisitionList extends Component{
                 <div style={{width:"700px"}}>
                 <Steps size={"default"} current={2}>
                     <Steps.Step icon={<Icon type="database" />} title={<strong>查看信息</strong>} />
-                    <Steps.Step icon={<Icon type="folder-open" />} title={<strong>产品类别</strong>} description={this.state.current_product_name}/>
+                    <Steps.Step icon={<Icon type="folder-open" />} title={<strong>产品类别</strong>}description={this.state.current_product_name}/>
                     <Steps.Step title={<strong>申请单</strong>} description={"总数:"+this.state.requisitionList.length}/>
                 </Steps></div>
                 <br/>

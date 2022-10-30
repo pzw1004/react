@@ -19,10 +19,9 @@
 .defectInfo{
     display: inline-block;
     margin-left: 50px;
-    width: 300px;
+    width: 350px;
     border-radius: 25px;
-    background: #F7F7F7;
-}
+   }
 .blue {
     background-color: #00a0e9;
 }
