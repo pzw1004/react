@@ -218,7 +218,7 @@ class PrintReport extends Component {
             let tr3 = document.createElement("tr")
             let t1 = document.createTextNode(item.polygon.polygon_flaw_length)  //大小
             let t2 = document.createTextNode(item.damageType.damagetype_name)  //类型
-            let t3 = document.createTextNode(item.polygon.polygon_author)  //描述（来源）
+            let t3 = document.createTextNode(item.polygon.polygon_flaw_position_x+","+item.polygon.polygon_flaw_position_y)  //描述（来源）
 
             tr1.appendChild(t1)
             tr2.appendChild(t2)
@@ -302,7 +302,7 @@ class PrintReport extends Component {
                         <tr>
                             <td colSpan="1" rowSpan="2">序号：</td>
                             <td colSpan="4" rowSpan="2">检测部位及说明：&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td colSpan="2" rowSpan="2">片位编号：&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td colSpan="2" rowSpan="2">底片名称：&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td colSpan="2" rowSpan="2">板厚/规格(mm)：&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td colSpan="1" rowSpan="2">底片黑度：&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td colSpan="1" rowSpan="2">像质指数：&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -319,7 +319,7 @@ class PrintReport extends Component {
                                 类型：&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                             <td>
-                                描述：&nbsp;&nbsp;&nbsp;&nbsp;
+                                位置：&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         {
@@ -329,14 +329,14 @@ class PrintReport extends Component {
                                         <tr>
                                             <td colSpan="1" >{index+1}&nbsp;&nbsp;</td>
                                             <td colSpan="4" >{picture.picture_parts_Introductions}&nbsp;&nbsp;</td>
-                                            <td colSpan="2" >{picture.picture_id}&nbsp;&nbsp;</td>
+                                            <td colSpan="2" >{picture.picture_dir}&nbsp;&nbsp;</td>
                                             <td colSpan="2" >{picture.picture_thickness}&nbsp;&nbsp;</td>
                                             <td colSpan="1" >{picture.picture_density != null ?  picture.picture_density : this.state.requisition.requisition_density}&nbsp;&nbsp;</td>
                                             <td colSpan="1" >{picture.picture_quality}&nbsp;&nbsp;</td>
 
                                             <td id={picture.picture_id + "f1"} colSpan="1" ><tr>{picture.picture_flaw_position}&nbsp;&nbsp;</tr></td>
                                             <td id={picture.picture_id + "f2"} colSpan="1" ><tr>{picture.picture_flaw_type}&nbsp;&nbsp;</tr></td>
-                                            <td id={picture.picture_id + "f3"}colSpan="1" ><tr>{picture.picture_flaw_description}&nbsp;&nbsp;</tr></td>
+                                            <td id={picture.picture_id + "f3"}colSpan="1" ><tr>{}&nbsp;&nbsp;</tr></td>
                                             <td colSpan="1" >{picture.picture_conclusion}&nbsp;&nbsp;</td>
                                             <td colSpan="1" >{picture.picture_welding_operator}&nbsp;&nbsp;</td>
                                         </tr>

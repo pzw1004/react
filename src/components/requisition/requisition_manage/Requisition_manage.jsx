@@ -425,6 +425,115 @@ class DrawerForm extends Component {
                     placement="left"
                 >
                     <Form  layout="vertical"  onSubmit={this.handleSubmit}>
+
+                        <Row gutter={20}>
+                            <Col span={4}>
+                            <Form.Item label="结构名称">
+                                {getFieldDecorator('requisition_structure_name', {
+                                    rules: [{ required: true, message: '请输入结构名称' }],
+                                    initialValue: this.props.RequisitionList.state.requisition.requisition_structure_name
+                                })(<Input placeholder="结构名称" />)}
+                            </Form.Item>
+                        </Col>
+                            <Col span={4}>
+                                <Form.Item label="检测部位">
+                                    {getFieldDecorator('requisition_test_part', {
+                                        rules: [{ required: true, message: '请输入检测部位' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_test_part
+                                    })(<Input placeholder="检测部位" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="表面状态">
+                                    {getFieldDecorator('requisition_surface_state', {
+                                        rules: [{ required: true, message: '请输入表面状态' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_surface_state
+                                    })(<Input placeholder="表面状态" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="外观检查结论">
+                                    {getFieldDecorator('requisition_surface_conclusion', {
+                                        rules: [{ required: true, message: '请输入外观检查结论' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_surface_conclusion
+                                    })(<Input placeholder="外观检查结论" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="被检物地址">
+                                    {getFieldDecorator('requisition_item_address', {
+                                        rules: [{ required: true, message: '请输入被检物地址' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_item_address
+                                    })(<Input placeholder="被检物地址" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="施工部门">
+                                    {getFieldDecorator('requisition_constructunit', {
+                                        rules: [{ required: true, message: '请输入施工部门' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_constructunit
+                                    })(<Input placeholder="施工部门" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="联系人">
+                                    {getFieldDecorator('requisition_contact', {
+                                        rules: [{ required: true, message: '请输入联系人'}],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_contact
+                                    })(<Input placeholder="联系人" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="生产管理部门">
+                                    {getFieldDecorator('requisition_management_department', {
+                                        rules: [{ required: true, message: '请输入生产管理部门' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_management_department
+                                    })(<Input placeholder="生产管理部门" />)}
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={4}>
+                                <Form.Item label="无损检测室">
+                                    {getFieldDecorator('requisition_test_room', {
+                                        rules: [{ required: true, message: '请输入无损检测室' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_test_room
+                                    })(<Input placeholder="无损检测室" />)}
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={4}>
+                                <Form.Item label="顾客">
+                                    {getFieldDecorator('requisition_customer', {
+                                        rules: [{ required: true, message: '请输入顾客' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_customer
+                                    })(<Input placeholder="顾客" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="识别码">
+                                    {getFieldDecorator('requisition_code', {
+                                        rules: [{ required: true, message: '请输入识别码' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_code
+                                    })(<Input placeholder="识别码" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="检测时间">
+                                    {getFieldDecorator('requisition_test_time', {
+                                        rules: [{ required: true, message: '请输入检测时间' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_test_time
+                                    })(<Input placeholder="检测时间" />)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="检查员">
+                                    {getFieldDecorator('requisition_inspector', {
+                                        rules: [{ required: true, message: '请输入检查员' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_inspector
+                                    })(<Input placeholder="检查员" />)}
+                                </Form.Item>
+                            </Col>
+                        </Row>
                         {/*<Row gutter={20} >*/}
                         {/*    /!*<Col span={4}>*!/*/}
                         {/*    /!*    <Form.Item label="申请单id" style={{display:true}}>*!/*/}
@@ -686,7 +795,7 @@ class DrawerForm extends Component {
                             {/*        })(<Input placeholder="申请单id" />)}*/}
                             {/*    </Form.Item>*/}
                             {/*</Col>*/}
-
+                            <Divider>详细信息</Divider>
                             <Col span={4}>
                                 {/*产品名称*/}
                                 <Form.Item label="产品名称">
@@ -708,11 +817,11 @@ class DrawerForm extends Component {
 
                             <Col span={4}>
                                 {/*左上角编号*/}
-                                <Form.Item label="工程编号">
+                                <Form.Item label="编号">
                                     {getFieldDecorator('requisition_number', {
-                                        rules: [{ required: true, message: '请输入工程编号' }],
+                                        rules: [{ required: true, message: '请输入编号' }],
                                         initialValue: this.props.RequisitionList.state.requisition.requisition_number
-                                    })(<Input placeholder="工程编号" />)}
+                                    })(<Input placeholder="编号" />)}
                                 </Form.Item>
                             </Col>
 

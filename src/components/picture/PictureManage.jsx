@@ -146,6 +146,7 @@ class PictureManage extends Component {
             onClickRectId: '',
             AIDetectLoading: '',
             crossdisplay:'',
+            a:''
         }
     }
 
@@ -655,7 +656,7 @@ class PictureManage extends Component {
         this.onDectect(this.state.picture.picture_number);
         saveLoginInfo('对编号' + this.state.picture.picture_number + '进行了ai检测');
         let picture_id = this.state.propsPictureId;
-        let api = global.AppConfig.serverIP + '/detectionById_backstage?id=' + picture_id;
+        let api = global.AppConfig.serverIP + '/detectionById_backstage/' + picture_id+'/'+this.state.picture.picture_real_width;
         axios.post(api)
             .then((response) => {
                 setTimeout(loadinghide, 100);
@@ -700,11 +701,16 @@ class PictureManage extends Component {
                 min_y = points[1][i]
             }
         }
+        //todo 计算缺陷大小
         d_x = max_x - min_x
         d_y = max_y - min_y
-        d_x = d_x * (300/1000)
-        d_y = d_y * (100/300)
-        return d_x > d_y ? d_x : d_y
+
+        d_x = d_x * (this.state.picture.picture_real_width/1000)
+        d_y = d_y *(100/300)
+        console.log("d_x","d_y",d_x," ",d_y)
+        var d = d_x > d_y ? d_x : d_y
+        d = d.toFixed(2)
+        return d
     }
     savePolygon = () => {//给发送到后端做准备
         //TODO 保存多边形
@@ -1131,34 +1137,53 @@ class PictureManage extends Component {
     updatePicture = (picture) => {//该picture为当前框中的值
         //todo 更新
         let picture_id = this.props.match.params.picture_id;
-        this.setState({
-            propsPictureId: picture_id,
-        });
-        this.getPicture(picture_id);
-        this.getPictureRect(picture_id);
-        this.getDamageTypeList();
+        // this.setState({
+        //     propsPictureId: picture_id,
+        // });
+        // this.getPicture(picture_id);
+        // this.getPictureRect(picture_id);
+        // this.getDamageTypeList();
 
         //判断是否更改厚度和检测标准
         var obj_updatepicture = null;
-        var flag = true;
+        // var flag = true;
+        obj_updatepicture = Object.assign({}, this.state.picture, {
+            picture_real_width:picture.picture_real_width,
+            picture_real_height:100,
+            picture_number:picture.picture_number,
+            picture_hanfeng_name:picture.picture_hanfeng_name,
+            picture_hanfeng_number:picture.picture_hanfeng_number,
+            picture_hanfeng_method:picture.picture_hanfeng_method,
+            picture_bevel_form:picture.picture_bevel_form,
+            picture_material_number:picture.picture_material_number,
+            picture_hanfeng_length:picture.picture_hanfeng_length,
+            picture_testing_rate:picture.picture_testing_rate,
+            picture_hanfeng_testlength:picture.picture_hanfeng_testlength,
+            picture_density:picture.picture_density,
+            picture_quality:picture.picture_quality,
+            picture_parts_Introductions:picture.picture_parts_Introductions,
+            picture_thickness:picture.picture_thickness,
+            picture_entrytime:picture.picture_entrytime,
+            picture_conclusion:picture.picture_conclusion,
+            picture_welding_operator:picture.picture_welding_operator
+        });
+        // if (db_picture_teststandard == picture.picture_teststandard && db_picture_thickness == picture.picture_thickness)//说明都没改
+        // {
+        //     flag = false;
+        // } else {
+        //     obj_updatepicture = Object.assign({}, this.state.picture, {
+        //         picture_teststandard: picture.picture_teststandard,
+        //         picture_thickness: picture.picture_thickness,
+        //         picture_density:picture.picture_density,
+        //         picture_quality:picture.picture_quality,
+        //         picture_entrytime:picture.picture_entrytime,
+        //         picture_qualifylevel:picture.picture_qualifylevel,
+        //         picture_testmethod:picture.picture_testmethod,
+        //         picture_jointform:picture.picture_jointform,
+        //         picture_parts_Introductions:picture.picture_parts_Introductions,
+        //     });
+        // }
 
-        if (db_picture_teststandard == picture.picture_teststandard && db_picture_thickness == picture.picture_thickness)//说明都没改
-        {
-            flag = false;
-        } else {
-            obj_updatepicture = Object.assign({}, this.state.picture, {
-                picture_teststandard: picture.picture_teststandard,
-                picture_thickness: picture.picture_thickness,
-                picture_density:picture.picture_density,
-                picture_quality:picture.picture_quality,
-                picture_entrytime:picture.picture_entrytime,
-                picture_qualifylevel:picture.picture_qualifylevel,
-                picture_testmethod:picture.picture_testmethod,
-                picture_jointform:picture.picture_jointform,
-                picture_parts_Introductions:picture.picture_parts_Introductions,
-            });
-        }
-        if (flag == true) {
             console.log("图片更新后requisition是否改  id:" + obj_updatepicture.requisition_id + " last-test-standard:" + obj_updatepicture.requisition_last_teststandard)
             this.setState({
                 picture: obj_updatepicture,
@@ -1173,32 +1198,33 @@ class PictureManage extends Component {
                     this.setState({
                         requisition: response.data,
                     });
+                    this.getPicturePolygon(picture_id)
                 })
                 .catch((error) => {
                     console.log(error);
                 });
-            console.log(db_picture_thickness, picture.picture_thickness, db_picture_thickness == picture.picture_thickness);
-        }
+
+
 
 
         /**使用axios将value表单信息发送到后端
          * */
         //console.log(this.state.requisition);
-        saveLoginInfo('更新了影像图编号' + picture.picture_number + '的信息');
-        let api2 = global.AppConfig.serverIP + '/updatePicture';
-        axios.post(api2, picture)
-            .then((response) => {
-                // console.log(response);
-                // console.log(JSON.stringify(response.data));
-                this.setState({
-                    picture: response.data,
-                });
-                message.success("完成影像图信息更新！")
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        // saveLoginInfo('更新了影像图编号' + picture.picture_number + '的信息');
+        // let api2 = global.AppConfig.serverIP + '/updatePicture';
+        // axios.post(api2, picture)
+        //     .then((response) => {
+        //         // console.log(response);
+        //         // console.log(JSON.stringify(response.data));
+        //         this.setState({
+        //             picture: response.data,
+        //         });
+        //         message.success("完成影像图信息更新！")
+        //
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
 
     };
 
@@ -1581,6 +1607,8 @@ class PictureManage extends Component {
             let polygon_id = polyg[i].polygon_id;
             let polygon_pt = polyg[i].polygon_pt;
             let polygon_belief = polyg[i].polygon_belief;
+            let polygon_p_x = polyg[i].polygon_flaw_position_x;
+            let polygon_p_y = polyg[i].polygon_flaw_position_y;
             //  let polygon_picture_id = polyg[i].polygon_picture_id;
             let polygon_author = polyg[i].polygon_author;
             let polygon_damage_type = polyg[i].polygon_damage_type;
@@ -1600,25 +1628,27 @@ class PictureManage extends Component {
                 hanfenglist.push({
                     id: polygon_id,
                     points: polygon_pt,
-                    author: polygon_author,
+                    author: this.trans_str(polygon_author),
                     damage_type: polygon_damage_type,
                     damage_name: polygon_damage_name,
                     textx: topx,
                     texty: topy,
                     belief: polygon_belief,
-                    lengths: polygon_flaw_lengths
+                    lengths: polygon_flaw_lengths,
+                    flaw_positions: polygon_p_x+","+polygon_p_y,
                 })
             }
             polygList.push({
                 id: polygon_id,
                 points: polygon_pt,
-                author: polygon_author,
+                author:  this.trans_str(polygon_author),
                 damage_type: polygon_damage_type,
                 damage_name: polygon_damage_name,
                 textx: topx,
                 texty: topy,
                 belief: polygon_belief,
                 lengths: polygon_flaw_lengths,
+                flaw_positions: polygon_p_x+","+polygon_p_y,
             })
 
         }
@@ -1808,6 +1838,7 @@ class PictureManage extends Component {
             setCrossTag = message.loading('请鼠标点击十字，校准位置', 120);
         }else{
             set_cross = false
+
             setTimeout(setCrossTag, 1);
         }
 
@@ -1823,6 +1854,11 @@ closeCross=()=>{
             crossdisplay: 'none'
         })
         }
+    }
+    getposition=()=>{
+        //todo  重新计算
+        this.updateCross(this.state.picture.picture_cross_point)
+        window.location.replace(window.location.href);
     }
 
 
@@ -1845,29 +1881,43 @@ closeCross=()=>{
                 return <circle id="cross" cx={x} cy={y} fill={"red"} strokeWidth={1} r={3} stroke={"black"} display={this.state.crossdisplay} />
             }
     }
+    trans_str=(str)=>{
+        if(str==="member"){
+            return "人工标注"
+        }else{
+            return "AI检测"
+        }
+    }
     render() {
         //this.getTypeNumber();
         console.log(polygList)
         const columns = [{
-            width: 200,
+            width: 160,
             title: '类型',
             dataIndex: 'damage_name',
             key: 'damage_name',
         }, {
-            width: 200,
+            width: 160,
             title: '标注来源',
             dataIndex: 'author',
             key: 'author',
         }, {
-            width: 200,
+            width: 160,
             title: '置信度',
             dataIndex: 'belief',
             key: 'belief',
         },
             {
-                width: 200,
+                width: 160,
                 title: '大小(mm)',
                 dataIndex: 'lengths',
+                key: 'belief',
+            },
+
+            {
+                width: 160,
+                title: '位置',
+                dataIndex: 'flaw_positions',
                 key: 'belief',
             },
         ];
@@ -2055,11 +2105,11 @@ closeCross=()=>{
                                     var r = this.judgeQuadrant(n_p)
                                     var x1 = index > 7 ? n_p[2] : n_p[0]
                                     var y1 = index > 7 ? n_p[3] : n_p[1]
-                                    var rect_y = index > 7 ? 420 : 0
+                                    var rect_y = index > 7 ? 410 : 0
                                     index = index > 7 ? index - 8 : index;
                                     var rect_x = index * (120 + 5)
                                     var line_x = rect_x + 60
-                                    var line_y = rect_y > 0 ? 420 : 80
+                                    var line_y = rect_y > 0 ? 410 : 80
                                     console.log("index" + index + " rect_x" + rect_x)
                                     if (item.author !== 'member') {
 
@@ -2070,7 +2120,7 @@ closeCross=()=>{
                                             <rect rx="5" ry="5" stroke-opacity="0.9" stroke="rgb(0,0,0)" strokeWidth="3"
                                                   opacity="0.5" style={{display: this.state.drawDamageTypeDisplay}}
                                                   fill="rgb(255,255,255)" id={'rect_info' + item.id} x={rect_x}
-                                                  y={rect_y} width="120" height="80"/>
+                                                  y={rect_y} width="120" height="90"/>
                                             <text style={{display: this.state.drawDamageTypeDisplay}} id={'text' + item.id}
                                                   key={'text' + index} damage={item.damage_type} fontSize="12">
                                                 <tspan x={rect_x + 5}
@@ -2083,6 +2133,9 @@ closeCross=()=>{
                                                 <tspan x={rect_x + 5}
                                                        y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + 5}>缺陷大小：{item.lengths+"mm"}
                                                 </tspan>
+                                                <tspan x={rect_x + 5}
+                                                       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + +12+5+5}>缺陷位置：{(item.flaw_positions)}
+                                                </tspan>
                                             </text>
                                         </>
                                     } else {
@@ -2093,7 +2146,7 @@ closeCross=()=>{
                                             <rect rx="5" ry="5" stroke-opacity="0.9" stroke="rgb(0,0,0)" strokeWidth="3"
                                                   opacity="0.5" style={{display: this.state.drawDamageTypeDisplay}}
                                                   fill="rgb(255,255,255)" id={'rect_info' + item.id} x={rect_x}
-                                                  y={rect_y} width="120" height="80"/>
+                                                  y={rect_y} width="120" height="90"/>
                                             <text style={{display: this.state.drawDamageTypeDisplay}} id={'text' + item.id}
                                                   key={'text' + index} damage={item.damage_type} fontSize="12">
                                                 <tspan x={rect_x + 5}
@@ -2105,6 +2158,9 @@ closeCross=()=>{
                                                 </tspan>
                                                 <tspan x={rect_x + 5}
                                                        y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + 5}>缺陷大小：{item.lengths+"mm"}
+                                                </tspan>
+                                                <tspan x={rect_x + 5}
+                                                       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + +12+5+5}>缺陷位置：{(item.flaw_positions)}
                                                 </tspan>
                                             </text>
                                         </>
@@ -2136,7 +2192,7 @@ closeCross=()=>{
                                                 <tspan x={rect_x + 5}
                                                        y={rect_y + 12}>缺陷类型：{item.damage_name}</tspan>
                                                 <tspan x={rect_x + 5}
-                                                       y={rect_y + 12 + 12 + 5}>标注来源：{item.author}</tspan>
+                                                       y={rect_y + 12 + 12 +5}>标注来源：{item.author}</tspan>
                                                 {/*<tspan x={rect_x + 5}*/}
                                                 {/*       y={rect_y + 12 + 12 + 5 + 12 + 5}>置&ensp;信&ensp;度：人工标注*/}
                                                 {/*</tspan>*/}
@@ -2160,7 +2216,7 @@ closeCross=()=>{
                                                 <tspan x={rect_x + 5}
                                                        y={rect_y + 12}>缺陷类型：{item.damage_name}</tspan>
                                                 <tspan x={rect_x + 5}
-                                                       y={rect_y + 12 + 12 + 5}>标注来源：{item.author}</tspan>
+                                                       y={rect_y + 12 + 12 +5}>标注来源：{item.author}</tspan>
                                                 {/*<tspan x={rect_x + 5}*/}
                                                 {/*       y={rect_y + 12 + 12 + 5 + 12 + 5}>置&ensp;信&ensp;度：人工标注*/}
                                                 {/*</tspan>*/}
@@ -2202,7 +2258,10 @@ closeCross=()=>{
                     <br/>
                     &emsp;校准准星：
                     <Button onClick={this.setCross}> 校准准星</Button>&emsp;&emsp;
-                    <Button onClick={this.closeCross}> 隐藏/显示准星</Button>
+                    <Button onClick={this.closeCross}> 隐藏/显示准星</Button>&emsp;&emsp;
+                    <br/>
+                    <br/>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button onClick={this.getposition}> 重新计算</Button>
                     <br/>
                     <br/>
                     &emsp;AI &nbsp;检测 &nbsp;：
@@ -2304,64 +2363,124 @@ closeCross=()=>{
                         {/*</div>*/}
                         <Divider>确认影像图信息</Divider>
                         <Form layout="vertical" onSubmit={this.handleSubmit}>
-                            <Row gutter={20}>
-                                <Col span={4}>
-                                    <Form.Item label="影像图编号" style={{display: true}}>
-                                        {getFieldDecorator('picture_number', {
-                                            rules: [{required: true, message: '请输入影像图编号'}],
-                                            initialValue: this.state.picture.picture_number,
-                                        })(<Input placeholder="影像图编号"  disabled={"true"}/>)}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={4}>
-                                    <Form.Item label="厚度">
-                                        {getFieldDecorator('picture_thickness', {
-                                            rules: [{required: true, message: '请输入厚度'}],
-                                            initialValue: this.state.picture.picture_thickness,
-                                        })(<Input placeholder="厚度"/>)}
+                            <Row gutter={21}>
+                                <Col span={3}>
+                                    <Form.Item label="焊缝名称" style={{display: true}}>
+                                        {getFieldDecorator('picture_hanfeng_name', {
+                                            rules: [{required: true, message: '请输入焊缝名称'}],
+                                            initialValue: this.state.picture.picture_hanfeng_name,
+                                        })(<Input placeholder="焊缝名称" />)}
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={4}>
-                                    <Form.Item label="合格级别">
-                                        {getFieldDecorator('picture_qualifylevel', {
-                                            rules: [{required: true, message: '合格级别'}],
-                                            initialValue: this.state.picture.picture_qualifylevel,
-                                        })(<Input placeholder="合格级别"/>)}
+                                <Col span={3}>
+                                    <Form.Item label="焊接编号" style={{display: true}}>
+                                        {getFieldDecorator('picture_hanfeng_number', {
+                                            rules: [{required: true, message: '请输入焊接编号'}],
+                                            initialValue: this.state.picture.picture_hanfeng_number,
+                                        })(<Input placeholder="焊接编号" />)}
                                     </Form.Item>
                                 </Col>
-                                <Col span={4}>
-                                    <Form.Item label="检测方法">
-                                        {getFieldDecorator('picture_testmethod', {
-                                            rules: [{required: true, message: '请输入检测方法'}],
-                                            initialValue: "RT",
-                                        })(<Input placeholder="检测方法"/>)}
+                                <Col span={3}>
+                                    <Form.Item label="焊接方法" style={{display: true}}>
+                                        {getFieldDecorator('picture_hanfeng_method', {
+                                            rules: [{required: true, message: '请输入焊接方法'}],
+                                            initialValue: this.state.picture.picture_hanfeng_method,
+                                        })(<Input placeholder="焊接方法" />)}
                                     </Form.Item>
                                 </Col>
-                                <Col span={4}>
-                                    <Form.Item label="检测标准">
-                                        {getFieldDecorator('picture_teststandard', {
-                                            rules: [{required: true, message: '请输入检测标准'}],
-                                            initialValue: this.state.picture.picture_teststandard == null ? (this.state.requisition.requisition_last_teststandard == null ? this.state.requisition.requisition_testingstandard : this.state.requisition.requisition_last_teststandard) : this.state.picture.picture_teststandard,
-                                        })(
-                                            <Select placeholder="检测标准">
-                                                {
-                                                    this.state.pictureTeststandard.map(function (value, key) {
-                                                        return <option key={value}>{value}</option>
-                                                    })
-                                                }
-                                            </Select>
-                                        )}
+                                <Col span={3}>
+                                    <Form.Item label="板厚(几何尺寸)">
+                                        {getFieldDecorator('picture_thickness', {
+                                            rules: [{required: true, message: '请输入板厚'}],
+                                            initialValue: this.state.picture.picture_thickness,
+                                        })(<Input placeholder="板厚"/>)}
                                     </Form.Item>
                                 </Col>
-                                <Col span={4}>
-                                    <Form.Item label="影像图存放路径">
-                                        {getFieldDecorator('picture_dir', {
-                                            rules: [{required: true, message: '请输入影像图存放路径'}],
-                                            initialValue: this.state.picture.picture_dir,
-                                        })(<Input placeholder="影像图存放路径" disabled={"true"}/>)}
+                                <Col span={3}>
+                                    <Form.Item label="坡口形式">
+                                        {getFieldDecorator('picture_bevel_form', {
+                                            rules: [{required: true, message: '请输入坡口形式'}],
+                                            initialValue: this.state.picture.picture_bevel_form,
+                                        })(<Input placeholder="坡口形式"/>)}
                                     </Form.Item>
                                 </Col>
+
+                                <Col span={3}>
+                                    <Form.Item label="材料牌号">
+                                        {getFieldDecorator('picture_material_number', {
+                                            rules: [{required: true, message: '请输入材料牌号'}],
+                                            initialValue: this.state.picture.picture_material_number,
+                                        })(<Input placeholder="材料牌号"/>)}
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={3}>
+                                    <Form.Item label="焊缝长度">
+                                        {getFieldDecorator('picture_hanfeng_length', {
+                                            rules: [{required: true, message: '请输入焊缝长度'}],
+                                            initialValue: this.state.picture.picture_hanfeng_length,
+                                        })(<Input placeholder="焊缝长度"/>)}
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={3}>
+                                    <Form.Item label="检测长度">
+                                        {getFieldDecorator('picture_hanfeng_testlength', {
+                                            rules: [{required: true, message: '请输入检测长度'}],
+                                            initialValue: this.state.picture.picture_hanfeng_testlength,
+                                        })(<Input placeholder="检测长度"/>)}
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={3}>
+                                    <Form.Item label="检测比例%">
+                                        {getFieldDecorator('picture_testing_rate', {
+                                            rules: [{required: true, message: '请输入检测比例'}],
+                                            initialValue: this.state.picture.picture_testing_rate,
+                                        })(<Input placeholder="检测比例"/>)}
+                                    </Form.Item>
+                                </Col>
+                                {/*<Col span={4}>*/}
+                                {/*    <Form.Item label="影像图id" style={{display: "none"}}>*/}
+                                {/*        {getFieldDecorator('picture_id', {*/}
+                                {/*            rules: [{required: true, message: '影像图id'}],*/}
+                                {/*            initialValue: this.state.picture.picture_id,*/}
+                                {/*        })(<Input placeholder="影像图id" disabled={"true"}/>)}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
+                                {/*<Col span={4}>*/}
+                                {/*    <Form.Item label="合格级别">*/}
+                                {/*        {getFieldDecorator('picture_qualifylevel', {*/}
+                                {/*            rules: [{required: true, message: '合格级别'}],*/}
+                                {/*            initialValue: this.state.picture.picture_qualifylevel,*/}
+                                {/*        })(<Input placeholder="合格级别"/>)}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
+                                {/*<Col span={4}>*/}
+                                {/*    <Form.Item label="检测方法">*/}
+                                {/*        {getFieldDecorator('picture_testmethod', {*/}
+                                {/*            rules: [{required: true, message: '请输入检测方法'}],*/}
+                                {/*            initialValue: "RT",*/}
+                                {/*        })(<Input placeholder="检测方法"/>)}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
+                                {/*<Col span={4}>*/}
+                                {/*    <Form.Item label="检测标准">*/}
+                                {/*        {getFieldDecorator('picture_teststandard', {*/}
+                                {/*            rules: [{required: true, message: '请输入检测标准'}],*/}
+                                {/*            initialValue: this.state.picture.picture_teststandard == null ? (this.state.requisition.requisition_last_teststandard == null ? this.state.requisition.requisition_testingstandard : this.state.requisition.requisition_last_teststandard) : this.state.picture.picture_teststandard,*/}
+                                {/*        })(*/}
+                                {/*            <Select placeholder="检测标准">*/}
+                                {/*                {*/}
+                                {/*                    this.state.pictureTeststandard.map(function (value, key) {*/}
+                                {/*                        return <option key={value}>{value}</option>*/}
+                                {/*                    })*/}
+                                {/*                }*/}
+                                {/*            </Select>*/}
+                                {/*        )}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
                                 {/*<Col span={4}>*/}
                                 {/*    <Form.Item label="评定级别">*/}
                                 {/*        {getFieldDecorator('picture_level', {*/}
@@ -2378,75 +2497,56 @@ closeCross=()=>{
                                 {/*        )}*/}
                                 {/*    </Form.Item>*/}
                                 {/*</Col>*/}
-                            </Row>
-                            <Row gutter={20}>
-                                <Col span={4}>
-                                    <Form.Item label="底片黑度">
-                                        {getFieldDecorator('picture_density', {
-                                            rules: [{required: true, message: '请输入底片黑度'}],
-                                            initialValue: this.state.picture.picture_density,
-                                        })(<Input placeholder="底片黑度"/>)}
+                                <Col span={3}>
+                                <Form.Item label="底片长度">
+                                    {getFieldDecorator('picture_real_width', {
+                                        rules: [{required: true, message: '请选择底片长度'}],
+                                        initialValue: this.state.picture.picture_real_width,
+                                    })(<Select placeholder="底片长度">
+                                        <option key={300}>300</option>
+                                        <option key={360}>360</option>
+                                    </Select>)}
+                                </Form.Item>
+                            </Col>
+                            <Col span={3}>
+                                <Form.Item label="底片黑度">
+                                    {getFieldDecorator('picture_density', {
+                                        rules: [{required: true, message: '请输入底片黑度'}],
+                                        initialValue: this.state.picture.picture_density,
+                                    })(<Input placeholder="底片黑度"/>)}
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={3}>
+                                <Form.Item label="像质指数">
+                                    {getFieldDecorator('picture_quality', {
+                                        rules: [{required: true, message: '像质指数'}],
+                                        initialValue: this.state.picture.picture_quality,
+                                    })(<Input placeholder="像质指数"/>)}
+                                </Form.Item>
+                            </Col>
+                                {/*<Col span={6}>*/}
+                                {/*    <br/>*/}
+                                {/*    <br/>*/}
+                                {/*<strong>注:更新底片长度后，需重新进行AI检测和人工标注</strong></Col>*/}
+                                <Col span={3}>
+                                    <Form.Item label="影像图编号" style={{display: "none"}}>
+                                        {getFieldDecorator('picture_number', {
+                                            rules: [{required: true, message: '请输入焊接编号'}],
+                                            initialValue: this.state.picture.picture_number,
+                                        })(<Input placeholder="影像图编号" />)}
                                     </Form.Item>
                                 </Col>
 
-                                <Col span={4}>
-                                    <Form.Item label="像质指数">
-                                        {getFieldDecorator('picture_quality', {
-                                            rules: [{required: true, message: '像质指数'}],
-                                            initialValue: this.state.picture.picture_quality,
-                                        })(<Input placeholder="像质指数"/>)}
-                                    </Form.Item>
-                                </Col>
-
-                                <Col span={4}>
-                                    <Form.Item label="接头形式">
-                                        {getFieldDecorator('picture_jointform', {
-                                            rules: [{required: true, message: '请输入接头形式'}],
-                                            initialValue: this.state.picture.picture_jointform,
-                                        })(<Input placeholder="接头形式"/>)}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={4}>
-                                    <Form.Item label="影像图的长">
-                                        {getFieldDecorator('picture_width', {
-                                            rules: [{required: true, message: '影像图的长'}],
-                                            initialValue: this.state.picture.picture_width,
-                                        })(<Input placeholder="影像图的长" disabled={"true"}/>)}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={4}>
-                                    <Form.Item label="影像图的高">
-                                        {getFieldDecorator('picture_height', {
-                                            rules: [{required: true, message: '影像图的高'}],
-                                            initialValue: this.state.picture.picture_height,
-                                        })(<Input placeholder="影像图的高" disabled={"true"}/>)}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={4}>
-                                    <Form.Item label="录入时间">
-                                        {getFieldDecorator('picture_entrytime', {
-                                            rules: [{required: true, message: '请输入录入时间'}],
-                                            initialValue: this.state.picture.picture_entrytime,
-                                        })(<Input placeholder="录入时间"/>)}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={4}>
-                                    <Form.Item label="检测部位以及说明">
-                                        {getFieldDecorator('picture_parts_Introductions', {
-                                            rules: [{required: true, message: '请输入检测部位以及说明'}],
-                                            initialValue: this.state.picture.picture_parts_Introductions,
-                                        })(<TextArea placeholder="请输入检测部位以及说明"/>)}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={4} style={{display: "none"}}>
-                                    <Form.Item label="picture_AIresult">
-                                        {getFieldDecorator('picture_AIresult', {
-                                            rules: [{required: true, message: 'picture_AIresult'}],
-                                            initialValue: this.state.picture.picture_AIresult,
-                                        })(<Input placeholder="picture_AIresult" disabled={"true"}/>)}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={4} style={{display: "none"}}>
+                                {/*<Col span={4} style={{display: "none"}}>*/}
+                                {/*    <Form.Item label="picture_AIresult">*/}
+                                {/*        {getFieldDecorator('picture_AIresult', {*/}
+                                {/*            rules: [{required: true, message: 'picture_AIresult'}],*/}
+                                {/*            initialValue: this.state.picture.picture_AIresult,*/}
+                                {/*        })(<Input placeholder="picture_AIresult" disabled={"true"}/>)}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
+                                <Col span={3} style={{display: "none"}}>
                                     <Form.Item label="picture_requisition_id">
                                         {getFieldDecorator('picture_requisition_id', {
                                             rules: [{required: true, message: 'picture_requisition_id'}],
@@ -2454,24 +2554,100 @@ closeCross=()=>{
                                         })(<Input placeholder="picture_requisition_id" disabled={"true"}/>)}
                                     </Form.Item>
                                 </Col>
-                                <Col span={4}>
-                                    <Form.Item label="影像图id" style={{display: "none"}}>
-                                        {getFieldDecorator('picture_id', {
-                                            rules: [{required: true, message: '影像图id'}],
-                                            initialValue: this.state.picture.picture_id,
-                                        })(<Input placeholder="影像图id" disabled={"true"}/>)}
+                            </Row>
+                            <Divider/>
+                            <Row gutter={21}>
+                                {/*<Col span={4}>*/}
+                                {/*    <Form.Item label="接头形式">*/}
+                                {/*        {getFieldDecorator('picture_jointform', {*/}
+                                {/*            rules: [{required: true, message: '请输入接头形式'}],*/}
+                                {/*            initialValue: this.state.picture.picture_jointform,*/}
+                                {/*        })(<Input placeholder="接头形式"/>)}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
+                                {/*<Col span={4}>*/}
+                                {/*    <Form.Item label="影像图的长">*/}
+                                {/*        {getFieldDecorator('picture_width', {*/}
+                                {/*            rules: [{required: true, message: '影像图的长'}],*/}
+                                {/*            initialValue: this.state.picture.picture_width,*/}
+                                {/*        })(<Input placeholder="影像图的长" disabled={"true"}/>)}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
+                                {/*<Col span={4}>*/}
+                                {/*    <Form.Item label="影像图的高">*/}
+                                {/*        {getFieldDecorator('picture_height', {*/}
+                                {/*            rules: [{required: true, message: '影像图的高'}],*/}
+                                {/*            initialValue: this.state.picture.picture_height,*/}
+                                {/*        })(<Input placeholder="影像图的高" disabled={"true"}/>)}*/}
+                                {/*    </Form.Item>*/}
+                                {/*</Col>*/}
+                                <Col span={3}>
+                                <Form.Item label="影像图存放路径">
+                                    {getFieldDecorator('picture_dir', {
+                                        rules: [{required: true, message: '请输入影像图存放路径'}],
+                                        initialValue: this.state.picture.picture_dir,
+                                    })(<Input placeholder="影像图存放路径" disabled={"true"}/>)}
+                                </Form.Item>
+                            </Col>
+                                <Col span={3}>
+                                    <Form.Item label="焊接人">
+                                        {getFieldDecorator('picture_welding_operator', {
+                                            rules: [{required: true, message: '焊接人'}],
+                                            initialValue: this.state.picture.picture_welding_operator,
+                                        })(<Input placeholder="焊接人"/>)}
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={3}>
+                                    <Form.Item label="录入时间">
+                                        {getFieldDecorator('picture_entrytime', {
+                                            rules: [{required: true, message: '请输入录入时间'}],
+                                            initialValue: this.state.picture.picture_entrytime,
+                                        })(<Input placeholder="录入时间"/>)}
+                                    </Form.Item>
+                                </Col>
+
+                                <Col span={3}>
+                                    <Form.Item label="检测部位以及说明">
+                                        {getFieldDecorator('picture_parts_Introductions', {
+                                            rules: [{required: true, message: '请输入检测部位以及说明'}],
+                                            initialValue: this.state.picture.picture_parts_Introductions,
+                                        })(<TextArea placeholder="请输入检测部位以及说明"/>)}
+                                    </Form.Item>
+                                </Col>
+                                <Col span={3}>
+                                    <Form.Item label="检测结论">
+                                        {getFieldDecorator('picture_conclusion', {
+                                            rules: [{required: true, message: '检测结论'}],
+                                            initialValue: this.state.picture.picture_conclusion,
+                                        })(<Input placeholder="检测结论"/>)}
                                     </Form.Item>
                                 </Col>
                             </Row>
+                            {/*<Row gutter={20}>*/}
+                            {/*<Col span={4}>*/}
+                            {/*    <Form.Item label="影像图存放路径">*/}
+                            {/*        {getFieldDecorator('picture_dir', {*/}
+                            {/*            rules: [{required: true, message: '请输入影像图存放路径'}],*/}
+                            {/*            initialValue: this.state.picture.picture_dir,*/}
+                            {/*        })(<Input placeholder="影像图存放路径" disabled={"true"}/>)}*/}
+                            {/*    </Form.Item>*/}
+                            {/*</Col>*/}
+                            {/*<Col span={4}>*/}
+                            {/*    <Form.Item label="检测部位以及说明">*/}
+                            {/*        {getFieldDecorator('picture_parts_Introductions', {*/}
+                            {/*            rules: [{required: true, message: '请输入检测部位以及说明'}],*/}
+                            {/*            initialValue: this.state.picture.picture_parts_Introductions,*/}
+                            {/*        })(<TextArea placeholder="请输入检测部位以及说明"/>)}*/}
+                            {/*    </Form.Item>*/}
+                            {/*</Col>*/}
+                            {/*</Row>*/}
                             {/*<br/><br/>*/}
-                            <Divider/>
-                            <Row gutter={16}>
-                                <Col span={4}>
+                            <Divider>
                                     <Form.Item>
                                         <Button type="primary" htmlType="submit">更新影像图信息</Button>
                                     </Form.Item>
-                                </Col>
-                            </Row>
+                            </Divider>
                         </Form>
                     </div>
 
