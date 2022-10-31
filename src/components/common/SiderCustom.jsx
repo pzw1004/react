@@ -80,11 +80,11 @@ btnUpPage=()=>{
     }
     render() {
         const  current_iter = this.state.current_iter
-        let max_iter = Math.ceil(this.state.productList.length/5) - 1
-        console.log("this.state.productList.length"+this.state.productList.length)
-        if( (this.state.productList.length %5)>0){
-            max_iter=max_iter+1;
-        }
+        let max_iter = Math.ceil(this.state.productList.length/5)
+        // console.log("this.state.productList.length"+this.state.productList.length)
+        // if( (this.state.productList.length %5)>0){
+        //     max_iter=max_iter+1;
+        // }
         maxiter = max_iter
         console.log("current_iter"+current_iter)
         console.log("current_iter"+current_iter)
