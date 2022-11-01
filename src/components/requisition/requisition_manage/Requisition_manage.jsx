@@ -63,14 +63,15 @@ class DrawerForm extends Component {
 
     completeApproval = () => {
         let member_id = JSON.parse(sessionStorage.getItem("temp_user")).member_id;
-        let api = global.AppConfig.serverIP + '/completeApproval?requisition_id='+this.props.RequisitionList.state.requisition.requisition_id+'&requisition_state='+this.props.RequisitionList.state.requisition.requisition_state + '&member_id='+member_id;
+        let api = global.AppConfig.serverIP + '/completeApproval?requisition_id='+this.props.RequisitionList.state.requisition.requisition_id+'&requisition_state='+this.props.RequisitionList.state.requisition.requisition_state + '&member_id='+member_id+'&product_id='+this.props.RequisitionList.state.product_id;
         axios.post(api)
             .then((response)=> {
                 console.log(response);
                 console.log(JSON.stringify(response.data));
                 //this.props.MemberList.run();
                 alert("已完成审批");
-                this.props.RequisitionList.shenpiState(response.data);
+                window.location.replace(window.location.href);
+                // this.props.RequisitionList.shenpiState(response.data);
                 // this.props.RequisitionList.setState({
                 //     requisitionList: response.data,
                 // })
@@ -82,14 +83,16 @@ class DrawerForm extends Component {
     };
 
     rejectRequest=()=>{
-        let api = global.AppConfig.serverIP + '/rejectRequest?requisition_id='+this.props.RequisitionList.state.requisition.requisition_id+'&requisition_state='+this.props.RequisitionList.state.requisition.requisition_state;
+        //todo 跳转bug
+        let api = global.AppConfig.serverIP + '/rejectRequest?requisition_id='+this.props.RequisitionList.state.requisition.requisition_id+'&requisition_state='+this.props.RequisitionList.state.requisition.requisition_state+'&product_id='+this.props.RequisitionList.state.product_id;
         axios.post(api)
             .then((response)=> {
                 console.log(response);
                 console.log(JSON.stringify(response.data));
                 //this.props.MemberList.run();
-                alert("已完成驳回");//驳回是指：当级别n完成审核时，而n+1认为n的审核不正确，可以把上一级的驳回，让其重新审核
-                this.props.RequisitionList.shenpiState(response.data);
+                alert("已完成驳回");
+                window.location.replace(window.location.href);//驳回是指：当级别n完成审核时，而n+1认为n的审核不正确，可以把上一级的驳回，让其重新审核
+                // this.props.RequisitionList.shenpiState(response.data);
                 // this.props.RequisitionList.setState({
                 //     requisitionList: response.data,
                 // })

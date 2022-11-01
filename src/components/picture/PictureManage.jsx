@@ -1259,16 +1259,17 @@ class PictureManage extends Component {
 
     changeRectDisplay = () => {
 
+        console.log(this.state.rectDisplay)
         if (this.state.rectDisplay == "none") {
             this.setState({
                 rectDisplay: "",
-                //  drawDamageTypeDisplay:"",
+                 drawDamageTypeDisplay:"",
                 drawConfDisplay: ""
             })
         } else {
             this.setState({
                 rectDisplay: "none",
-                // drawDamageTypeDisplay:"none",
+                drawDamageTypeDisplay:"none",
                 drawConfDisplay: "none"
             })
         }
@@ -2046,7 +2047,7 @@ closeCross=()=>{
                                         // let color = this.getDamageTypeColor(item.damage_type);
                                         // console.log(color);
                                         if (item.damage_type !== 6) {
-                                            if (item.author !== 'member') {
+                                            if (item.author !== '人工标注') {
                                                 return <polygon onMouseLeave={this.closeDefectInfo(item)}
                                                                 onMouseEnter={this.showDefectInfo(item)}
                                                                 author={item.author}
@@ -2111,7 +2112,7 @@ closeCross=()=>{
                                     var line_x = rect_x + 60
                                     var line_y = rect_y > 0 ? 410 : 80
                                     console.log("index" + index + " rect_x" + rect_x)
-                                    if (item.author !== 'member') {
+                                    if (item.author !== '人工标注') {
 
                                         return <>
                                             <line id={'line' + item.id} x1={x1} y1={y1} x2={line_x} y2={line_y}
@@ -2177,7 +2178,7 @@ closeCross=()=>{
                                     var line_x = rect_x + 60
                                     var line_y = rect_y + 40
                                     console.log("index" + index + " rect_x" + rect_x)
-                                    if (item.author !== 'member') {
+                                    if (item.author !== '人工标注') {
 
                                         return <>
                                             <line id={'line' + item.id} x1={x1} y1={y1} x2={line_x} y2={line_y}
