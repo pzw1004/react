@@ -415,6 +415,23 @@ class PictureManage extends Component {
                 this.setState({
                     picture: response.data,
                 })
+                window.location.replace(window.location.href);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    updateCrossforAI = (xy)=>{
+        // var crossxy = x + "," + y
+        let api = global.AppConfig.serverIP + '/updatePictureCross/' + xy + '/' + this.state.picture.picture_id;
+        axios.post(api)
+            .then((response) => {
+                //this.props.MemberList.run();
+                this.setState({
+                    picture: response.data,
+                })
+                window.location.replace(window.location.href);
             })
             .catch((error) => {
                 console.log(error);
@@ -661,6 +678,7 @@ class PictureManage extends Component {
             .then((response) => {
                 setTimeout(loadinghide, 100);
                 message.success("编号" + this.state.picture.picture_number + "影像图成功获取检测结果！！");
+                this.updateCrossforAI(this.state.picture.picture_cross_point)
                 //this.props.MemberList.run();
                 // this.setState({
                 //     polygonList: response.data,
@@ -751,6 +769,7 @@ class PictureManage extends Component {
         axios.post(api, polygonArray)
             .then((response) => {
                 // console.log(JSON.stringify(response.data));
+                this.updateCrossforAI(this.state.picture.picture_cross_point)
                 message.success('保存成功');
                 let ele = document.getElementById("tempId");
                 if (ele != null) {
@@ -1263,13 +1282,13 @@ class PictureManage extends Component {
         if (this.state.rectDisplay == "none") {
             this.setState({
                 rectDisplay: "",
-                 drawDamageTypeDisplay:"",
+                 // drawDamageTypeDisplay:"",
                 drawConfDisplay: ""
             })
         } else {
             this.setState({
                 rectDisplay: "none",
-                drawDamageTypeDisplay:"none",
+                // drawDamageTypeDisplay:"none",
                 drawConfDisplay: "none"
             })
         }
@@ -1859,7 +1878,7 @@ closeCross=()=>{
     getposition=()=>{
         //todo  重新计算
         this.updateCross(this.state.picture.picture_cross_point)
-        window.location.replace(window.location.href);
+
     }
 
 
@@ -2262,7 +2281,7 @@ closeCross=()=>{
                     <Button onClick={this.closeCross}> 隐藏/显示准星</Button>&emsp;&emsp;
                     <br/>
                     <br/>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button onClick={this.getposition}> 重新计算</Button>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button onClick={this.getposition}> 重新计算</Button>(位置显示null时点击)
                     <br/>
                     <br/>
                     &emsp;AI &nbsp;检测 &nbsp;：

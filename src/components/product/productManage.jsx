@@ -46,6 +46,7 @@ class productManage extends Component {
             .then((response) => {
                 message.info('删除成功', 3);
                 this.componentWillMount()
+                window.location.replace(window.location.href);
             })
             .catch((error) => {
                 console.log(error);
@@ -100,6 +101,7 @@ class productManage extends Component {
                 console.log(values.add_product_name)
                 if(values.add_product_name){
                     this.addproduct(values.add_product_name)
+                    window.location.replace(window.location.href);
                 }
                 else{
                     message.error("名称不能为空")
@@ -118,6 +120,7 @@ class productManage extends Component {
         })
             .then((response) => {
                 message.info('上传成功', 3);
+                window.location.replace(window.location.href);
             })
             .catch((error) => {
                 console.log(error);
@@ -136,6 +139,7 @@ class productManage extends Component {
 
                 message.info('添加成功', 3);
                 this.componentWillMount()
+                window.location.replace(window.location.href);
             })
             .catch((error) => {
                 console.log(error);
