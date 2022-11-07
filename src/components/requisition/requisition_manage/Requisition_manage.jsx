@@ -105,6 +105,7 @@ class DrawerForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        console.log("this.props.RequisitionList.state.requisition",this.props.RequisitionList.state.requisition)
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
@@ -356,7 +357,7 @@ class DrawerForm extends Component {
          * */
         //requisition_firstexam_member
 
-
+        console.log("addRequisition",requisition)
         requisition.requisition_firstexam_member = this.props.RequisitionList.state.firstMemberId;
         requisition.requisition_secondexam_member = this.props.RequisitionList.state.secondMemberId;
         requisition.requisition_thirdexam_member = this.props.RequisitionList.state.thirdMemberId;
@@ -390,6 +391,10 @@ class DrawerForm extends Component {
             // <Link to="/printReport" target="_blank">测试弹出</Link>
             // <Link to={`/printReport/${this.props.RequisitionList.state.requisition.requisition_id}`}
     };
+
+    con=()=>{
+        console.log("this.props.RequisitionList.state.requisition",this.props.RequisitionList.state.requisition)
+    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -537,6 +542,22 @@ class DrawerForm extends Component {
                                 </Form.Item>
                             </Col>
                         </Row>
+                        <Col span={4}>
+                                <Form.Item label="申请单id" style={{display:"none"}}>
+                                    {getFieldDecorator('requisition_id', {
+                                        rules: [{ required: false, message: '申请单id' }],
+                                        initialValue: this.props.RequisitionList.state.requisition.requisition_id,
+                                    })(<Input placeholder="申请单id" />)}
+                                </Form.Item>
+                            </Col>
+                        <Col span={4}>
+                            <Form.Item label="产品id" style={{display:"none"}}>
+                                {getFieldDecorator('requisition_product_id', {
+                                    rules: [{ required: false, message: '产品id' }],
+                                    initialValue: this.props.RequisitionList.state.product_id,
+                                })(<Input placeholder="申请单id" />)}
+                            </Form.Item>
+                        </Col>
                         {/*<Row gutter={20} >*/}
                         {/*    /!*<Col span={4}>*!/*/}
                         {/*    /!*    <Form.Item label="申请单id" style={{display:true}}>*!/*/}

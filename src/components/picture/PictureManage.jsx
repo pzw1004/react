@@ -1877,7 +1877,8 @@ closeCross=()=>{
     }
     getposition=()=>{
         //todo  重新计算
-        this.updateCross(this.state.picture.picture_cross_point)
+        console.log("ssss",this.state.picture.picture_cross_point)
+        this.updateCrossforAI(this.state.picture.picture_cross_point)
 
     }
 
@@ -1936,7 +1937,7 @@ closeCross=()=>{
 
             {
                 width: 160,
-                title: '位置',
+                title: '位置(mm,mm)',
                 dataIndex: 'flaw_positions',
                 key: 'belief',
             },
