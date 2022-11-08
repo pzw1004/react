@@ -104,8 +104,15 @@ btnUpPage=()=>{
                 >
 
                     <Menu.Item key="0"><Icon type="profile" theme="twoTone" />首页<Link to="/app"></Link></Menu.Item>
-                    <SubMenu key="sub1" title={<span><Icon type="profile" theme="twoTone" /><span>申请单处理</span></span>}>
-                        <SubMenu style={{marginLeft: '32px'}} mode="vertical" key="122"  title={<span>查看申请信息</span>}>
+                    <SubMenu key="s1" title={<span><Icon type="profile" theme="twoTone" /><span>创建委托单</span></span>}>
+
+                        <Menu.Item key="4"><Link to="/app/productManage" ><span>管理产品类</span></Link></Menu.Item>
+                        <Menu.Item key="2"><Link to="/app/addRequisition" ><span>增加新申请单</span></Link></Menu.Item>
+                        <Menu.Item key="3"><Link to="/app/addPictureList" ><span>导入影像图</span></Link></Menu.Item><
+                        /SubMenu>
+
+                    <SubMenu key="sub1" title={<span><Icon type="profile" theme="twoTone" /><span>委托单审核</span></span>}>
+                        <SubMenu style={{marginLeft: '32px'}} mode="vertical" key="122"  title={<span>查看信息</span>}>
 
                           {/*<Menu.Item key='11' style={{height: "auto" , "white-space": "break-spaces","line-height":"18px"}} ><Link to="/app/requisition" ><span>大船头啊啊啊啊啊啊啊红红火火恍恍惚惚哈哈哈哈</span></Link></Menu.Item>*/}
                           {/*<Menu.Item key='12'><span>船身</span></Menu.Item>*/}
@@ -149,9 +156,9 @@ btnUpPage=()=>{
                             {/*}}></Button>*/}
                         </div>
                         </SubMenu>
-                        <Menu.Item key="2"><Link to="/app/addRequisition" ><span>增加新申请单</span></Link></Menu.Item>
-                        <Menu.Item key="4"><Link to="/app/productManage" ><span>管理产品类</span></Link></Menu.Item>
-                        <Menu.Item key="3"><Link to="/app/addPictureList" ><span>导入影像图</span></Link></Menu.Item>
+                        {/*<Menu.Item key="2"><Link to="/app/addRequisition" ><span>增加新申请单</span></Link></Menu.Item>*/}
+                        {/*<Menu.Item key="4"><Link to="/app/productManage" ><span>管理产品类</span></Link></Menu.Item>*/}
+                        {/*<Menu.Item key="3"><Link to="/app/addPictureList" ><span>导入影像图</span></Link></Menu.Item>*/}
                         {/*<Menu.Item key="4"><Link to="/app/Statistics"><span>统计信息</span></Link></Menu.Item>*/}
                         {/*<Menu.Item key="2"><Link to="/printReport" target="_blank">测试弹出</Link></Menu.Item>*/}
                         {/*<Menu.Item key="2"><Link to="/app/test">增加申请单</Link></Menu.Item>*/}

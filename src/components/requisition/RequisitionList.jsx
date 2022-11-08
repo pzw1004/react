@@ -443,6 +443,13 @@ class RequisitionList extends Component{
         // clearInterval(this.intervalId);
     }
 
+    handleReport=(id)=>{
+        const w=window.open('about:blank');
+        w.location.href=`/printReport/${id}`;
+        //以下为备用方法，可直接写在button标签内，但经过实测IE浏览器可能出现无法传值的情况
+        // <Link to="/printReport" target="_blank">测试弹出</Link>
+        // <Link to={`/printReport/${this.props.RequisitionList.state.requisition.requisition_id}`}
+    };
 
     shenpiState=(requisitionList)=>{
 
@@ -582,18 +589,18 @@ class RequisitionList extends Component{
         { title: '一级状态', key: 'state1',width:110, render: (record) => <span><Badge status={record.firstStatus} />{record.requisition_firstexam}</span> },
         { title: '二级状态', key: 'state2',width:110, render: (record) => <span><Badge status={record.secondStatus}/>{record.requisition_secondexam}</span> },
         { title: '三级状态', key: 'state3',width:110, render: (record) => <span><Badge status={record.thirdStatus} />{record.requisition_thirdexam}</span> },
-        { title: '操作', key: 'operation', width:110,render: (record) => <a onClick={()=>this.showDrawer(record.requisition_id)}>审核申请单</a> },
+        { title: '操作', key: 'operation', width:110,render: (record) => <a onClick={()=>this.showDrawer(record.requisition_id)}>审核委托单</a> },
         { title: '删除', key: 'delete', width:110,render: (record) =>
             <Popconfirm
-                title="确定要删除该申请单吗？"
+                title="确定要删除该委托单吗？"
                 icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
                 onConfirm={()=>this.deleteRequisition(record.requisition_id,record.requisition_number)}
                 okText="确定删除"
                 cancelText="取消"
             >
-                <a href="#">删除申请单</a>
+                <a href="#">删除委托单</a>
             </Popconfirm>},
-    ];
+        { title: '生成报告单', key: 'operation', width:110,render: (record) => <a onClick={()=>this.handleReport(record.requisition_id)}>生成报告单</a> },];
     changeDrawer=()=>{
         this.setState({
             Dvisible: true
@@ -621,7 +628,7 @@ class RequisitionList extends Component{
                 <Steps size={"default"} current={2}>
                     <Steps.Step icon={<Icon type="database" />} title={<strong>查看信息</strong>} />
                     <Steps.Step icon={<Icon type="folder-open" />} title={<strong>产品类别</strong>}description={this.state.current_product_name}/>
-                    <Steps.Step title={<strong>申请单</strong>} description={"总数:"+this.state.requisitionList.length}/>
+                    <Steps.Step title={<strong>审核委托单</strong>} description={"总数:"+this.state.requisitionList.length}/>
                 </Steps></div>
                 <br/>
                 <strong><font size={4}>产品:</font></strong><font size={4}>&ensp;{this.state.current_product_name}</font> &emsp;

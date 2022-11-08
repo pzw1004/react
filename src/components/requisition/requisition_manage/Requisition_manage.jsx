@@ -426,7 +426,7 @@ class DrawerForm extends Component {
                 {/*    <Icon type="plus" /> 添加新申请单*/}
                 {/*</Button>*/}
                 <Drawer
-                    title="审核申请单"
+                    title="委托单"
                     width={1200}
                     onClose={this.onClose}
                     visible={this.props.RequisitionList.state.visible}
@@ -1611,11 +1611,11 @@ class DrawerForm extends Component {
                                     <Button type="primary" disabled={this.props.RequisitionList.state.requisition_button_disabled} onClick={this.completeApproval} style={{ marginRight: 8 }}>完成审批</Button>
                                 </Form.Item>
                             </Col>
-                            <Col span={4}>
-                                <Form.Item >
-                                    <Button  type="primary" htmlType="submit" onClick={this.handleReport}>生成检测报告</Button>
-                                </Form.Item>
-                            </Col>
+                            {/*<Col span={4}>*/}
+                            {/*    <Form.Item >*/}
+                            {/*        <Button  type="primary" htmlType="submit" onClick={this.handleReport}>生成检测报告</Button>*/}
+                            {/*    </Form.Item>*/}
+                            {/*</Col>*/}
 
                             <Col span={4}>
                                 <Form.Item >
