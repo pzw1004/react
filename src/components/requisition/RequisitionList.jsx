@@ -586,10 +586,10 @@ class RequisitionList extends Component{
         { title: '检测标准', dataIndex: 'requisition_testingstandard', width:110,},
         { title: '合格级别', dataIndex: 'requisition_qualificationlevel', width:110,},
         { title: '焊缝数量', dataIndex: 'requisition_totalnumber', width:110,},
-        { title: '一级状态', key: 'state1',width:110, render: (record) => <span><Badge status={record.firstStatus} />{record.requisition_firstexam}</span> },
-        { title: '二级状态', key: 'state2',width:110, render: (record) => <span><Badge status={record.secondStatus}/>{record.requisition_secondexam}</span> },
-        { title: '三级状态', key: 'state3',width:110, render: (record) => <span><Badge status={record.thirdStatus} />{record.requisition_thirdexam}</span> },
-        { title: '操作', key: 'operation', width:110,render: (record) => <a onClick={()=>this.showDrawer(record.requisition_id)}>审核委托单</a> },
+        // { title: '一级状态', key: 'state1',width:110, render: (record) => <span><Badge status={record.firstStatus} />{record.requisition_firstexam}</span> },
+        // { title: '二级状态', key: 'state2',width:110, render: (record) => <span><Badge status={record.secondStatus}/>{record.requisition_secondexam}</span> },
+        // { title: '三级状态', key: 'state3',width:110, render: (record) => <span><Badge status={record.thirdStatus} />{record.requisition_thirdexam}</span> },
+        { title: '操作', key: 'operation', width:110,render: (record) => <a onClick={()=>this.showDrawer(record.requisition_id)}>修改委托单</a> },
         { title: '删除', key: 'delete', width:110,render: (record) =>
             <Popconfirm
                 title="确定要删除该委托单吗？"

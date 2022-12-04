@@ -1485,112 +1485,112 @@ class DrawerForm extends Component {
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <Row gutter={16}>
-                            <Col span={4}>
-                                <Form.Item label="一级审核结果">
-                                    {getFieldDecorator('requisition_firstexam', {
-                                        rules: [{ required: true, message: '请输入一级审核结果' }],
-                                        initialValue: this.props.RequisitionList.state.requisition.requisition_firstexam
-                                    })(<Input placeholder="一级审核结果" disabled={"true"}/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="一级审核人员">
-                                    {getFieldDecorator('requisition_firstexam_member', {
-                                        rules: [{ required: true, message: '请输入一级审核人员' }],
-                                        initialValue: this.props.RequisitionList.state.firstMember
-                                    })(<Input placeholder="一级审核人员" disabled={"true"}/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item label="一级审核意见">
-                                    {getFieldDecorator('requisition_firstopinion', {
-                                        rules: [{ required: false, message: '请输入一级审核意见' }],
-                                        initialValue: this.props.RequisitionList.state.requisition.requisition_firstopinion
-                                    })(<Input.TextArea rows={4} placeholder="一级审核意见" disabled={this.props.RequisitionList.state.threeRoleManage.requisition_firstexam}/>)}
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col span={4}>
-                                <Form.Item label="二级审核结果">
-                                    {getFieldDecorator('requisition_secondexam', {
-                                        rules: [{ required: true, message: '请输入二级审核结果' }],
-                                        initialValue: this.props.RequisitionList.state.requisition.requisition_secondexam
-                                    })(<Input placeholder="二级审核结果" disabled={"true"}/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="二级审核人员">
-                                    {getFieldDecorator('requisition_secondexam_member', {
-                                        rules: [{ required: true, message: '请输入二级审核人员' }],
-                                        initialValue: this.props.RequisitionList.state.secondMember
-                                    })(<Input placeholder="二级审核人员" disabled={"true"}/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item label="二级审核意见">
-                                    {getFieldDecorator('requisition_secondopinion', {
-                                        rules: [{ required: false, message: '请输入二级审核意见' }],
-                                        initialValue: this.props.RequisitionList.state.requisition.requisition_secondopinion
-                                    })(<Input.TextArea rows={4} placeholder="二级审核意见" disabled={this.props.RequisitionList.state.threeRoleManage.requisition_secondexam}/>)}
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col span={4}>
-                                <Form.Item label="三级审核结果">
-                                    {getFieldDecorator('requisition_thirdexam', {
-                                        rules: [{ required: true, message: '请输入三级审核结果' }],
-                                        initialValue: this.props.RequisitionList.state.requisition.requisition_thirdexam
-                                    })(<Input placeholder="三级审核结果" disabled={"true"}/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="三级审核人员">
-                                    {getFieldDecorator('requisition_thirdexam_member', {
-                                        rules: [{ required: true, message: '请输入三级审核人员' }],
-                                        initialValue: this.props.RequisitionList.state.thirdMember
-                                    })(<Input placeholder="三级审核人员" disabled={"true"}/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item label="三级审核意见">
-                                    {getFieldDecorator('requisition_thirdopinion', {
-                                        rules: [{ required: false, message: '请输入三级审核意见' }],
-                                        initialValue: this.props.RequisitionList.state.requisition.requisition_thirdopinion
-                                    })(<Input.TextArea rows={4} placeholder="三级审核意见" disabled={this.props.RequisitionList.state.threeRoleManage.requisition_thirdexam}/>)}
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Row gutter={16}>
-                            <Col span={0}>
-                                <Form.Item label="审核状态" >
-                                    {getFieldDecorator('requisition_state', {
-                                        rules: [{ required: true, message: '审核状态' }],
-                                        initialValue: this.props.RequisitionList.state.requisition.requisition_state
-                                    })(<Input placeholder="审核状态"  disabled={this.props.RequisitionList.state.requisition_tubevoltage_disabled}/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={0} >
-                                <Form.Item label="是否提交（扫描端）" style={{display:"none"}}>
-                                    {getFieldDecorator('requisition_submit', {
-                                        rules: [{ required: true, message: '是否提交' }],
-                                        initialValue: 1
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_submit
-                                    })(<Input placeholder="是否提交" />)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="存入时间">
-                                    {getFieldDecorator('requisition_entrytime', {
-                                        rules: [{ required: true, message: '存入时间' }],
-                                        initialValue: this.props.RequisitionList.state.requisition.requisition_entrytime
-                                    })(<Input placeholder="存入时间" />)}
-                                </Form.Item>
-                            </Col>
+                        {/*<Row gutter={16}>*/}
+                        {/*    <Col span={4}>*/}
+                        {/*        <Form.Item label="一级审核结果">*/}
+                        {/*            {getFieldDecorator('requisition_firstexam', {*/}
+                        {/*                rules: [{ required: true, message: '请输入一级审核结果' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.requisition.requisition_firstexam*/}
+                        {/*            })(<Input placeholder="一级审核结果" disabled={"true"}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col span={4}>*/}
+                        {/*        <Form.Item label="一级审核人员">*/}
+                        {/*            {getFieldDecorator('requisition_firstexam_member', {*/}
+                        {/*                rules: [{ required: true, message: '请输入一级审核人员' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.firstMember*/}
+                        {/*            })(<Input placeholder="一级审核人员" disabled={"true"}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col span={8}>*/}
+                        {/*        <Form.Item label="一级审核意见">*/}
+                        {/*            {getFieldDecorator('requisition_firstopinion', {*/}
+                        {/*                rules: [{ required: false, message: '请输入一级审核意见' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.requisition.requisition_firstopinion*/}
+                        {/*            })(<Input.TextArea rows={4} placeholder="一级审核意见" disabled={this.props.RequisitionList.state.threeRoleManage.requisition_firstexam}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*</Row>*/}
+                        {/*<Row gutter={16}>*/}
+                        {/*    <Col span={4}>*/}
+                        {/*        <Form.Item label="二级审核结果">*/}
+                        {/*            {getFieldDecorator('requisition_secondexam', {*/}
+                        {/*                rules: [{ required: true, message: '请输入二级审核结果' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.requisition.requisition_secondexam*/}
+                        {/*            })(<Input placeholder="二级审核结果" disabled={"true"}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col span={4}>*/}
+                        {/*        <Form.Item label="二级审核人员">*/}
+                        {/*            {getFieldDecorator('requisition_secondexam_member', {*/}
+                        {/*                rules: [{ required: true, message: '请输入二级审核人员' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.secondMember*/}
+                        {/*            })(<Input placeholder="二级审核人员" disabled={"true"}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col span={8}>*/}
+                        {/*        <Form.Item label="二级审核意见">*/}
+                        {/*            {getFieldDecorator('requisition_secondopinion', {*/}
+                        {/*                rules: [{ required: false, message: '请输入二级审核意见' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.requisition.requisition_secondopinion*/}
+                        {/*            })(<Input.TextArea rows={4} placeholder="二级审核意见" disabled={this.props.RequisitionList.state.threeRoleManage.requisition_secondexam}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*</Row>*/}
+                        {/*<Row gutter={16}>*/}
+                        {/*    <Col span={4}>*/}
+                        {/*        <Form.Item label="三级审核结果">*/}
+                        {/*            {getFieldDecorator('requisition_thirdexam', {*/}
+                        {/*                rules: [{ required: true, message: '请输入三级审核结果' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.requisition.requisition_thirdexam*/}
+                        {/*            })(<Input placeholder="三级审核结果" disabled={"true"}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col span={4}>*/}
+                        {/*        <Form.Item label="三级审核人员">*/}
+                        {/*            {getFieldDecorator('requisition_thirdexam_member', {*/}
+                        {/*                rules: [{ required: true, message: '请输入三级审核人员' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.thirdMember*/}
+                        {/*            })(<Input placeholder="三级审核人员" disabled={"true"}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col span={8}>*/}
+                        {/*        <Form.Item label="三级审核意见">*/}
+                        {/*            {getFieldDecorator('requisition_thirdopinion', {*/}
+                        {/*                rules: [{ required: false, message: '请输入三级审核意见' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.requisition.requisition_thirdopinion*/}
+                        {/*            })(<Input.TextArea rows={4} placeholder="三级审核意见" disabled={this.props.RequisitionList.state.threeRoleManage.requisition_thirdexam}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*</Row>*/}
+                        {/*<Row gutter={16}>*/}
+                        {/*    <Col span={0}>*/}
+                        {/*        <Form.Item label="审核状态" >*/}
+                        {/*            {getFieldDecorator('requisition_state', {*/}
+                        {/*                rules: [{ required: true, message: '审核状态' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.requisition.requisition_state*/}
+                        {/*            })(<Input placeholder="审核状态"  disabled={this.props.RequisitionList.state.requisition_tubevoltage_disabled}/>)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col span={0} >*/}
+                        {/*        <Form.Item label="是否提交（扫描端）" style={{display:"none"}}>*/}
+                        {/*            {getFieldDecorator('requisition_submit', {*/}
+                        {/*                rules: [{ required: true, message: '是否提交' }],*/}
+                        {/*                initialValue: 1*/}
+                        {/*                // initialValue: this.props.RequisitionList.state.requisition.requisition_submit*/}
+                        {/*            })(<Input placeholder="是否提交" />)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col span={4}>*/}
+                        {/*        <Form.Item label="存入时间">*/}
+                        {/*            {getFieldDecorator('requisition_entrytime', {*/}
+                        {/*                rules: [{ required: true, message: '存入时间' }],*/}
+                        {/*                initialValue: this.props.RequisitionList.state.requisition.requisition_entrytime*/}
+                        {/*            })(<Input placeholder="存入时间" />)}*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Col>*/}
 
-                        </Row>
+                        {/*</Row>*/}
                         <br/><br/>
                         <Divider />
                         <Row gutter={16}>
@@ -1600,17 +1600,17 @@ class DrawerForm extends Component {
                                 </Form.Item>
                             </Col>
 
-                            <Col span={4}>
-                                <Form.Item >
-                                    <Button type="danger" disabled={this.props.RequisitionList.state.requisition_button_disabled} onClick={this.rejectRequest} style={{ marginRight: 8 }}>驳回申请单</Button>
-                                </Form.Item>
-                            </Col>
+                            {/*<Col span={4}>*/}
+                            {/*    <Form.Item >*/}
+                            {/*        <Button type="danger" disabled={this.props.RequisitionList.state.requisition_button_disabled} onClick={this.rejectRequest} style={{ marginRight: 8 }}>驳回申请单</Button>*/}
+                            {/*    </Form.Item>*/}
+                            {/*</Col>*/}
 
-                            <Col span={4}>
-                                <Form.Item >
-                                    <Button type="primary" disabled={this.props.RequisitionList.state.requisition_button_disabled} onClick={this.completeApproval} style={{ marginRight: 8 }}>完成审批</Button>
-                                </Form.Item>
-                            </Col>
+                            {/*<Col span={4}>*/}
+                            {/*    <Form.Item >*/}
+                            {/*        <Button type="primary" disabled={this.props.RequisitionList.state.requisition_button_disabled} onClick={this.completeApproval} style={{ marginRight: 8 }}>完成审批</Button>*/}
+                            {/*    </Form.Item>*/}
+                            {/*</Col>*/}
                             {/*<Col span={4}>*/}
                             {/*    <Form.Item >*/}
                             {/*        <Button  type="primary" htmlType="submit" onClick={this.handleReport}>生成检测报告</Button>*/}
@@ -1618,8 +1618,11 @@ class DrawerForm extends Component {
                             {/*</Col>*/}
 
                             <Col span={4}>
+                                {/*<Form.Item >*/}
+                                {/*    <Button type="danger"  htmlType="submit">提交并更改审核信息</Button>*/}
+                                {/*</Form.Item>*/}
                                 <Form.Item >
-                                    <Button type="danger"  htmlType="submit">提交并更改审核信息</Button>
+                                    <Button type="danger"  htmlType="submit">修改信息</Button>
                                 </Form.Item>
                             </Col>
                         </Row>

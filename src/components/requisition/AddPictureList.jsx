@@ -243,7 +243,7 @@ import {Tree} from 'antd';
 import {Select} from 'antd';
 import axios from "axios";
 import {PlusOutlined, UploadOutlined} from '@ant-design/icons';
-
+import './AddPictureList.css'
 const {Option} = Select;
 
 function getBase64(file) {
@@ -283,6 +283,8 @@ class AddPictureList extends Component {
             requisitionTree: [],
             requisitionFile: [],
             fileList: [],
+            fileList2: [],
+            fileList3: [],
             uploading: false,
             selectRequisition_id: '',
             percent: '',
@@ -339,12 +341,22 @@ class AddPictureList extends Component {
     };
 
     handleUpload = () => {
-        const {fileList} = this.state;
+        const {fileList,fileList2,fileList3} = this.state;
         const formData = new FormData();
         fileList.forEach(file => {
             //formData.append('files[]', file);
-            formData.append('uploadFile', file);
+            formData.append('uploadFile', file)//射线
         });
+        fileList2.forEach(file => {
+            //formData.append('files[]', file);
+            formData.append('uploadFile2', file) //涡流
+        });
+        fileList3.forEach(file => {
+            //formData.append('files[]', file);
+            formData.append('uploadFile3', file) //超声
+        });
+        console.log(fileList2.length)
+        console.log(fileList3.length)
         console.log(fileList.length)
         this.setState({
             uploading: true,
@@ -386,14 +398,13 @@ class AddPictureList extends Component {
             // },
         }).then((response) => {
             this.setState({
-                fileList: [],
                 uploading: false,
             });
             this.setState({
                 percent: 100
             })
             message.success('已经全部导入成功！');
-            this.getFileList();
+            // this.getFileList();
         }).catch((error) => {
             this.setState({
                 uploading: false,
@@ -433,7 +444,7 @@ class AddPictureList extends Component {
     render() {
 
 
-        const {uploading, fileList} = this.state;
+        const {uploading, fileList, fileList2, fileList3} = this.state;
 
         // const event = info.event;
         // if(event){
@@ -442,6 +453,7 @@ class AddPictureList extends Component {
         //         percent: percent
         //     })
         // }
+
         const props = {
             listType: 'picture',
             onRemove: file => {
@@ -482,6 +494,91 @@ class AddPictureList extends Component {
 
             },
             fileList,
+            defaultFileList: fileList,
+        };
+        const props2 = {
+            listType: 'picture',
+            onRemove: file => {
+                console.log(file)
+                this.setState(state => {
+                    const index = state.fileList2.indexOf(file);
+                    console.log(index)
+                    const newFileList = state.fileList2.slice();
+                    newFileList.splice(index, 1);
+                    console.log(newFileList)
+                    return {
+                        fileList2: newFileList,
+                    };
+                });
+
+            },
+            beforeUpload: file => {
+                console.log(file)
+                file.url = global.AppConfig.tiffPicsIP + "0//涡流//" + file.name;//预览图片保存的地址
+
+                this.setState(state => ({
+                        fileList2: [...state.fileList2, file],
+                    }
+                ));
+                console.log(this.state.fileList2)
+                return false;
+            },
+            onChange: ({file, fileList}) => {
+                let d = this.state.donef
+
+                if (file.status == "done") {
+                    console.log("done")
+                    this.setState({
+                        donef: d + 1
+                    })
+                }
+                console.log(file);
+
+            },
+            fileList2,
+            defaultFileList: fileList2,
+        };
+        const props3 = {
+            listType: 'picture',
+            onRemove: file => {
+                console.log(file)
+                this.setState(state => {
+                    const index = state.fileList3.indexOf(file);
+                    console.log(index)
+                    const newFileList = state.fileList3.slice();
+                    newFileList.splice(index, 1);
+                    console.log(newFileList)
+                    return {
+                        fileList3: newFileList,
+                    };
+                });
+
+            },
+            beforeUpload: file => {
+                console.log(file)
+                file.url = global.AppConfig.tiffPicsIP + "0//超声//" + file.name;//预览图片保存的地址
+
+                this.setState(state => ({
+                        fileList3: [...state.fileList3, file],
+                    }
+                ));
+                console.log(this.state.fileList)
+                return false;
+            },
+            onChange: ({file, fileList}) => {
+                let d = this.state.donef
+
+                if (file.status == "done") {
+                    console.log("done")
+                    this.setState({
+                        donef: d + 1
+                    })
+                }
+                console.log(file);
+
+            },
+            fileList3,
+            defaultFileList: fileList3,
         };
 
 
@@ -531,14 +628,31 @@ class AddPictureList extends Component {
                 </Button>
                 <Progress percent={this.state.percent}></Progress>
                 <br/>
-
-                <Upload {...props}
+                <div className="uploadDiv">
+                <Upload  {...props}
                         multiple="picture">
                     <Button>
-                        <UploadOutlined/> 选择要上传的图片
+                        <UploadOutlined/> 上传射线图片
+                    </Button>
+                </Upload>
+            </div>
+                <div className="uploadDiv2">
+                <Upload {...props2}
+                        multiple="picture">
+                    <Button>
+                        <UploadOutlined/> 上传涡流图片
+                    </Button>
+                </Upload>
+                </div>
+                <div className="uploadDiv3">
+                <Upload {...props3}
+                        multiple="picture">
+                    <Button>
+                        <UploadOutlined/> 上传相控阵图片
                     </Button>
                 </Upload>
 
+                </div>
             </div>
         );
     }

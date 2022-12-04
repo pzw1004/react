@@ -13,6 +13,8 @@
     "d3v4": "^4.2.2",
     "echarts": "^5.3.3",
     "echarts-for-react": "^3.0.2",
+    "jszip": "^3.10.1",
+    "jszip-utils": "^0.1.0",
     "moment": "^2.24.0",
     "print-js": "^1.6.0",
     "react": "^16.8.6",

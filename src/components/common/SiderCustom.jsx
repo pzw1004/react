@@ -111,7 +111,7 @@ btnUpPage=()=>{
                         <Menu.Item key="3"><Link to="/app/addPictureList" ><span>导入影像图</span></Link></Menu.Item><
                         /SubMenu>
 
-                    <SubMenu key="sub1" title={<span><Icon type="profile" theme="twoTone" /><span>委托单审核</span></span>}>
+                    <SubMenu key="sub1" title={<span><Icon type="profile" theme="twoTone" /><span>委托单检测</span></span>}>
                         <SubMenu style={{marginLeft: '32px'}} mode="vertical" key="122"  title={<span>查看信息</span>}>
 
                           {/*<Menu.Item key='11' style={{height: "auto" , "white-space": "break-spaces","line-height":"18px"}} ><Link to="/app/requisition" ><span>大船头啊啊啊啊啊啊啊红红火火恍恍惚惚哈哈哈哈</span></Link></Menu.Item>*/}
@@ -165,22 +165,22 @@ btnUpPage=()=>{
                         {/*<Menu.Item key="3">批量导入影像图</Menu.Item>*/}
                     </SubMenu>
 
-                    <SubMenu key="sub4" style={{display: (this.state.display)}} title={<span><Icon type="contacts" theme="twoTone" /><span>成员管理</span></span>}>
-                        <Menu.Item key="13"><Link to="/app/member"><span>查看成员列表</span></Link></Menu.Item>
-                    </SubMenu>
+                    {/*<SubMenu key="sub4" style={{display: (this.state.display)}} title={<span><Icon type="contacts" theme="twoTone" /><span>成员管理</span></span>}>*/}
+                    {/*    <Menu.Item key="13"><Link to="/app/member"><span>查看成员列表</span></Link></Menu.Item>*/}
+                    {/*</SubMenu>*/}
 
-                    <SubMenu key="sub5" title={<span><Icon type="file" theme="twoTone" /><span>日志管理</span></span>}>
-                        <Menu.Item key="17"><Link to="/app/log"><span>查看日志列表</span></Link></Menu.Item>
-                    </SubMenu>
+                    {/*<SubMenu key="sub5" title={<span><Icon type="file" theme="twoTone" /><span>日志管理</span></span>}>*/}
+                    {/*    <Menu.Item key="17"><Link to="/app/log"><span>查看日志列表</span></Link></Menu.Item>*/}
+                    {/*</SubMenu>*/}
 
                     <SubMenu key="sub2" title={<span><Icon type="idcard" theme="twoTone" /><span>个人信息管理</span></span>}>
                         <Menu.Item key="5" ><Link to="/app/personalPage"><span>个人信息</span></Link></Menu.Item>
                         {/*<Menu.Item key="6" ><Link to="/app/signature"><span>电子签名</span></Link></Menu.Item>*/}
                     </SubMenu>
 
-                    <SubMenu key="sub3" title={<span><Icon type="notification" theme="twoTone"/><span>模型训练</span></span>}>
-                        <Menu.Item><Link to="/app/settings" ><span>训练信息</span></Link></Menu.Item>
-                    </SubMenu>
+                    {/*<SubMenu key="sub3" title={<span><Icon type="notification" theme="twoTone"/><span>模型训练</span></span>}>*/}
+                    {/*    <Menu.Item><Link to="/app/settings" ><span>训练信息</span></Link></Menu.Item>*/}
+                    {/*</SubMenu>*/}
 
 
                 </Menu>

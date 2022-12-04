@@ -666,125 +666,125 @@ getaccount=(e)=>{
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Divider>底片信息</Divider>
-                    <Row gutter={20}>
-                        <Col span={2}>
-                    <Form.Item label="底片数量">
-                        {getFieldDecorator('countofpic', {
-                            rules: [{ required: false, message: '请输入底片数量' }],
-                            // initialValue: this.props.RequisitionList.state.requisition.requisition_name
-                        })(<Input id="account" placeholder="0" onChange={this.getaccount}/>)}
-                    </Form.Item></Col>
-                    </Row>
-                    {this.state.arrpic.map((item,i)=>{
-                        var name = "picture_hanfeng_name"+ i
-                        var name1 = "picture_hanfeng_number"+ i
-                        var name2 = "picture_hanfeng_method"+ i
-                        var name3 = "picture_thickness"+ i
-                        var name4 = "picture_bevel_form"+ i
-                        var name5 = "picture_material_number"+ i
-                        var name6 = "picture_hanfeng_length"+ i
-                        var name7 = "picture_hanfeng_testlength"+ i
-                        var name8 = "picture_testing_rate%"+ i
-                        var name9 = "picture_real_width"+ i
-                        var name10 = "picture_welding_operator"+ i
-                        return    (
-                            <Row gutter={20}>
-                                <Divider>{i+1}</Divider>
-                                <Col span={4}>
-                                    <Form.Item label="焊接人">
-                                        {getFieldDecorator(name10, {
-                                            rules: [{required: true, message: '请输入焊接人'}],
-                                            // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                        })(<Input placeholder="焊接人"/>)}
-                                    </Form.Item>
-                                </Col>
-                                <Col span={4}>
-                                    <Form.Item label="底片长度">
-                                        {getFieldDecorator(name9, {
-                                            rules: [{required: true, message: '请输入底片长度'}],
-                                            // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                        })(<Input placeholder="底片长度"/>)}
-                                    </Form.Item>
-                                </Col>
-                            <Col span={4}>
-                                <Form.Item label="焊缝名称">
-                                    {getFieldDecorator(name, {
-                                        rules: [{required: true, message: '请输入焊缝名称'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="焊缝名称"/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="焊接编号">
-                                    {getFieldDecorator(name1, {
-                                        rules: [{required: true, message: '请输入焊接编号'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="焊接编号"/>)}
-                                </Form.Item>
-                            </Col>
+                    {/*<Divider>底片信息</Divider>*/}
+                    {/*<Row gutter={20}>*/}
+                    {/*    <Col span={2}>*/}
+                    {/*<Form.Item label="底片数量">*/}
+                    {/*    {getFieldDecorator('countofpic', {*/}
+                    {/*        rules: [{ required: false, message: '请输入底片数量' }],*/}
+                    {/*        // initialValue: this.props.RequisitionList.state.requisition.requisition_name*/}
+                    {/*    })(<Input id="account" placeholder="0" onChange={this.getaccount}/>)}*/}
+                    {/*</Form.Item></Col>*/}
+                    {/*</Row>*/}
+                    {/*{this.state.arrpic.map((item,i)=>{*/}
+                    {/*    var name = "picture_hanfeng_name"+ i*/}
+                    {/*    var name1 = "picture_hanfeng_number"+ i*/}
+                    {/*    var name2 = "picture_hanfeng_method"+ i*/}
+                    {/*    var name3 = "picture_thickness"+ i*/}
+                    {/*    var name4 = "picture_bevel_form"+ i*/}
+                    {/*    var name5 = "picture_material_number"+ i*/}
+                    {/*    var name6 = "picture_hanfeng_length"+ i*/}
+                    {/*    var name7 = "picture_hanfeng_testlength"+ i*/}
+                    {/*    var name8 = "picture_testing_rate%"+ i*/}
+                    {/*    var name9 = "picture_real_width"+ i*/}
+                    {/*    var name10 = "picture_welding_operator"+ i*/}
+                    {/*    return    (*/}
+                    {/*        <Row gutter={20}>*/}
+                    {/*            <Divider>{i+1}</Divider>*/}
+                    {/*            <Col span={4}>*/}
+                    {/*                <Form.Item label="焊接人">*/}
+                    {/*                    {getFieldDecorator(name10, {*/}
+                    {/*                        rules: [{required: true, message: '请输入焊接人'}],*/}
+                    {/*                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                    })(<Input placeholder="焊接人"/>)}*/}
+                    {/*                </Form.Item>*/}
+                    {/*            </Col>*/}
+                    {/*            <Col span={4}>*/}
+                    {/*                <Form.Item label="底片长度">*/}
+                    {/*                    {getFieldDecorator(name9, {*/}
+                    {/*                        rules: [{required: true, message: '请输入底片长度'}],*/}
+                    {/*                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                    })(<Input placeholder="底片长度"/>)}*/}
+                    {/*                </Form.Item>*/}
+                    {/*            </Col>*/}
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="焊缝名称">*/}
+                    {/*                {getFieldDecorator(name, {*/}
+                    {/*                    rules: [{required: true, message: '请输入焊缝名称'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="焊缝名称"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="焊接编号">*/}
+                    {/*                {getFieldDecorator(name1, {*/}
+                    {/*                    rules: [{required: true, message: '请输入焊接编号'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="焊接编号"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
 
-                            <Col span={4}>
-                                <Form.Item label="焊接方法">
-                                    {getFieldDecorator(name2, {
-                                        rules: [{required: true, message: '请输入焊接方法'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="焊接方法"/>)}
-                                </Form.Item>
-                            </Col>
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="焊接方法">*/}
+                    {/*                {getFieldDecorator(name2, {*/}
+                    {/*                    rules: [{required: true, message: '请输入焊接方法'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="焊接方法"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
 
-                            <Col span={4}>
-                                <Form.Item label="板厚(几何尺寸)">
-                                    {getFieldDecorator(name3, {
-                                        rules: [{required: true, message: '请输入板厚(几何尺寸)'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="板厚(几何尺寸)"/>)}
-                                </Form.Item>
-                            </Col>
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="板厚(几何尺寸)">*/}
+                    {/*                {getFieldDecorator(name3, {*/}
+                    {/*                    rules: [{required: true, message: '请输入板厚(几何尺寸)'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="板厚(几何尺寸)"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
 
-                            <Col span={4}>
-                                <Form.Item label="坡口形式">
-                                    {getFieldDecorator(name4, {
-                                        rules: [{required: true, message: '请输入坡口形式'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="坡口形式"/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="材料牌号">
-                                    {getFieldDecorator(name5, {
-                                        rules: [{required: true, message: '请输入材料牌号'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="材料牌号"/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="焊缝长度">
-                                    {getFieldDecorator(name6, {
-                                        rules: [{required: true, message: '请输入焊缝长度'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="焊缝长度"/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="检测长度">
-                                    {getFieldDecorator(name7, {
-                                        rules: [{required: false, message: '请输入检测长度'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="检测长度"/>)}
-                                </Form.Item>
-                            </Col>
-                            <Col span={4}>
-                                <Form.Item label="检测比例%">
-                                    {getFieldDecorator(name8, {
-                                        rules: [{required: true, message: '请输入检测比例'}],
-                                        // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard
-                                    })(<Input placeholder="检测比例%"/>)}
-                                </Form.Item>
-                            </Col>
-                        </Row>)
-                    })}
-                    <Divider></Divider>
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="坡口形式">*/}
+                    {/*                {getFieldDecorator(name4, {*/}
+                    {/*                    rules: [{required: true, message: '请输入坡口形式'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="坡口形式"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="材料牌号">*/}
+                    {/*                {getFieldDecorator(name5, {*/}
+                    {/*                    rules: [{required: true, message: '请输入材料牌号'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="材料牌号"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="焊缝长度">*/}
+                    {/*                {getFieldDecorator(name6, {*/}
+                    {/*                    rules: [{required: true, message: '请输入焊缝长度'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="焊缝长度"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="检测长度">*/}
+                    {/*                {getFieldDecorator(name7, {*/}
+                    {/*                    rules: [{required: false, message: '请输入检测长度'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="检测长度"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
+                    {/*        <Col span={4}>*/}
+                    {/*            <Form.Item label="检测比例%">*/}
+                    {/*                {getFieldDecorator(name8, {*/}
+                    {/*                    rules: [{required: true, message: '请输入检测比例'}],*/}
+                    {/*                    // initialValue: this.props.RequisitionList.state.requisition.requisition_testingstandard*/}
+                    {/*                })(<Input placeholder="检测比例%"/>)}*/}
+                    {/*            </Form.Item>*/}
+                    {/*        </Col>*/}
+                    {/*    </Row>)*/}
+                    {/*})}*/}
+                    {/*<Divider></Divider>*/}
                     {/*<Row gutter={20}>*/}
                     {/*    <Col span={4}>*/}
                     {/*        <Form.Item label="检测比例">*/}

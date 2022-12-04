@@ -6,7 +6,7 @@ import '../../assets/css/login.css'
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 import '../../config/config'
-import Background from '../../assets/images/login.jpg';
+import Background from '../../assets/images/login1.jpg';
 
 class NormalLoginForm extends Component {
 

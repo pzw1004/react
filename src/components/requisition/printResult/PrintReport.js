@@ -232,22 +232,22 @@ class PrintReport extends Component {
                     console.log("执行了", index)
                     let f1 = document.getElementById(item.picture.picture_id + "f1")
                     let f2 = document.getElementById(item.picture.picture_id + "f2")
-                    let f3 = document.getElementById(item.picture.picture_id + "f3")
+                    // let f3 = document.getElementById(item.picture.picture_id + "f3")
 
                     let tr1 = document.createElement("tr")
                     let tr2 = document.createElement("tr")
-                    let tr3 = document.createElement("tr")
+                    // let tr3 = document.createElement("tr")
                     let t1 = document.createTextNode(item.polygon.polygon_flaw_length)  //大小
                     let t2 = document.createTextNode(item.damageType.damagetype_name)  //类型
-                    let t3 = document.createTextNode(item.polygon.polygon_flaw_position_x + "," + item.polygon.polygon_flaw_position_y)  //描述（来源）
+                    // let t3 = document.createTextNode(item.polygon.polygon_flaw_position_x + "," + item.polygon.polygon_flaw_position_y)  //描述（来源）
 
                     tr1.appendChild(t1)
                     tr2.appendChild(t2)
-                    tr3.appendChild(t3)
+                    // tr3.appendChild(t3)
 
                     f1.appendChild(tr1)
                     f2.appendChild(tr2)
-                    f3.appendChild(tr3)
+                    // f3.appendChild(tr3)
                 }
             })
         }
@@ -263,14 +263,14 @@ class PrintReport extends Component {
                     <div className="top-title">
                         <span>
                             &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                            <img src={cssc} width="100" height="35"/>
+                            {/*<img src={cssc} width="100" height="35"/>*/}
 
                             &emsp;&emsp;
                             <font
-                                size="6">渤&emsp;海&emsp;造&emsp;船&emsp;厂&emsp;集&emsp;团&emsp;有&emsp;限&emsp;公&emsp;司</font>
+                                size="6">武&emsp;汉&emsp;造&emsp;船&emsp;厂&emsp;集&emsp;团&emsp;有&emsp;限&emsp;公&emsp;司</font>
                             <br/>
                             &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                            <font size="6">BOHAI&ensp;SHIPYARD&ensp;GROUP&ensp;CORPORATION,&ensp;LTD.</font>
+                            <font size="6">WUHAN&ensp;SHIPYARD&ensp;GROUP&ensp;CORPORATION,&ensp;LTD.</font>
                             <hr/>
                             &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                             <font size="6">射&emsp;线&emsp;检&emsp;测&emsp;报&emsp;告</font>
@@ -331,7 +331,7 @@ class PrintReport extends Component {
                             <td colSpan="2" rowSpan="2">板厚/规格(mm)：&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td colSpan="1" rowSpan="2">底片黑度：&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td colSpan="1" rowSpan="2">像质指数：&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td colSpan="3" rowSpan="1">缺陷记录：
+                            <td colSpan="2" rowSpan="1">缺陷记录：
                             </td>
                             <td colSpan="1" rowSpan="2">结论：&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td colSpan="1" rowSpan="2">焊接人：&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -343,9 +343,9 @@ class PrintReport extends Component {
                             <td>
                                 类型：&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
-                            <td>
-                                位置：&nbsp;&nbsp;&nbsp;&nbsp;
-                            </td>
+                            {/*<td>*/}
+                            {/*    位置：&nbsp;&nbsp;&nbsp;&nbsp;*/}
+                            {/*</td>*/}
                         </tr>
                         {
                             this.state.pictureList.map((picture, index) => {
@@ -368,9 +368,9 @@ class PrintReport extends Component {
                                             <td id={picture.picture_id + "f2"} colSpan="1">
                                                 <tr>&nbsp;&nbsp;</tr>
                                             </td>
-                                            <td id={picture.picture_id + "f3"} colSpan="1">
-                                                <tr>&nbsp;&nbsp;</tr>
-                                            </td>
+                                            {/*<td id={picture.picture_id + "f3"} colSpan="1">*/}
+                                            {/*    /!*<tr>&nbsp;&nbsp;</tr>*!/*/}
+                                            {/*</td>*/}
                                             <td colSpan="1">{picture.picture_conclusion}&nbsp;&nbsp;</td>
                                             <td colSpan="1">{picture.picture_welding_operator}&nbsp;&nbsp;</td>
                                         </tr>

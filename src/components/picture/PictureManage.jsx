@@ -14,8 +14,9 @@ import {
     Input,
     Select,
     Switch,
-    InputNumber
+    InputNumber, Carousel
 } from 'antd';
+import JSZip from 'jszip';
 import cv, {COLOR_BGR2GRAY} from "@techstark/opencv-js";
 import {ShrinkOutlined, PoweroffOutlined, SearchOutlined} from '@ant-design/icons';
 import React, {Component} from "react";
@@ -35,6 +36,7 @@ import ReactTooltip from 'react-tooltip';
 import windows from '../../assets/images/windows.png';
 import tools from '../../assets/images/tools.png'
 import TextArea from "antd/es/input/TextArea";
+import JSZipUtils from "jszip-utils";
 window.cv = cv;
 const {Option} = Select;
 message.config({
@@ -92,19 +94,29 @@ let lastPolygonId = "";
 let polygonTopx = 1050;
 let polygonTopy = 350;//先设置成最大，只要每次变小就更新，找到最上方点作为损伤类型位置
 let polygonClickflag = false;//用于改变损伤框类型(为了与rect框区分)   若点击多边形，设置为true，发送给后端对应的接口
-
+//轮播图数据
+var imglist1 = [] //涡流图
+var imglist2 = [] //相控阵
+var imglist3 = []
+var imglistmap1 = [] //涡流图
+var imglistmap2 = [] //相控阵
+var img1count = 0;
+var img2count = 0;
 //单击延时触发
 var clickTimeId;
 let enhance = false;
 let updateRectClor = '';
 let clickRectClor = '';  // rect的Id?
 const confirm = Modal.confirm;
+const zip = new JSZip();
 class PictureManage extends Component {
 
     constructor(props) {
         super(props);
         this.cannyEdgeRef = React.createRef();
         this.state = {
+            AIstate: '',
+            imgState: '',
             chan: " ",
             labeltools: " ",
             pagesize: 5,
@@ -156,11 +168,83 @@ class PictureManage extends Component {
             propsPictureId: picture_id,
         });
         this.getPicture(picture_id);
-        this.getPictureRect(picture_id);
+        // this.getPictureRect(picture_id);
         this.getDamageTypeList();
         this.getPicturePolygon(picture_id);
-        //this.render_Rect_Polygon_List();
+        // this.render_Rect_Polygon_List();
         console.log(this.state)
+    }
+    // getZip1Count=()=>{
+    //     JSZipUtils.getBinaryContent(global.AppConfig.XrayDBIP+this.state.picture.picture_woliu_dir, function (err, data) {
+    //         if (err) {
+    //             throw err;
+    //         }
+    //         const jsZip = new JSZip();
+    //         jsZip.loadAsync(data).then(function (zip) {
+    //             img1count =  Object.keys(zip.files).length
+    //         });
+    //     });
+    // }
+    //
+    // getZip2Count=()=>{
+    //     JSZipUtils.getBinaryContent(global.AppConfig.XrayDBIP+this.state.picture.picture_chaosheng_dir, function (err, data) {
+    //         if (err) {
+    //             throw err;
+    //         }
+    //         const jsZip = new JSZip();
+    //         jsZip.loadAsync(data).then(function (zip) {
+    //             img2count =  Object.keys(zip.files).length
+    //         });
+    //     });
+    // }
+
+    getZip1= (dir) =>{
+        imglist1 = []
+        var list = []
+        var t = this
+        JSZipUtils.getBinaryContent(global.AppConfig.XrayDBIP+dir, function (err, data) {
+            if (err) {
+                throw err;
+            }
+            const jsZip = new JSZip();
+            jsZip.loadAsync(data).then(function (zip) {
+                Object.keys(zip.files).forEach(function (filename) {
+                    zip.files[filename].async("base64").then(function (fileData) {
+                        const image = document.createElement("img");
+                        image.style = "margin-bottom: 50px"
+                        image.width = 400
+                        image.height = 400
+                        image.src = "data:image/*;base64," + fileData;
+                        var c1 = document.getElementById("cd1")
+                        c1.appendChild(image)
+                    });
+                    });
+                });
+
+        });
+}
+    getZip2 = (dir) =>{
+        imglist2 = []
+        var list = []
+        JSZipUtils.getBinaryContent(global.AppConfig.XrayDBIP+dir, function (err, data) {
+            if (err) {
+                throw err;
+            }
+            const jsZip = new JSZip();
+            jsZip.loadAsync(data).then(function (zip) {
+                Object.keys(zip.files).forEach(function (filename) {
+                    zip.files[filename].async("base64").then(function (fileData) {
+                        const image = document.createElement("img");
+                        image.style = "margin-bottom: 50px"
+                        image.width = 400
+                        image.height = 400
+                        image.src = "data:image/*;base64," + fileData;
+                        var c2 = document.getElementById("cd2")
+                        c2.appendChild(image)
+                    });
+                });
+            });
+        });
     }
 
     polygonModel = () => {//开启或关闭多边形模式
@@ -313,7 +397,8 @@ class PictureManage extends Component {
                 this.setState({
                     picture: response.data,
                 });
-
+                // this.getZip1(this.state.picture.picture_woliu_dir)
+                // this.getZip2(this.state.picture.picture_chaosheng_dir)
                 db_picture_thickness = this.state.picture.picture_thickness;
                 db_picture_teststandard = this.state.picture.picture_teststandard;
                 console.log('getPicture', db_picture_thickness);
@@ -950,7 +1035,7 @@ class PictureManage extends Component {
             p.style.cssText = ""
         }
         else{
-            p.style.cssText = "opacity: 0.6;stroke-Width:5px;"
+            p.style.cssText = "opacity: 1;stroke-Width:7px; "
             message.success("多边形损伤框已选中,请“添加缺陷类型” 或 “删除损伤框”")
         }
         lastPolygonId = polygon_id;
@@ -1816,6 +1901,30 @@ class PictureManage extends Component {
         }
 
     }
+    changeAIDisplay = (a) => {
+        if (a) {
+            this.setState({
+                AIstate: " ",
+            })
+        } else {
+            this.setState({
+                AIstate: "none",
+            })
+        }
+
+    }
+    changeimgDisplay = (a) => {
+        if (a) {
+            this.setState({
+                imgState: " ",
+            })
+        } else {
+            this.setState({
+                imgState: "none",
+            })
+        }
+
+    }
     imgEnhance = () =>{
         let img = document.getElementById("img111")
         let img_org = cv.imread(img)
@@ -1910,8 +2019,6 @@ closeCross=()=>{
         }
     }
     render() {
-        //this.getTypeNumber();
-        console.log(polygList)
         const columns = [{
             width: 160,
             title: '类型',
@@ -1935,21 +2042,20 @@ closeCross=()=>{
                 key: 'belief',
             },
 
-            {
-                width: 160,
-                title: '位置(mm,mm)',
-                dataIndex: 'flaw_positions',
-                key: 'belief',
-            },
+            // {
+            //     width: 160,
+            //     title: '位置(mm,mm)',
+            //     dataIndex: 'flaw_positions',
+            //     key: 'belief',
+            // },
         ];
-        console.log(this.state.picture.picture_dir)
         const {getFieldDecorator} = this.props.form;
         //TODO 横轴
-        const COLORS = ["#ED9D01", "#E4EE5D", "#0aff02", "#00CEA6", "#003CB1", "#b1000f"];
+        const COLORS = ["#ED9D01", "#E4EE5D", "#0aff02", "#00CEA6", "#003CB1"];
         const option = {
             xAxis: {
                 type: 'category',
-                data: ['气孔', '夹渣', '裂纹', '未熔合', '未焊透', '人工标注未确定'],
+                data: ['气孔', '夹渣', '裂纹', '未熔合', '未焊透' ],
                 axisTick: {
                     alignWithLabel: true
                 },
@@ -1981,47 +2087,81 @@ closeCross=()=>{
         return (
 
             <div>
-                <div>
-                    <strong>标注工具</strong>
+            {/*    <div style={{marginLeft: 300}}>*/}
+            {/*        <strong>标注工具</strong>*/}
+            {/*        &emsp;<Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked*/}
+            {/*                      onChange={this.changeToolsDisplay}></Switch>*/}
+            {/*        <div className="labeltools" style={{display: this.state.labeltools}}>*/}
+            {/*            <div style={{marginTop: "4px", marginLeft: "4px"}}>*/}
+            {/*                <Button style={{marginLeft: "10px"}} onClick={this.polygonModel} size="small" type="primary"*/}
+            {/*                        shape="round"><font size="2">(开/关)标注模式</font></Button>*/}
+            {/*                &nbsp;&nbsp;&nbsp;&nbsp;*/}
+            {/*                <Button onClick={this.rePolygon} type="primary" size="small" shape="round"><font*/}
+            {/*                    size="2">重新画</font></Button>*/}
+            {/*                &nbsp;&nbsp;&nbsp;&nbsp;*/}
+            {/*                <Button onClick={this.savetmpPolygon} type="primary" size="small" shape="round"><font*/}
+            {/*                    size="2">保存标注</font></Button>*/}
+            {/*                &nbsp;&nbsp;&nbsp;&nbsp;*/}
+            {/*                <Button onClick={() => this.deletePolygon()} type="danger" size="small" shape="round"><font*/}
+            {/*                    size="2">删除标注</font></Button>*/}
+            {/*                &nbsp;&nbsp;&nbsp;&nbsp;*/}
+            {/*                <Select placeholder="请选择损伤类型" style={{width: 200}} size="small"*/}
+            {/*                        defaultValue={this.state.damageType.damagetype_name}*/}
+            {/*                        onChange={this.updateDamageTypeByselect}>*/}
+            {/*                    {this.state.damageTypeList.map((item, index) => {*/}
+            {/*                        return <Option value={item.damagetype_id}>{item.damagetype_name}</Option>*/}
+            {/*                    })*/}
+            {/*                    }*/}
+            {/*                </Select>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*<br/>*/}
+                <div style={{marginLeft: 300}}>
+                    <strong>A I 检 测&nbsp;</strong>
                     &emsp;<Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked
-                                  onChange={this.changeToolsDisplay}></Switch>
-                    <div className="labeltools" style={{display: this.state.labeltools}}>
+                                 onChange={this.changeAIDisplay}></Switch>
+                    <div className="labeltools" style={{display: this.state.AIstate}}>
                         <div style={{marginTop: "4px", marginLeft: "4px"}}>
-                            <Button style={{marginLeft: "10px"}} onClick={this.polygonModel} size="small" type="primary"
-                                    shape="round"><font size="2">(开/关)标注模式</font></Button>
+                            <Button style={{marginLeft: "10px"}} onClick={this.HorizatalFlipPicture} size="small" type="primary"
+                                    shape="round"><font size="2">水平翻转</font></Button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <Button onClick={this.rePolygon} type="primary" size="small" shape="round"><font
-                                size="2">重新画</font></Button>
+                            <Button onClick={this.VerticalFlipPicture} type="primary" size="small" shape="round"><font
+                                size="2">垂直翻转</font></Button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <Button onClick={this.savetmpPolygon} type="primary" size="small" shape="round"><font
-                                size="2">保存标注</font></Button>
+                            <Button onClick={this.AIprocess} type="default" size="small" shape="round"><font
+                                size="2">AI检测</font></Button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <Button onClick={() => this.deletePolygon()} type="danger" size="small" shape="round"><font
-                                size="2">删除标注</font></Button>
+                                size="2">删除AI检测框</font></Button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <Select placeholder="请选择损伤类型" style={{width: 200}} size="small"
-                                    defaultValue={this.state.damageType.damagetype_name}
-                                    onChange={this.updateDamageTypeByselect}>
-                                {this.state.damageTypeList.map((item, index) => {
-                                    return <Option value={item.damagetype_id}>{item.damagetype_name}</Option>
-                                })
-                                }
-                            </Select>
-                            {/*&emsp;&emsp;<font size="2">缩放比例</font>*/}
-                            {/*<InputNumber*/}
-                            {/*    style={{width:"80px"}}*/}
-                            {/*    defaultValue={100}*/}
-                            {/*    min={100}*/}
-                            {/*    max={500}*/}
-                            {/*    step={20}*/}
-                            {/*    formatter={(value) => `${value}%`}*/}
-                            {/*    parser={(value) => value.replace('%', '')}*/}
-                            {/*    onChange={this.changeZoom}*/}
-                            {/*/>*/}
+                        </div>
+                </div>
+                </div>
+                <br/>
+                <div style={{marginLeft: 300}}>
+                    <strong>信息展示</strong>
+                    &emsp;<Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked
+                                  onChange={this.changeimgDisplay}></Switch>
+                    <div className="labeltools" style={{display: this.state.imgState}}>
+                        <div style={{marginTop: "4px", marginLeft: "4px"}}>
+                            {/*<Button style={{marginLeft: "10px"}} onClick={this.changeRectDisplay} size="small" type="default"*/}
+                            {/*        shape="round"><font size="2">关闭/开启人工标注</font></Button>*/}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <Button onClick={this.changeAIRectDisplay} type="default" size="small" shape="round"><font
+                                size="2">关闭/开启AI检测框</font></Button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <Button onClick={this.changeDamageTypeDisplay} type="default" size="small" shape="round"><font
+                                size="2">关闭/开启损伤信息</font></Button>
+                            {/*&nbsp;&nbsp;&nbsp;&nbsp;*/}
+                            {/*<Button onClick={() => this.changehanfengDisplay} type="default" size="small" shape="round"><font*/}
+                            {/*    size="2">关闭/开启焊缝显示</font></Button>*/}
+                            {/*&nbsp;&nbsp;&nbsp;&nbsp;*/}
                         </div>
                     </div>
                 </div>
                 <br/>
+                <Divider>射线底片</Divider>
                 <div className="Legends">
                     <table width="800px">
                         <tr>
@@ -2045,22 +2185,23 @@ closeCross=()=>{
                     {/*         src={global.AppConfig.XrayDBIP + this.state.picture.picture_dir + "?rand=" + Math.random()}*/}
                     {/*         style={{width: 1000, height: 300}}/>*/}
                     {/*</div>*/}
+
                     <div className="svgpanel">
                         <img className="tifImg"
                              id="img111"
                              src={global.AppConfig.XrayDBIP + this.state.picture.picture_dir + "?rand=" + Math.random()}
-                             style={{width: 1000, height: 300}}
+                             style={{width: 675, height: 675}}
                         crossOrigin="anonymous"/>
-                        <canvas className="tifImg" id="canvans111" style={{width: 1000, height: 300}} ref={this.cannyEdgeRef} />
+                        <canvas className="tifImg" id="canvans111" style={{width: 675, height: 875}} ref={this.cannyEdgeRef} />
                         <svg
                             onMouseDown={this.mousedown}
                             onMouseMove={this.mousemove}
                             onMouseUp={this.mouseup}
                             // onMouseOver={this.mouseover
-                            className="svgG" id="svgG" version="1.1" width="1000px" height="500px"
+                            className="svgG" id="svgG" version="1.1" width="675px" height="875px"
                             xmlns="http://www.w3.org/2000/svg"
                         >
-                            {this.renderCross()}
+                            {/*{this.renderCross()}*/}
                             }
                             {
                                 polygList.map((item, index) => {
@@ -2077,8 +2218,9 @@ closeCross=()=>{
                                                                 textx={item.textx} texty={item.texty}
                                                                 damage={item.damage_type}
                                                                 points={item.points}
-                                                                fill={this.getDamageTypeColor(item.damage_type)}
-                                                                stroke="#0099CC" opacity={0.8}>
+                                                                fillOpacity={0}
+                                                                strokeWidth={2}
+                                                                stroke={this.getDamageTypeColor(item.damage_type)} opacity={1}>
                                                 </polygon>
 
                                             } else {
@@ -2091,8 +2233,10 @@ closeCross=()=>{
                                                                 textx={item.textx} texty={item.texty}
                                                                 damage={item.damage_type}
                                                                 points={item.points}
-                                                                fill={this.getDamageTypeColor(item.damage_type)}
-                                                                stroke="red" opacity={0.8}>
+                                                                fill={"white"}
+                                                                fillOpacity={0}
+                                                                strokeWidth={2}
+                                                                stroke={this.getDamageTypeColor(item.damage_type)} opacity={1}>
                                                 </polygon>
 
                                             }
@@ -2105,6 +2249,8 @@ closeCross=()=>{
                                                             onMouseDownCapture={() => this.selectPolygon(item.id)}
                                                             textx={item.textx} texty={item.texty} damage={item.damage_type}
                                                             points={item.points}
+                                                            fillOpacity={0}
+                                                            strokeWidth={2}
                                                             fill={this.getDamageTypeColor(item.damage_type)}
                                                             stroke="red" opacity={0.3}>
                                             </polygon>
@@ -2126,11 +2272,11 @@ closeCross=()=>{
                                     var r = this.judgeQuadrant(n_p)
                                     var x1 = index > 7 ? n_p[2] : n_p[0]
                                     var y1 = index > 7 ? n_p[3] : n_p[1]
-                                    var rect_y = index > 7 ? 410 : 0
+                                    var rect_y = index > 7 ? 815 : 0
                                     index = index > 7 ? index - 8 : index;
                                     var rect_x = index * (120 + 5)
                                     var line_x = rect_x + 60
-                                    var line_y = rect_y > 0 ? 410 : 80
+                                    var line_y = rect_y > 0 ? 815 : 60
                                     console.log("index" + index + " rect_x" + rect_x)
                                     if (item.author !== '人工标注') {
 
@@ -2141,7 +2287,7 @@ closeCross=()=>{
                                             <rect rx="5" ry="5" stroke-opacity="0.9" stroke="rgb(0,0,0)" strokeWidth="3"
                                                   opacity="0.5" style={{display: this.state.drawDamageTypeDisplay}}
                                                   fill="rgb(255,255,255)" id={'rect_info' + item.id} x={rect_x}
-                                                  y={rect_y} width="120" height="90"/>
+                                                  y={rect_y} width="120" height="60"/>
                                             <text style={{display: this.state.drawDamageTypeDisplay}} id={'text' + item.id}
                                                   key={'text' + index} damage={item.damage_type} fontSize="12">
                                                 <tspan x={rect_x + 5}
@@ -2151,12 +2297,12 @@ closeCross=()=>{
                                                 <tspan x={rect_x + 5}
                                                        y={rect_y + 12 + 12 + 5 + 12 + 5}>置&ensp;信&ensp;度：{item.belief}
                                                 </tspan>
-                                                <tspan x={rect_x + 5}
-                                                       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + 5}>缺陷大小：{item.lengths+"mm"}
-                                                </tspan>
-                                                <tspan x={rect_x + 5}
-                                                       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + +12+5+5}>缺陷位置：{(item.flaw_positions)}
-                                                </tspan>
+                                                {/*<tspan x={rect_x + 5}*/}
+                                                {/*       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + 5}>缺陷大小：{item.lengths+"mm"}*/}
+                                                {/*</tspan>*/}
+                                                {/*<tspan x={rect_x + 5}*/}
+                                                {/*       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + +12+5+5}>缺陷位置：{(item.flaw_positions)}*/}
+                                                {/*</tspan>*/}
                                             </text>
                                         </>
                                     } else {
@@ -2177,12 +2323,12 @@ closeCross=()=>{
                                                 <tspan x={rect_x + 5}
                                                        y={rect_y + 12 + 12 + 5 + 12 + 5}>置&ensp;信&ensp;度：人工标注
                                                 </tspan>
-                                                <tspan x={rect_x + 5}
-                                                       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + 5}>缺陷大小：{item.lengths+"mm"}
-                                                </tspan>
-                                                <tspan x={rect_x + 5}
-                                                       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + +12+5+5}>缺陷位置：{(item.flaw_positions)}
-                                                </tspan>
+                                                {/*<tspan x={rect_x + 5}*/}
+                                                {/*       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + 5}>缺陷大小：{item.lengths+"mm"}*/}
+                                                {/*</tspan>*/}
+                                                {/*<tspan x={rect_x + 5}*/}
+                                                {/*       y={rect_y + 12 + 12 + 5 + 12 + 5 + 12 + +12+5+5}>缺陷位置：{(item.flaw_positions)}*/}
+                                                {/*</tspan>*/}
                                             </text>
                                         </>
                                     }
@@ -2261,90 +2407,10 @@ closeCross=()=>{
                         </svg>
 
 
-                    </div>
-                </div>
 
-                <div className="defectInfo">
-                    <div style={{textAlign: "center"}}>
-                        <br/>
-                        <img src={tools} width="20px" height="20px"/>
-                        <strong><font size={3}> AI检测 </font></strong>
                     </div>
-                    <br/>
-                    &emsp;图片调整：
-                    <Button type="primary" onClick={this.HorizatalFlipPicture}>水平翻转</Button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&emsp;
-                    <Button type="primary" onClick={this.VerticalFlipPicture}>垂直翻转</Button>
-                    <br/>
-                    <br/>
-                    &emsp;校准准星：
-                    <Button onClick={this.setCross}> 校准准星</Button>&emsp;&emsp;
-                    <Button onClick={this.closeCross}> 隐藏/显示准星</Button>&emsp;&emsp;
-                    <br/>
-                    <br/>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button onClick={this.getposition}> 重新计算</Button>(位置显示null时点击)
-                    <br/>
-                    <br/>
-                    &emsp;AI &nbsp;检测 &nbsp;：
-                    <Button onClick={this.AIprocess}>AI检测</Button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;
-                    <Button type="danger" onClick={this.deletePolygon}>删除AI检测框</Button>
-                    <br/>
-                    <div style={{textAlign: "center"}}>
-                        <br/>
-                        <img src={tools} width="20px" height="20px"/>
-                        <strong><font size={3}> 工&nbsp;具 </font></strong>
-                    </div>
-                    <br/>
-                    &emsp;图像增强：
-                    <Button onClick={this.imgEnhance}>对比度增强</Button>&emsp;
-                    <Button onClick={this.imgCanyEnhance}>文字增强</Button>
-                    <br/>
-                    {/*<br/>*/}
-                    {/*&emsp;报告功能：*/}
-                    {/*<Button onClick={() => this.generateReport()}>生成报告</Button>*/}
-                    {/*<br/>*/}
-                    <br/>
-                    &emsp;信息展示：
-                    {/*<Button onClick={()=>this.deleteRect(clickRectClor)}>删除矩形框</Button>*/}
-                    {/*    &nbsp;&nbsp;&nbsp;&nbsp;*/}
-                    <Button onClick={this.changeRectDisplay}>关闭/开启人工标注</Button>
-                    <br/>
-                    <br/>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button onClick={this.changeAIRectDisplay}>关闭/开启AI检测框</Button>
-                    <br/>
-                    <br/>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button
-                    onClick={this.changeDamageTypeDisplay}>关闭/开启损伤信息</Button>
-                    <br/>
-                    <br/>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<Button onClick={this.changehanfengDisplay}>关闭/开启焊缝显示</Button>
-                    <br/><br/>
-                    &emsp;确认标注：
-                    <Button type="primary" onClick={() => this.sendToApitest()}>标注完成</Button>
-                </div>
-                    <div className="defectInfoUtils">
-                        <Button onClick={this.getUpPagePicture}>上一张</Button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <Button onClick={this.getNextPagePicture}>下一张</Button>
-                </div>
 
-                {/*<div className="Legends">*/}
-                {/*    <Row>*/}
-                {/*        <Row>*/}
-                {/*            <Col span={4}>col-4</Col>*/}
-                {/*            <Col span={4}>col-4</Col>*/}
-                {/*            <Col span={4}>col-4</Col>*/}
-                {/*            <Col span={4}>col-4</Col>*/}
-                {/*            <Col span={4}>col-4</Col>*/}
-                {/*            <Col span={4}>col-4</Col>*/}
-                {/*        </Row>*/}
-                {/*    </Row>*/}
-                {/*</div>*/}
-                <div className="Utils">
                     <div className="info">
-                        <Divider>缺陷详细信息<p align="center" style={{fontWeight: "bold"}}>共 {hanfenglist.length} 条记录</p>
-                        </Divider>
                         <div className="infoTable">
                             <Table
                                 style={{ wordBreak: "break-all"}}
@@ -2376,6 +2442,39 @@ closeCross=()=>{
                         </div>
 
                     </div>
+                    <Divider>涡流图&相控阵图</Divider>
+                    <div className="pic2" >
+
+                    <img src = {global.AppConfig.XrayDBIP+this.state.picture.picture_woliu_dir} style={{width:600,height:300,marginLeft:100}}/>
+                        <img src = {global.AppConfig.XrayDBIP+this.state.picture.picture_chaosheng_dir}  style={{width:600,height:300,marginLeft:300}}/>
+
+
+                    </div>
+                    </div>
+                    <br/>
+                    <br/>
+                <Divider></Divider>
+                    <div className="defectInfoUtils">
+                        <Button onClick={this.getUpPagePicture}>上一张</Button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <Button onClick={this.getNextPagePicture}>下一张</Button>
+                </div>
+
+
+                {/*<div className="Legends">*/}
+                {/*    <Row>*/}
+                {/*        <Row>*/}
+                {/*            <Col span={4}>col-4</Col>*/}
+                {/*            <Col span={4}>col-4</Col>*/}
+                {/*            <Col span={4}>col-4</Col>*/}
+                {/*            <Col span={4}>col-4</Col>*/}
+                {/*            <Col span={4}>col-4</Col>*/}
+                {/*            <Col span={4}>col-4</Col>*/}
+                {/*        </Row>*/}
+                {/*    </Row>*/}
+                {/*</div>*/}
+                <div className="Utils">
+
                     <div className="pageUtils">
                         {/*<div style={{textAlign: "center"}}>*/}
                         {/*    <Button onClick={this.getUpPagePicture}>上一张</Button>*/}

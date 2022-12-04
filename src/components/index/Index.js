@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import saveLoginInfo from  '../../utils/saveLogInfo'
+import {Icon, Steps} from "antd";
 class Index extends Component{
 
     componentWillMount() {
@@ -16,7 +17,18 @@ class Index extends Component{
 
     render() {
 
-        return(<div style={{textAlign:'center',fontSize:'large'}}>欢迎登录射线底片数字化管理及辅助判读技术！</div>)
+        return(<div style={{textAlign:'center',fontSize:'large'}}><strong>欢迎登录x80钢焊缝无损检测系统！</strong>
+            {/*<br/>*/}
+            {/*<br/>*/}
+            {/*    <div style={{width: "1000px",marginTop:"200px"}}>*/}
+            {/*        基本流程*/}
+            {/*        <Steps size={"default"} current={3}>*/}
+            {/*        <Steps.Step icon={<Icon type="database" />} title={<strong>Step1:创建委托单</strong>} description={"填入无损检测委托单的各类信息"}/>*/}
+            {/*        <Steps.Step icon={<Icon type="folder-open" />} title={<strong>Step2:检测委托单</strong>} description={"进行底片AI检测"}/>*/}
+            {/*        <Steps.Step icon={<Icon type="folder-open" />} title={<strong>Step3:更新委托单</strong>} description={"对完成检测后的委托单信息进行更新"}/>*/}
+            {/*    </Steps></div>*/}
+
+    </div>)
     }
 }
 

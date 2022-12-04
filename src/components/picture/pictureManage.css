@@ -9,11 +9,29 @@
     background: #F7F7F7;
     margin-left: 30px;
 }
+.pic2 {
+    display: inline-block;
+    margin-left: 100px;
+    margin-top: 30px;
+}
+
+.pic3 {
+    text-align: right;
+    margin-left: 100px;
+    display: inline-block;
+    overflow-y: scroll;
+    height: 400px;
+    width: 500px;
+}
+
+
 .svgpanel {
-    border-radius: 25px;
+    margin-left: 50px;
     float: left;
-    width: 1000px;
-    height: 500px;
+    display: inline-block;
+    border-radius: 25px;
+    width: 675px;
+    height: 875px;
     background: #F7F7F7;
 }
 .defectInfo{
@@ -35,21 +53,21 @@
     margin-top: 50px;
 }
 .info{
-    margin-top: 10px;
+    margin-left: 150px;
+    display: inline-block;
 }
 .infoChart{
-    margin-left: 800px;
     width: 700px;
 }
 .infoTable{
-    width: 800px;
-    height: 200px;
-    display: inline-block;
-    position: absolute;
+    margin-top: 150px;
+    margin-left: 50px;
+    width: 600px;
+    height: 300px;
 }
 polygon:hover {
-    opacity: 0.6;
-    stroke-Width:5px;
+    opacity: 1;
+    stroke-Width:7px;
 }
 body{
 
